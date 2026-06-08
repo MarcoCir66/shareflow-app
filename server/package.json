@@ -1,0 +1,9 @@
+{
+  "name": "shareflow-server",
+  "version": "0.1.0",
+  "description": "ShareFlow Node.js backend — provisioning API (not yet implemented)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
