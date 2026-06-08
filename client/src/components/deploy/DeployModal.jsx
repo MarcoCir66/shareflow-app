@@ -1,0 +1,1 @@
+export default function DeployModal({ onClose }) { return <div className="fixed inset-0 bg-black/50 flex items-center justify-center"><button onClick={onClose} className="text-white">Close</button></div> }
