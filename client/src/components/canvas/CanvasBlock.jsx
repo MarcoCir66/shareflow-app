@@ -25,6 +25,7 @@ export default function CanvasBlock({ widget }) {
     <div
       ref={setNodeRef}
       style={style}
+      {...attributes}
       onClick={() => dispatch({ type: ACTIONS.SELECT_WIDGET, payload: { instanceId: widget.instanceId } })}
       className={`
         group relative bg-slate rounded-xl p-4 mb-3 border-2 cursor-pointer transition-all
@@ -32,7 +33,6 @@ export default function CanvasBlock({ widget }) {
       `}
     >
       <button
-        {...attributes}
         {...listeners}
         onClick={e => e.stopPropagation()}
         className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-light opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity"

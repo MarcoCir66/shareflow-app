@@ -29,6 +29,7 @@ export default function DeployModal({ onClose }) {
 
   useEffect(() => {
     dispatch({ type: ACTIONS.EXPORT_CONFIGURATION })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
