@@ -28,14 +28,14 @@ export default function CanvasBlock({ widget }) {
       {...attributes}
       onClick={() => dispatch({ type: ACTIONS.SELECT_WIDGET, payload: { instanceId: widget.instanceId } })}
       className={`
-        group relative bg-slate rounded-xl p-4 mb-3 border-2 cursor-pointer transition-all
-        ${isSelected ? 'border-blue-electric shadow-lg shadow-blue/20' : 'border-slate-mid hover:border-blue'}
+        group relative bg-white rounded-lg p-4 mb-3 border cursor-pointer transition-all shadow-sm
+        ${isSelected ? 'border-blue ring-1 ring-blue/20 shadow-md' : 'border-gray-200 hover:border-gray-300 hover:shadow-md'}
       `}
     >
       <button
         {...listeners}
         onClick={e => e.stopPropagation()}
-        className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-light opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity"
+        className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300 opacity-0 group-hover:opacity-100 hover:text-navy cursor-grab active:cursor-grabbing transition-opacity"
       >
         <GripVertical size={16} />
       </button>
@@ -44,7 +44,7 @@ export default function CanvasBlock({ widget }) {
           e.stopPropagation()
           dispatch({ type: ACTIONS.REMOVE_WIDGET, payload: { instanceId: widget.instanceId } })
         }}
-        className="absolute right-2 top-2 text-slate-light opacity-0 group-hover:opacity-100 hover:text-white transition-opacity"
+        className="absolute right-2 top-2 text-gray-300 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-opacity"
       >
         <X size={14} />
       </button>

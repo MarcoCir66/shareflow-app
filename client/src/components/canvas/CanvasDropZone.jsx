@@ -20,7 +20,7 @@ export default function CanvasDropZone() {
           ref={setNodeRef}
           className={`
             min-h-96 rounded-2xl border-2 border-dashed p-4 transition-colors
-            ${isOver ? 'border-blue-electric bg-blue/5' : 'border-slate-mid bg-white'}
+            ${isOver ? 'border-blue bg-blue/5' : 'border-slate-mid bg-white'}
           `}
         >
           {activeWidgets.length === 0 ? (

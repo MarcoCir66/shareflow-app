@@ -46,7 +46,7 @@ function AppInner() {
       />
       <DragOverlay>
         {overlayBlock && (
-          <div className="bg-slate border-2 border-blue-electric rounded-xl p-4 w-56 shadow-xl opacity-90">
+          <div className="bg-white border-2 border-blue rounded-lg p-4 w-64 shadow-xl">
             <CanvasBlockPreview block={overlayBlock} />
           </div>
         )}
