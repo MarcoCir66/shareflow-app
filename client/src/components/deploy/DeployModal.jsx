@@ -3,23 +3,16 @@ import { CheckCircle2, Loader2, Circle, X, ExternalLink } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { startProvisioning, getProvisioningStatus } from '../../lib/provisioningApi.js'
 
+// Real step implementations live in server/src/provisioningJobs.js,
+// using server/src/msalClient.js (app-only MSAL token) and
+// server/src/graphClient.js (Graph SDK client) when Azure credentials are
+// configured; otherwise each step is simulated.
 const STEPS = [
-  { id: 1, label: 'Authenticating via MSAL…',
-    // TODO: MSAL — replace delay with:
-    // const token = await msalInstance.acquireTokenSilent({ scopes: ['Sites.FullControl.All'] })
-  },
-  { id: 2, label: 'Connecting to Microsoft Graph API…',
-    // TODO: GRAPH — const graphClient = Client.initWithMiddleware({ authProvider })
-  },
-  { id: 3, label: 'Creating SharePoint Communication Site…',
-    // TODO: SP_SITE — await graphClient.api('/sites').post({ displayName: siteName, ... })
-  },
-  { id: 4, label: 'Provisioning Lists & Content Types…',
-    // TODO: SP_LISTS — for (const widget of tenantConfiguration.widgets) { await provisionList(widget) }
-  },
-  { id: 5, label: 'Configuring Pages & Webparts…',
-    // TODO: SP_PAGES — await graphClient.api(`/sites/${siteId}/pages`).post(pageLayout)
-  },
+  { id: 1, label: 'Authenticating via MSAL…' },
+  { id: 2, label: 'Connecting to Microsoft Graph API…' },
+  { id: 3, label: 'Creating SharePoint Communication Site…' },
+  { id: 4, label: 'Provisioning Lists & Content Types…' },
+  { id: 5, label: 'Configuring Pages & Webparts…' },
   { id: 6, label: 'Deployment complete!' },
 ]
 
@@ -29,6 +22,7 @@ export default function DeployModal({ onClose }) {
   const [currentStep, setCurrentStep] = useState(0)
   const [status, setStatus] = useState('running')
   const [result, setResult] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   const startedRef = useRef(false)
 
   const done = status === 'done'
@@ -57,6 +51,9 @@ export default function DeployModal({ onClose }) {
         if (job.status === 'done') {
           setStatus('done')
           setResult(job.result)
+        } else if (job.status === 'error') {
+          setStatus('error')
+          setErrorMessage(job.error)
         }
       } catch {
         setStatus('error')
@@ -83,7 +80,7 @@ export default function DeployModal({ onClose }) {
         {failed ? (
           <div className="p-5 space-y-3">
             <p className="text-sm text-red-400">
-              Unable to reach the provisioning service. Make sure the backend is running and try again.
+              {errorMessage ?? 'Unable to reach the provisioning service. Make sure the backend is running and try again.'}
             </p>
             <button
               onClick={onClose}

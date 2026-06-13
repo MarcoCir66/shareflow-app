@@ -1,4 +1,6 @@
 import { Layers } from 'lucide-react'
+import { isMsalConfigured } from '../../auth/msalInstance.js'
+import AuthSection from './AuthSection.jsx'
 
 export default function Navbar({ onDeployClick }) {
   return (
@@ -15,9 +17,11 @@ export default function Navbar({ onDeployClick }) {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-xs text-slate-light bg-slate px-3 py-1 rounded-full border border-slate-mid">
-          Tenant: Contoso Corp
-        </span>
+        {isMsalConfigured ? <AuthSection /> : (
+          <span className="text-xs text-slate-light bg-slate px-3 py-1 rounded-full border border-slate-mid">
+            Tenant: Contoso Corp
+          </span>
+        )}
         <button
           onClick={onDeployClick}
           className="flex items-center gap-2 bg-blue-electric hover:bg-blue text-navy font-semibold text-sm px-4 py-2 rounded-lg transition-colors"

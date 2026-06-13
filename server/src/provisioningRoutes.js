@@ -25,6 +25,7 @@ router.get('/jobs/:jobId', (req, res) => {
     currentStep: job.currentStep,
     totalSteps: job.totalSteps,
     result: job.result,
+    error: job.error,
   })
 })
 

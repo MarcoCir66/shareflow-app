@@ -16,7 +16,7 @@ export const initialState = {
   activeWidgets: [],
   selectedWidgetInstanceId: null,
   tenantConfiguration: {
-    tenantId: null, // TODO: MSAL — populate after acquireTokenSilent() resolves tenant context
+    tenantId: null,
     siteName: 'My Corporate Intranet',
     siteUrl: '',
     widgets: [],
