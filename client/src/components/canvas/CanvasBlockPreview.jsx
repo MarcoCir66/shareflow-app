@@ -1,5 +1,9 @@
 import * as icons from 'lucide-react'
-import { CATEGORIES } from '../../data/blockCatalog.js'
+
+const EVENT_PREVIEW_IDS = new Set([
+  'eventi-corporate', 'eventi-country', 'eventi-sede', 'eventi-funzione',
+  'sezione-fiere', 'sezione-mostre', 'multimedia-gallery', 'countdown-lancio',
+])
 
 function SkeletonLine({ w = 'w-full', h = 'h-2' }) {
   return <div className={`${w} ${h} bg-slate-mid rounded animate-pulse`} />
@@ -7,9 +11,8 @@ function SkeletonLine({ w = 'w-full', h = 'h-2' }) {
 
 export default function CanvasBlockPreview({ block }) {
   const Icon = icons[block.icon] ?? icons.Box
-  const cat = block.category
 
-  if (cat === CATEGORIES.COMMUNICATION && block.id.startsWith('news')) {
+  if (block.id.startsWith('news')) {
     return (
       <div className="space-y-2">
         <div className="flex items-center gap-2 mb-3">
@@ -24,7 +27,7 @@ export default function CanvasBlockPreview({ block }) {
     )
   }
 
-  if (cat === CATEGORIES.EVENTS) {
+  if (EVENT_PREVIEW_IDS.has(block.id)) {
     return (
       <div className="space-y-2">
         <div className="flex items-center gap-2 mb-3">
