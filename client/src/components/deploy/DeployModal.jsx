@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { CheckCircle2, Loader2, Circle, X, ExternalLink } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
-import { flattenWidgets } from '../../context/sectionHelpers.js'
+import { buildTenantExport } from '../../context/pageHelpers.js'
 import { startProvisioning, getProvisioningStatus } from '../../lib/provisioningApi.js'
 
 // Real step implementations live in server/src/provisioningJobs.js,
@@ -35,7 +35,7 @@ export default function DeployModal({ onClose }) {
 
     dispatch({ type: ACTIONS.EXPORT_CONFIGURATION })
 
-    const tenantConfiguration = { ...state.tenantConfiguration, widgets: flattenWidgets(state.sections) }
+    const tenantConfiguration = buildTenantExport(state.pages, state.tenantConfiguration)
     startProvisioning(tenantConfiguration)
       .then(({ jobId: newJobId }) => setJobId(newJobId))
       .catch(() => setStatus('error'))

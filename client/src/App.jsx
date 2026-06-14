@@ -3,9 +3,10 @@ import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestC
 import { useConfigurator } from './hooks/useConfigurator.js'
 import { blockById } from './data/blockCatalog.js'
 import { findWidgetLocation, findColumnById } from './context/sectionHelpers.js'
+import { findPage } from './context/pageHelpers.js'
 import Navbar from './components/layout/Navbar.jsx'
 import WorkspaceShell from './components/layout/WorkspaceShell.jsx'
-import BlockLibrary from './components/sidebar-left/BlockLibrary.jsx'
+import LeftSidebar from './components/sidebar-left/LeftSidebar.jsx'
 import CanvasDropZone from './components/canvas/CanvasDropZone.jsx'
 import PropertiesPanel from './components/sidebar-right/PropertiesPanel.jsx'
 import DeployModal from './components/deploy/DeployModal.jsx'
@@ -26,6 +27,7 @@ function AppInner() {
   const [activeDragData, setActiveDragData] = useState(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
+  const activePage = findPage(state.pages, state.activePageId)
 
   function handleDragStart({ active }) {
     setActiveDragData(active.data.current)
@@ -37,15 +39,15 @@ function AppInner() {
     const type = active.data.current?.type
 
     if (type === 'catalog-block') {
-      const target = resolveColumnTarget(over.id, state.sections)
+      const target = resolveColumnTarget(over.id, activePage.sections)
       if (!target) return
       dispatch({
         type: ACTIONS.ADD_WIDGET,
         payload: { blockId: active.data.current.blockId, sectionId: target.sectionId, columnId: target.columnId },
       })
     } else if (type === 'canvas-block' && active.id !== over.id) {
-      const activeLocation = findWidgetLocation(state.sections, active.id)
-      const target = resolveColumnTarget(over.id, state.sections)
+      const activeLocation = findWidgetLocation(activePage.sections, active.id)
+      const target = resolveColumnTarget(over.id, activePage.sections)
       if (!activeLocation || !target) return
       // Phase 1: drag only reorders within the same column; cross-column moves use "Move to →"
       if (activeLocation.sectionId !== target.sectionId || activeLocation.columnId !== target.columnId) return
@@ -64,7 +66,7 @@ function AppInner() {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Navbar onDeployClick={() => setDeployOpen(true)} />
       <WorkspaceShell
-        left={<BlockLibrary />}
+        left={<LeftSidebar />}
         center={<CanvasDropZone />}
         right={<PropertiesPanel />}
       />

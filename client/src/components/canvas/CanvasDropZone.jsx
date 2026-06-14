@@ -1,23 +1,28 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
+import { findPage } from '../../context/pageHelpers.js'
 import CanvasSection from './CanvasSection.jsx'
 import SectionLayoutPicker from './SectionLayoutPicker.jsx'
+import CanvasTopNav from './CanvasTopNav.jsx'
 
 export default function CanvasDropZone() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
+  const activePage = findPage(state.pages, state.activePageId)
 
   return (
     <div className="min-h-full p-6">
       <div className="max-w-2xl mx-auto">
+        <CanvasTopNav />
+
         <div className="mb-4">
           <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">Canvas Preview</h2>
-          <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — Home Page</p>
+          <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — {activePage.title}</p>
         </div>
 
         <div className="min-h-96 rounded-2xl border-2 border-dashed border-slate-mid bg-white p-4">
-          {state.sections.map(section => (
+          {activePage.sections.map(section => (
             <CanvasSection key={section.sectionId} section={section} />
           ))}
 

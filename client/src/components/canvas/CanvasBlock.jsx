@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { X, GripVertical, ArrowRightLeft } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { blockById } from '../../data/blockCatalog.js'
+import { findPage } from '../../context/pageHelpers.js'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
 
 export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) {
@@ -23,7 +24,8 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
     opacity: isDragging ? 0.4 : 1,
   }
 
-  const otherColumns = state.sections.flatMap((section, si) =>
+  const activePage = findPage(state.pages, state.activePageId)
+  const otherColumns = activePage.sections.flatMap((section, si) =>
     section.columns.map((column, ci) => ({
       sectionId: section.sectionId,
       columnId: column.columnId,

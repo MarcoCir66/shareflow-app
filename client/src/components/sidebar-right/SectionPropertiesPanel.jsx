@@ -1,12 +1,14 @@
 import { LayoutGrid, Trash2 } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { SECTION_LAYOUTS } from '../../data/sectionLayouts.js'
+import { findPage } from '../../context/pageHelpers.js'
 import SectionLayoutPicker from '../canvas/SectionLayoutPicker.jsx'
 
 export default function SectionPropertiesPanel({ sectionId }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
-  const sectionIndex = state.sections.findIndex(s => s.sectionId === sectionId)
-  const section = state.sections[sectionIndex]
+  const activePage = findPage(state.pages, state.activePageId)
+  const sectionIndex = activePage.sections.findIndex(s => s.sectionId === sectionId)
+  const section = activePage.sections[sectionIndex]
   if (!section) return null
 
   const isEmpty = section.columns.every(c => c.widgets.length === 0)
