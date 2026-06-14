@@ -1,9 +1,11 @@
 import * as icons from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { blockById, CATEGORY_LABELS } from '../../data/blockCatalog.js'
+import { findWidget } from '../../context/sectionHelpers.js'
 import EmptyState from './EmptyState.jsx'
 import ScopeSelector from './ScopeSelector.jsx'
 import ToggleField from './ToggleField.jsx'
+import SectionPropertiesPanel from './SectionPropertiesPanel.jsx'
 
 const PROP_LABELS = {
   visible:         'Visible',
@@ -13,9 +15,13 @@ const PROP_LABELS = {
 
 export default function PropertiesPanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
-  const { selectedWidgetInstanceId, activeWidgets } = state
+  const { selectedWidgetInstanceId, selectedSectionId, sections } = state
 
-  const widget = activeWidgets.find(w => w.instanceId === selectedWidgetInstanceId)
+  if (selectedSectionId) {
+    return <SectionPropertiesPanel sectionId={selectedSectionId} />
+  }
+
+  const widget = findWidget(sections, selectedWidgetInstanceId)
   const block  = widget ? blockById[widget.blockId] : null
 
   if (!widget || !block) return <EmptyState />

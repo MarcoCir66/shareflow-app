@@ -1,13 +1,12 @@
-import { useDroppable } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { Layers } from 'lucide-react'
+import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
-import CanvasBlock from './CanvasBlock.jsx'
+import CanvasSection from './CanvasSection.jsx'
+import SectionLayoutPicker from './SectionLayoutPicker.jsx'
 
 export default function CanvasDropZone() {
-  const { state } = useConfigurator()
-  const { activeWidgets } = state
-  const { setNodeRef, isOver } = useDroppable({ id: 'canvas-drop' })
+  const { state, dispatch, ACTIONS } = useConfigurator()
+  const [addPickerOpen, setAddPickerOpen] = useState(false)
 
   return (
     <div className="min-h-full p-6">
@@ -16,31 +15,31 @@ export default function CanvasDropZone() {
           <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">Canvas Preview</h2>
           <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — Home Page</p>
         </div>
-        <div
-          ref={setNodeRef}
-          className={`
-            min-h-96 rounded-2xl border-2 border-dashed p-4 transition-colors
-            ${isOver ? 'border-blue bg-blue/5' : 'border-slate-mid bg-white'}
-          `}
-        >
-          {activeWidgets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-80 gap-3 text-slate-light">
-              <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center">
-                <Layers size={28} className="text-slate-mid" />
-              </div>
-              <p className="text-sm font-medium">Drag blocks here to build your intranet</p>
-              <p className="text-xs">Or click any block in the left panel</p>
-            </div>
-          ) : (
-            <SortableContext
-              items={activeWidgets.map(w => w.instanceId)}
-              strategy={verticalListSortingStrategy}
+
+        <div className="min-h-96 rounded-2xl border-2 border-dashed border-slate-mid bg-white p-4">
+          {state.sections.map(section => (
+            <CanvasSection key={section.sectionId} section={section} />
+          ))}
+
+          <div className="relative flex justify-center pt-1">
+            <button
+              type="button"
+              onClick={() => setAddPickerOpen(o => !o)}
+              className="flex items-center gap-1.5 text-xs font-medium text-slate-light hover:text-blue border border-dashed border-slate-mid hover:border-blue rounded-lg px-3 py-1.5 transition-colors"
             >
-              {activeWidgets.map(widget => (
-                <CanvasBlock key={widget.instanceId} widget={widget} />
-              ))}
-            </SortableContext>
-          )}
+              <Plus size={14} /> Aggiungi sezione
+            </button>
+            {addPickerOpen && (
+              <div className="absolute top-full mt-2 z-20">
+                <SectionLayoutPicker
+                  onSelect={key => {
+                    dispatch({ type: ACTIONS.ADD_SECTION, payload: { layout: key } })
+                    setAddPickerOpen(false)
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

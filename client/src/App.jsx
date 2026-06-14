@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
 import { useConfigurator } from './hooks/useConfigurator.js'
 import { blockById } from './data/blockCatalog.js'
+import { findWidgetLocation, findColumnById } from './context/sectionHelpers.js'
 import Navbar from './components/layout/Navbar.jsx'
 import WorkspaceShell from './components/layout/WorkspaceShell.jsx'
 import BlockLibrary from './components/sidebar-left/BlockLibrary.jsx'
@@ -10,8 +11,17 @@ import PropertiesPanel from './components/sidebar-right/PropertiesPanel.jsx'
 import DeployModal from './components/deploy/DeployModal.jsx'
 import CanvasBlockPreview from './components/canvas/CanvasBlockPreview.jsx'
 
+const COLUMN_PREFIX = 'column-'
+
+function resolveColumnTarget(overId, sections) {
+  if (typeof overId === 'string' && overId.startsWith(COLUMN_PREFIX)) {
+    return findColumnById(sections, overId.slice(COLUMN_PREFIX.length))
+  }
+  return findWidgetLocation(sections, overId)
+}
+
 function AppInner() {
-  const { dispatch, ACTIONS } = useConfigurator()
+  const { state, dispatch, ACTIONS } = useConfigurator()
   const [deployOpen, setDeployOpen] = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
 
@@ -25,10 +35,24 @@ function AppInner() {
     setActiveDragData(null)
     if (!over) return
     const type = active.data.current?.type
+
     if (type === 'catalog-block') {
-      dispatch({ type: ACTIONS.ADD_WIDGET, payload: { blockId: active.data.current.blockId } })
+      const target = resolveColumnTarget(over.id, state.sections)
+      if (!target) return
+      dispatch({
+        type: ACTIONS.ADD_WIDGET,
+        payload: { blockId: active.data.current.blockId, sectionId: target.sectionId, columnId: target.columnId },
+      })
     } else if (type === 'canvas-block' && active.id !== over.id) {
-      dispatch({ type: ACTIONS.REORDER_WIDGETS, payload: { activeId: active.id, overId: over.id } })
+      const activeLocation = findWidgetLocation(state.sections, active.id)
+      const target = resolveColumnTarget(over.id, state.sections)
+      if (!activeLocation || !target) return
+      // Phase 1: drag only reorders within the same column; cross-column moves use "Move to →"
+      if (activeLocation.sectionId !== target.sectionId || activeLocation.columnId !== target.columnId) return
+      dispatch({
+        type: ACTIONS.REORDER_WIDGETS,
+        payload: { activeId: active.id, overId: over.id, sectionId: activeLocation.sectionId, columnId: activeLocation.columnId },
+      })
     }
   }
 

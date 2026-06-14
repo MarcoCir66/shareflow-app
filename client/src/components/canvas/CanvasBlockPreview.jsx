@@ -10,6 +10,9 @@ const MEDIA_IDS = new Set([
 
 const MONTHS = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic']
 
+const GRID_COLS_BY_WIDTH = { full: 'grid-cols-3', twoThirds: 'grid-cols-2', half: 'grid-cols-2', third: 'grid-cols-1' }
+const ITEM_COUNT_BY_WIDTH = { full: 3, twoThirds: 2, half: 2, third: 1 }
+
 function SkeletonLine({ w = 'w-full', h = 'h-2', light = false }) {
   return <div className={`${w} ${h} rounded ${light ? 'bg-gray-100' : 'bg-gray-200'}`} />
 }
@@ -28,15 +31,17 @@ function Header({ block, Icon, showSeeAll = true }) {
   )
 }
 
-export default function CanvasBlockPreview({ block }) {
+export default function CanvasBlockPreview({ block, width = 'full' }) {
   const Icon = icons[block.icon] ?? icons.Box
+  const gridColsClass = GRID_COLS_BY_WIDTH[width] ?? GRID_COLS_BY_WIDTH.full
+  const itemCount = ITEM_COUNT_BY_WIDTH[width] ?? ITEM_COUNT_BY_WIDTH.full
 
   if (block.id.startsWith('news')) {
     return (
       <div>
         <Header block={block} Icon={Icon} />
-        <div className="grid grid-cols-3 gap-3">
-          {[0, 1, 2].map(i => (
+        <div className={`grid ${gridColsClass} gap-3`}>
+          {Array.from({ length: itemCount }).map((_, i) => (
             <div key={i} className="space-y-2">
               <div className="aspect-[16/10] rounded-md bg-gray-100" />
               <SkeletonLine h="h-2.5" />
@@ -80,8 +85,8 @@ export default function CanvasBlockPreview({ block }) {
     return (
       <div>
         <Header block={block} Icon={Icon} />
-        <div className="grid grid-cols-3 gap-2">
-          {[0, 1, 2].map(i => <div key={i} className="aspect-square rounded-md bg-gray-100" />)}
+        <div className={`grid ${gridColsClass} gap-2`}>
+          {Array.from({ length: itemCount }).map((_, i) => <div key={i} className="aspect-square rounded-md bg-gray-100" />)}
         </div>
       </div>
     )
