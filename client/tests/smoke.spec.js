@@ -11,6 +11,7 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByText('Communication', { exact: true })).toBeVisible()
     await expect(page.getByText('SharePoint Communication Site — Home')).toBeVisible()
     await expect(page.getByText('No block selected')).toBeVisible()
+    await expect(page.locator('main').getByRole('button', { name: 'Home', exact: true }).locator('svg')).toHaveCount(0)
   })
 
   test('search filters the block library', async ({ page }) => {
@@ -61,6 +62,42 @@ test.describe('ShareFlow configurator smoke test', () => {
     await page.getByRole('button', { name: 'Pagine' }).click()
     await page.getByRole('button', { name: 'Aggiungi pagina' }).click()
     await expect(page.getByText('SharePoint Communication Site — Nuova pagina')).toBeVisible()
+  })
+
+  test('mega-menu shows a nested page and toggles open/closed', async ({ page }) => {
+    await page.getByRole('button', { name: 'Pagine' }).click()
+
+    const homeRow = page.locator('aside.border-r').locator('div.group', { hasText: 'Home' })
+    await homeRow.hover()
+    await homeRow.getByTitle('Aggiungi sottopagina').click()
+
+    const canvas = page.locator('main')
+    await expect(canvas.getByText('SharePoint Communication Site — Nuova pagina')).toBeVisible()
+
+    const homeTab = canvas.getByRole('button', { name: 'Home', exact: true })
+    const panelItem = canvas.getByRole('button', { name: 'Nuova pagina', exact: true })
+
+    // Home now has a child: chevron appears, and its panel is open by default.
+    await expect(homeTab.locator('svg')).toBeVisible()
+    await expect(panelItem).toBeVisible()
+
+    // Case 2: clicking the active root while on a descendant navigates to the
+    // root's own page; the panel stays open.
+    await homeTab.click()
+    await expect(canvas.getByText('SharePoint Communication Site — Home')).toBeVisible()
+    await expect(panelItem).toBeVisible()
+
+    // Case 3: clicking the active root while already on its own page toggles the panel closed.
+    await homeTab.click()
+    await expect(panelItem).not.toBeVisible()
+
+    // Case 3 again: toggles the panel back open.
+    await homeTab.click()
+    await expect(panelItem).toBeVisible()
+
+    // Clicking an item inside the panel navigates to it.
+    await panelItem.click()
+    await expect(canvas.getByText('SharePoint Communication Site — Nuova pagina')).toBeVisible()
   })
 
   test('deploy flow completes end-to-end against the provisioning API', async ({ page }) => {
