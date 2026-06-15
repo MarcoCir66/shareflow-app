@@ -13,6 +13,7 @@ export default function CanvasTopNav() {
   const [closedRootId, setClosedRootId] = useState(null)
   const tree = buildPageTree(state.pages)
   const activeRoot = tree.find(root => isInSubtree(root, state.activePageId))
+  if (!activeRoot) return null
   const openRoot = activeRoot && activeRoot.children.length > 0 && activeRoot.pageId !== closedRootId
     ? activeRoot
     : null
