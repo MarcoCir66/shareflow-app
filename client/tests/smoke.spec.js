@@ -65,7 +65,15 @@ test.describe('ShareFlow configurator smoke test', () => {
 
   test('deploy flow completes end-to-end against the provisioning API', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
-    await page.getByRole('button', { name: 'Deploy to SharePoint' }).click()
+
+    const [request] = await Promise.all([
+      page.waitForRequest(req => req.url().includes('/api/provisioning/jobs') && req.method() === 'POST'),
+      page.getByRole('button', { name: 'Deploy to SharePoint' }).click(),
+    ])
+    const { tenantConfiguration } = request.postDataJSON()
+    expect(tenantConfiguration.navigation).toEqual([
+      { pageId: 'page-home', title: 'Home', slug: 'home', children: [] },
+    ])
 
     await expect(page.getByText('Deploying to SharePoint')).toBeVisible()
     await expect(page.getByText('Deployment complete!')).toBeVisible()

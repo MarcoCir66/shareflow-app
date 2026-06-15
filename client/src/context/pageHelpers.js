@@ -144,6 +144,15 @@ export function getProjection(pages, activeId, overId, dragOffsetX, indentationW
   }
 }
 
+/** Converts the page tree into the { pageId, title, slug, children } shape used by MegaMenuPanel and the deploy export. */
+export function buildNavigationExport(pages) {
+  return buildPageTree(pages).map(toNavNode)
+}
+
+function toNavNode({ pageId, title, slug, children }) {
+  return { pageId, title, slug, children: children.map(toNavNode) }
+}
+
 /**
  * Builds the export payload for the deploy flow: per-page widget lists plus
  * a flat, globally-ordered `widgets` array (backward compatible with the
@@ -160,6 +169,7 @@ export function buildTenantExport(pages, tenantConfiguration) {
   return {
     ...tenantConfiguration,
     pages: pagesExport,
+    navigation: buildNavigationExport(pages),
     widgets: pagesExport.flatMap(p => p.widgets).map((w, i) => ({ ...w, order: i })),
   }
 }
