@@ -137,8 +137,7 @@ A third tab "Contenuto" is added to the PropertiesPanel (right sidebar), alongsi
 ```
 ┌─ Fonte dati ──────────────────────────────────┐
 │ [SharePoint] [RSS] [HTTP API] [Manuale]        │  ← segmented control
-│ URL lista SharePoint: [________________________]│
-│ ▸ Mappatura colonne SP (collapsed accordion)   │
+│ URL: [_________________________________________]│  ← single URL field for all external types
 └───────────────────────────────────────────────┘
 
 ┌─ Dati campione (anteprima) ─────────── [+ Aggiungi] ┐
@@ -213,6 +212,8 @@ No server-side changes required for this feature.
 
 - Live data fetching from external sources inside the editor (no API calls in client)
 - Authentication management for SharePoint / HTTP API sources (handled by backend at deploy)
+- SharePoint column mapping UI (backend maps SP columns to schema fields using field `key` names by convention)
+- `params` UI for HTTP API (field exists in data shape for future use; v1 exposes URL only)
 - Image upload (imageUrl fields accept a URL string only)
 - Rich text / WYSIWYG editor (textarea only in v1)
 - Drag-to-reorder items (items reorder via delete + re-add in v1)
