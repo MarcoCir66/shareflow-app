@@ -142,4 +142,48 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByText('Deployment complete!')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Done' })).toBeVisible({ timeout: 15000 })
   })
+
+  test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
+    // News block has content schema → tab appears
+    await page.getByText('News - Corporate', { exact: true }).click()
+    const canvasBlock = page.locator('main').getByText('News - Corporate', { exact: true })
+    await canvasBlock.click()
+
+    const sidebar = page.locator('aside.border-l')
+    await expect(sidebar.getByRole('button', { name: 'Contenuto', exact: true })).toBeVisible()
+    await expect(sidebar.getByRole('button', { name: 'Proprietà', exact: true })).toBeVisible()
+  })
+
+  test('switching to source type "Manuale" shows production badge and hides URL field', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.locator('main').getByText('News - Corporate', { exact: true }).click()
+
+    const sidebar = page.locator('aside.border-l')
+    await sidebar.getByRole('button', { name: 'Contenuto', exact: true }).click()
+
+    // Switch to Manuale
+    await sidebar.getByRole('button', { name: 'Manuale', exact: true }).click()
+
+    // URL field gone, production badge + info banner visible
+    await expect(sidebar.locator('input[type="url"]')).not.toBeVisible()
+    await expect(sidebar.getByText('PRODUZIONE', { exact: true })).toBeVisible()
+  })
+
+  test('adding a content item replaces the skeleton in the canvas preview', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    const canvasBlock = page.locator('main').getByText('News - Corporate', { exact: true })
+    await canvasBlock.click()
+
+    const sidebar = page.locator('aside.border-l')
+    await sidebar.getByRole('button', { name: 'Contenuto', exact: true }).click()
+
+    // Add item
+    await sidebar.getByRole('button', { name: '+ Aggiungi', exact: true }).click()
+    await sidebar.locator('input[type="text"]').first().fill('Lancio piano welfare 2026')
+    await sidebar.locator('input[type="date"]').first().fill('2026-06-20')
+    await sidebar.getByRole('button', { name: 'Salva', exact: true }).click()
+
+    // Canvas should now show the item title
+    await expect(page.locator('main').getByText('Lancio piano welfare 2026')).toBeVisible()
+  })
 })
