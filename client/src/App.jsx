@@ -53,12 +53,17 @@ function AppInner() {
       const activeLocation = findWidgetLocation(activePage.sections, active.id)
       const target = resolveColumnTarget(over.id, activePage.sections)
       if (!activeLocation || !target) return
-      // Phase 1: drag only reorders within the same column; cross-column moves use "Move to →"
-      if (activeLocation.sectionId !== target.sectionId || activeLocation.columnId !== target.columnId) return
-      dispatch({
-        type: ACTIONS.REORDER_WIDGETS,
-        payload: { activeId: active.id, overId: over.id, sectionId: activeLocation.sectionId, columnId: activeLocation.columnId },
-      })
+      if (activeLocation.sectionId !== target.sectionId || activeLocation.columnId !== target.columnId) {
+        dispatch({
+          type: ACTIONS.MOVE_WIDGET,
+          payload: { instanceId: active.id, toSectionId: target.sectionId, toColumnId: target.columnId },
+        })
+      } else {
+        dispatch({
+          type: ACTIONS.REORDER_WIDGETS,
+          payload: { activeId: active.id, overId: over.id, sectionId: activeLocation.sectionId, columnId: activeLocation.columnId },
+        })
+      }
     }
   }
 
