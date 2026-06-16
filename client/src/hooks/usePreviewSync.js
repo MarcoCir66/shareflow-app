@@ -8,14 +8,19 @@ export function usePreviewSync(state) {
   const channelRef = useRef(null)
 
   useEffect(() => {
+    if (typeof BroadcastChannel === 'undefined') return
     channelRef.current = new BroadcastChannel(CHANNEL_NAME)
-    return () => channelRef.current.close()
+    return () => channelRef.current?.close()
   }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const json = JSON.stringify(state)
-      localStorage.setItem(STORAGE_KEY, json)
+      try {
+        localStorage.setItem(STORAGE_KEY, json)
+      } catch {
+        // localStorage unavailable (quota exceeded or private browsing)
+      }
       channelRef.current?.postMessage({ type: 'state-update', state })
     }, DEBOUNCE_MS)
     return () => clearTimeout(timer)
