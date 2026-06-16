@@ -15,11 +15,16 @@ export function usePreviewState() {
 
   useEffect(() => {
     if (typeof BroadcastChannel === 'undefined') return
-    const channel = new BroadcastChannel(CHANNEL_NAME)
-    channel.onmessage = e => {
-      if (e.data?.type === 'state-update') setState(e.data.state)
+    let channel
+    try {
+      channel = new BroadcastChannel(CHANNEL_NAME)
+      channel.onmessage = e => {
+        if (e.data?.type === 'state-update') setState(e.data.state)
+      }
+    } catch {
+      // BroadcastChannel blocked by security policy
     }
-    return () => channel.close()
+    return () => channel?.close()
   }, [])
 
   return state
