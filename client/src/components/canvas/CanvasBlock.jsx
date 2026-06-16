@@ -3,12 +3,14 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { X, GripVertical, ArrowRightLeft } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
+import { useTheme } from '../../hooks/useTheme.js'
 import { blockById } from '../../data/blockCatalog.js'
 import { findPage } from '../../context/pageHelpers.js'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
 
 export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
+  const { template } = useTheme()
   const [moveMenuOpen, setMoveMenuOpen] = useState(false)
   const block = blockById[widget.blockId]
   const isSelected = state.selectedWidgetInstanceId === widget.instanceId
@@ -43,8 +45,9 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
         dispatch({ type: ACTIONS.SELECT_WIDGET, payload: { instanceId: widget.instanceId } })
       }}
       className={`
-        group relative bg-white rounded-lg p-4 mb-3 border cursor-pointer transition-all shadow-sm
-        ${isSelected ? 'border-blue ring-1 ring-blue/20 shadow-md' : 'border-gray-200 hover:border-gray-300 hover:shadow-md'}
+        group relative p-4 mb-3 cursor-pointer transition-all
+        ${template.card.wrapper}
+        ${isSelected ? 'ring-2 ring-blue' : 'hover:ring-1 hover:ring-[var(--theme-accent)]/30'}
       `}
     >
       <button
