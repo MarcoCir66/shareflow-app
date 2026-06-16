@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import BlockLibrary from './BlockLibrary.jsx'
 import PagesPanel from './PagesPanel.jsx'
+import AppearancePanel from './AppearancePanel.jsx'
 
 const TABS = [
   { id: 'blocks', label: 'Blocchi' },
   { id: 'pages', label: 'Pagine' },
+  { id: 'appearance', label: 'Aspetto' },
 ]
 
 export default function LeftSidebar() {
@@ -25,7 +27,9 @@ export default function LeftSidebar() {
         ))}
       </div>
       <div className="flex-1 overflow-hidden">
-        {tab === 'blocks' ? <BlockLibrary /> : <PagesPanel />}
+        {tab === 'blocks' && <BlockLibrary />}
+        {tab === 'pages' && <PagesPanel />}
+        {tab === 'appearance' && <AppearancePanel />}
       </div>
     </div>
   )
