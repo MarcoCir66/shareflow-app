@@ -32,7 +32,7 @@ function Header({ template, block, Icon, showSeeAll = true }) {
   )
 }
 
-export default function CanvasBlockPreview({ block, width = 'full' }) {
+export default function CanvasBlockPreview({ block, width = 'full', contentItems = [] }) {
   const { template } = useTheme()
   const Icon = icons[block.icon] ?? icons.Box
   const gridColsClass = GRID_COLS_BY_WIDTH[width] ?? GRID_COLS_BY_WIDTH.full

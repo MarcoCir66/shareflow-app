@@ -104,7 +104,13 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
       )}
 
       <div className="pl-4">
-        {block && <CanvasBlockPreview block={block} width={widthHint} />}
+        {block && (
+          <CanvasBlockPreview
+            block={block}
+            width={widthHint}
+            contentItems={widget.props.contentItems ?? []}
+          />
+        )}
       </div>
     </div>
   )
