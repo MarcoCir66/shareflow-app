@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
 import { useConfigurator } from './hooks/useConfigurator.js'
+import { usePreviewSync } from './hooks/usePreviewSync.js'
+import PreviewApp from './components/preview/PreviewApp.jsx'
 import { blockById } from './data/blockCatalog.js'
 import { findWidgetLocation, findColumnById } from './context/sectionHelpers.js'
 import { findPage } from './context/pageHelpers.js'
@@ -13,6 +15,7 @@ import DeployModal from './components/deploy/DeployModal.jsx'
 import CanvasBlockPreview from './components/canvas/CanvasBlockPreview.jsx'
 
 const COLUMN_PREFIX = 'column-'
+const IS_PREVIEW = new URLSearchParams(window.location.search).get('mode') === 'preview'
 
 function resolveColumnTarget(overId, sections) {
   if (typeof overId === 'string' && overId.startsWith(COLUMN_PREFIX)) {
@@ -23,6 +26,7 @@ function resolveColumnTarget(overId, sections) {
 
 function AppInner() {
   const { state, dispatch, ACTIONS } = useConfigurator()
+  usePreviewSync(state)
   const [deployOpen, setDeployOpen] = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
 
@@ -83,5 +87,5 @@ function AppInner() {
 }
 
 export default function App() {
-  return <AppInner />
+  return IS_PREVIEW ? <PreviewApp /> : <AppInner />
 }
