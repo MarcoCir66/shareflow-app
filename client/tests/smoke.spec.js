@@ -100,6 +100,31 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(canvas.getByText('SharePoint Communication Site — Nuova pagina')).toBeVisible()
   })
 
+  test('Aspetto tab shows the template gallery', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aspetto' }).click()
+    await expect(page.getByRole('button', { name: /Corporate Classic/ })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Modern Light/ })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Dark Glass/ })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Vibrant Color/ })).toBeVisible()
+  })
+
+  test('selecting a template re-skins the hero banner and nav', async ({ page }) => {
+    await expect(page.locator('main').getByText('My Corporate Intranet', { exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Aspetto' }).click()
+    await page.getByRole('button', { name: /Modern Light/ }).click()
+
+    await expect(page.locator('main nav').locator('..')).toHaveClass(/bg-white/)
+    await expect(page.locator('main').getByText('My Corporate Intranet', { exact: true })).toBeVisible()
+  })
+
+  test('accent color picker updates --theme-accent on the canvas', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aspetto' }).click()
+    await page.locator('input[type="color"]').fill('#ff0000')
+
+    await expect(page.locator('[style*="--theme-accent"]')).toHaveAttribute('style', /--theme-accent:\s*#ff0000/)
+  })
+
   test('deploy flow completes end-to-end against the provisioning API', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
 
@@ -111,6 +136,7 @@ test.describe('ShareFlow configurator smoke test', () => {
     expect(tenantConfiguration.navigation).toEqual([
       { pageId: 'page-home', title: 'Home', slug: 'home', children: [] },
     ])
+    expect(tenantConfiguration.theme).toEqual({ templateId: 'corporate-classic', accentColor: null })
 
     await expect(page.getByText('Deploying to SharePoint')).toBeVisible()
     await expect(page.getByText('Deployment complete!')).toBeVisible()
