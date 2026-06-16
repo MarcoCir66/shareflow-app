@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import * as icons from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { blockById, CATEGORY_LABELS } from '../../data/blockCatalog.js'
@@ -7,6 +8,7 @@ import EmptyState from './EmptyState.jsx'
 import ScopeSelector from './ScopeSelector.jsx'
 import ToggleField from './ToggleField.jsx'
 import SectionPropertiesPanel from './SectionPropertiesPanel.jsx'
+import ContentPanel from './ContentPanel.jsx'
 
 const PROP_LABELS = {
   visible:         'Visible',
@@ -18,6 +20,10 @@ export default function PropertiesPanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { selectedWidgetInstanceId, selectedSectionId } = state
   const activePage = findPage(state.pages, state.activePageId)
+  const [activeTab, setActiveTab] = useState('props')
+
+  // Reset to Proprietà tab whenever the selected widget changes
+  useEffect(() => { setActiveTab('props') }, [selectedWidgetInstanceId])
 
   if (selectedSectionId) {
     return <SectionPropertiesPanel sectionId={selectedSectionId} />
@@ -29,13 +35,14 @@ export default function PropertiesPanel() {
   if (!widget || !block) return <EmptyState />
 
   const Icon = icons[block.icon] ?? icons.Box
+  const hasContentTab = block.contentSourceTypes != null
 
   function updateProp(key, value) {
     dispatch({ type: ACTIONS.UPDATE_WIDGET_PROP, payload: { instanceId: widget.instanceId, key, value } })
   }
 
   return (
-    <div className="p-4">
+    <div key={widget.instanceId} className="p-4">
       <div className="flex items-center gap-3 mb-1 pb-4 border-b border-slate-mid">
         <div className="w-9 h-9 rounded-lg bg-blue/20 flex items-center justify-center flex-shrink-0">
           <Icon size={18} className="text-blue-electric" />
@@ -46,32 +53,65 @@ export default function PropertiesPanel() {
         </div>
       </div>
 
-      <div className="mt-4 space-y-5">
-        {block.configurableProps.map(key => {
-          if (key === 'scope') {
+      {hasContentTab && (
+        <div className="flex border-b border-slate-mid mb-4 mt-3">
+          <button
+            onClick={() => setActiveTab('props')}
+            className={`px-3 py-2 text-xs font-medium transition-colors ${
+              activeTab === 'props'
+                ? 'text-white border-b-2 border-blue-electric -mb-px'
+                : 'text-slate-light hover:text-white'
+            }`}
+          >
+            Proprietà
+          </button>
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-3 py-2 text-xs font-medium transition-colors ${
+              activeTab === 'content'
+                ? 'text-white border-b-2 border-blue-electric -mb-px'
+                : 'text-slate-light hover:text-white'
+            }`}
+          >
+            Contenuto
+          </button>
+        </div>
+      )}
+
+      {activeTab === 'props' && (
+        <div className="mt-4 space-y-5">
+          {block.configurableProps.map(key => {
+            if (key === 'scope') {
+              return (
+                <ScopeSelector
+                  key={key}
+                  value={widget.props.scope}
+                  onChange={v => updateProp('scope', v)}
+                />
+              )
+            }
             return (
-              <ScopeSelector
+              <ToggleField
                 key={key}
-                value={widget.props.scope}
-                onChange={v => updateProp('scope', v)}
+                label={PROP_LABELS[key] ?? key}
+                value={widget.props[key]}
+                onChange={v => updateProp(key, v)}
               />
             )
-          }
-          return (
-            <ToggleField
-              key={key}
-              label={PROP_LABELS[key] ?? key}
-              value={widget.props[key]}
-              onChange={v => updateProp(key, v)}
-            />
-          )
-        })}
-      </div>
+          })}
+        </div>
+      )}
 
-      <div className="mt-6 pt-4 border-t border-slate-mid">
-        <p className="text-xs text-slate-light font-medium uppercase tracking-wider mb-2">Instance ID</p>
-        <code className="text-xs text-slate-light font-mono break-all">{widget.instanceId}</code>
-      </div>
+      {activeTab === 'content' && hasContentTab && (
+        <ContentPanel widget={widget} block={block} />
+      )}
+
+      {activeTab === 'props' && (
+        <div className="mt-6 pt-4 border-t border-slate-mid">
+          <p className="text-xs text-slate-light font-medium uppercase tracking-wider mb-2">Instance ID</p>
+          <code className="text-xs text-slate-light font-mono break-all">{widget.instanceId}</code>
+        </div>
+      )}
     </div>
   )
 }
