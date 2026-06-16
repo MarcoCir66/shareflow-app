@@ -5,16 +5,20 @@ import { findPage } from '../../context/pageHelpers.js'
 import CanvasSection from './CanvasSection.jsx'
 import SectionLayoutPicker from './SectionLayoutPicker.jsx'
 import CanvasTopNav from './CanvasTopNav.jsx'
+import { useTheme } from '../../hooks/useTheme.js'
+import HeroBanner from './HeroBanner.jsx'
 
 export default function CanvasDropZone() {
   const { state, dispatch, ACTIONS } = useConfigurator()
+  const { accentColor } = useTheme()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
   const activePage = findPage(state.pages, state.activePageId)
 
   return (
     <div className="min-h-full p-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto" style={{ '--theme-accent': accentColor }}>
         <CanvasTopNav />
+        <HeroBanner />
 
         <div className="mb-4">
           <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">Canvas Preview</h2>
