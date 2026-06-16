@@ -10,6 +10,24 @@ import ToggleField from './ToggleField.jsx'
 import SectionPropertiesPanel from './SectionPropertiesPanel.jsx'
 import ContentPanel from './ContentPanel.jsx'
 
+function InstanceIdSection({ instanceId }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="mt-6 pt-4 border-t border-slate-mid">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="flex items-center gap-1.5 text-xs text-slate-light font-medium uppercase tracking-wider hover:text-white transition-colors w-full"
+      >
+        <icons.ChevronRight size={12} className={`transition-transform ${open ? 'rotate-90' : ''}`} />
+        Instance ID
+      </button>
+      {open && (
+        <code className="mt-2 block text-xs text-slate-light font-mono break-all">{instanceId}</code>
+      )}
+    </div>
+  )
+}
+
 const PROP_LABELS = {
   visible:         'Visible',
   commentsEnabled: 'Comments enabled',
@@ -107,10 +125,7 @@ export default function PropertiesPanel() {
       )}
 
       {activeTab === 'props' && (
-        <div className="mt-6 pt-4 border-t border-slate-mid">
-          <p className="text-xs text-slate-light font-medium uppercase tracking-wider mb-2">Instance ID</p>
-          <code className="text-xs text-slate-light font-mono break-all">{widget.instanceId}</code>
-        </div>
+        <InstanceIdSection instanceId={widget.instanceId} />
       )}
     </div>
   )
