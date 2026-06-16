@@ -186,4 +186,71 @@ test.describe('ShareFlow configurator smoke test', () => {
     // Canvas should now show the item title
     await expect(page.locator('main').getByText('Lancio piano welfare 2026')).toBeVisible()
   })
+
+  test('Preview button is visible in the navbar', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Preview', exact: true })).toBeVisible()
+  })
+
+  test('Preview tab opens and shows page without edit chrome', async ({ page, context }) => {
+    // Wait for usePreviewSync to write initial state to localStorage (debounced 300ms)
+    await page.waitForFunction(() => !!localStorage.getItem('shareflow-preview'))
+
+    const [previewPage] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: 'Preview', exact: true }).click(),
+    ])
+    await previewPage.waitForLoadState('domcontentloaded')
+
+    // Preview toolbar with LIVE badge is visible
+    await expect(previewPage.getByText('LIVE', { exact: true })).toBeVisible()
+    // The intranet site name from initialState is visible (hero/nav)
+    await expect(previewPage.getByText('My Corporate Intranet')).toBeVisible()
+    // No editing chrome: no "Aggiungi sezione" button, no Deploy button
+    await expect(previewPage.getByRole('button', { name: 'Aggiungi sezione' })).not.toBeVisible()
+    await expect(previewPage.getByRole('button', { name: 'Deploy to SharePoint' })).not.toBeVisible()
+  })
+
+  test('Preview tab shows block content added in the editor', async ({ page, context }) => {
+    // Add a block in the editor
+    await page.getByText('News - Corporate', { exact: true }).click()
+
+    // Wait for usePreviewSync to write the updated state
+    await page.waitForFunction(() => {
+      try {
+        const s = JSON.parse(localStorage.getItem('shareflow-preview') || 'null')
+        return s?.pages?.some(p => p.sections?.some(sec => sec.columns?.some(col => col.widgets?.length > 0)))
+      } catch { return false }
+    })
+
+    const [previewPage] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: 'Preview', exact: true }).click(),
+    ])
+    await previewPage.waitForLoadState('domcontentloaded')
+
+    // The block type label from CanvasBlockPreview should be visible
+    await expect(previewPage.getByText('News - Corporate', { exact: false })).toBeVisible()
+  })
+
+  test('device switcher in preview toolbar updates the data-device attribute', async ({ page, context }) => {
+    await page.waitForFunction(() => !!localStorage.getItem('shareflow-preview'))
+
+    const [previewPage] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: 'Preview', exact: true }).click(),
+    ])
+    await previewPage.waitForLoadState('domcontentloaded')
+
+    // Default is desktop
+    await expect(previewPage.locator('[data-device="desktop"]')).toBeVisible()
+
+    // Switch to mobile
+    await previewPage.getByRole('button', { name: 'Mobile', exact: true }).click()
+    await expect(previewPage.locator('[data-device="mobile"]')).toBeVisible()
+    await expect(previewPage.locator('[data-device="desktop"]')).not.toBeVisible()
+
+    // Switch to tablet
+    await previewPage.getByRole('button', { name: 'Tablet', exact: true }).click()
+    await expect(previewPage.locator('[data-device="tablet"]')).toBeVisible()
+  })
 })
