@@ -1,8 +1,30 @@
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { blockById } from '../../data/blockCatalog.js'
 import CanvasBlock from './CanvasBlock.jsx'
+import CanvasBlockPreview from './CanvasBlockPreview.jsx'
 
-export default function CanvasColumn({ sectionId, column, widthHint }) {
+export default function CanvasColumn({ sectionId, column, widthHint, readOnly = false }) {
+  if (readOnly) {
+    return (
+      <div className="min-h-0">
+        {column.widgets.map(widget => {
+          const block = blockById[widget.blockId]
+          if (!block) return null
+          return (
+            <div key={widget.instanceId} className="mb-3">
+              <CanvasBlockPreview
+                block={block}
+                width={widthHint}
+                contentItems={widget.props.contentItems ?? []}
+              />
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   const { setNodeRef, isOver } = useDroppable({
     id: `column-${column.columnId}`,
     data: { type: 'column' },
