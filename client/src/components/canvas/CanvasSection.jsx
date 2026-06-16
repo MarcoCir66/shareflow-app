@@ -5,11 +5,28 @@ import { SECTION_LAYOUTS } from '../../data/sectionLayouts.js'
 import CanvasColumn from './CanvasColumn.jsx'
 import SectionLayoutPicker from './SectionLayoutPicker.jsx'
 
-export default function CanvasSection({ section }) {
+export default function CanvasSection({ section, readOnly = false }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const [pickerOpen, setPickerOpen] = useState(false)
 
   const layout = SECTION_LAYOUTS[section.layout]
+
+  if (readOnly) {
+    return (
+      <div className={`mb-4 grid ${layout.gridCols} gap-3`}>
+        {section.columns.map((column, i) => (
+          <CanvasColumn
+            key={column.columnId}
+            sectionId={section.sectionId}
+            column={column}
+            widthHint={layout.widths[i]}
+            readOnly
+          />
+        ))}
+      </div>
+    )
+  }
+
   const isSelected = state.selectedSectionId === section.sectionId
   const isEmpty = section.columns.every(c => c.widgets.length === 0)
 
