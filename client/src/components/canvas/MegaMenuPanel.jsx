@@ -1,16 +1,16 @@
-export default function MegaMenuPanel({ node, activePageId, onSelect }) {
+export default function MegaMenuPanel({ node, activePageId, onSelect, template }) {
   return (
-    <div className="bg-surface px-3 py-3">
+    <div className={`px-3 py-3 ${template.nav.megaMenu}`}>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {node.children.map(child => (
-          <MegaMenuColumn key={child.pageId} node={child} activePageId={activePageId} onSelect={onSelect} />
+          <MegaMenuColumn key={child.pageId} node={child} activePageId={activePageId} onSelect={onSelect} template={template} />
         ))}
       </div>
     </div>
   )
 }
 
-function MegaMenuColumn({ node, activePageId, onSelect }) {
+function MegaMenuColumn({ node, activePageId, onSelect, template }) {
   const isActive = node.pageId === activePageId
   return (
     <div className="min-w-0">
@@ -19,14 +19,14 @@ function MegaMenuColumn({ node, activePageId, onSelect }) {
         onClick={() => onSelect(node.pageId)}
         title={node.title}
         className={`block w-full truncate text-left text-xs font-semibold transition-colors
-          ${isActive ? 'text-blue' : 'text-slate-light hover:text-navy'}`}
+          ${isActive ? template.nav.megaMenuActive : template.nav.megaMenuInactive}`}
       >
         {node.title}
       </button>
       {node.children.length > 0 && (
-        <ul className="mt-1.5 space-y-1 border-l border-slate-mid pl-2">
+        <ul className={`mt-1.5 space-y-1 border-l pl-2 ${template.nav.megaMenuBorder}`}>
           {node.children.map(grandchild => (
-            <MegaMenuItem key={grandchild.pageId} node={grandchild} activePageId={activePageId} onSelect={onSelect} />
+            <MegaMenuItem key={grandchild.pageId} node={grandchild} activePageId={activePageId} onSelect={onSelect} template={template} />
           ))}
         </ul>
       )}
@@ -34,7 +34,7 @@ function MegaMenuColumn({ node, activePageId, onSelect }) {
   )
 }
 
-function MegaMenuItem({ node, activePageId, onSelect }) {
+function MegaMenuItem({ node, activePageId, onSelect, template }) {
   const isActive = node.pageId === activePageId
   return (
     <li className="min-w-0">
@@ -43,14 +43,14 @@ function MegaMenuItem({ node, activePageId, onSelect }) {
         onClick={() => onSelect(node.pageId)}
         title={node.title}
         className={`block w-full truncate text-left text-xs transition-colors
-          ${isActive ? 'text-blue font-semibold' : 'text-slate-light hover:text-navy'}`}
+          ${isActive ? `${template.nav.megaMenuActive} font-semibold` : template.nav.megaMenuInactive}`}
       >
         {node.title}
       </button>
       {node.children.length > 0 && (
-        <ul className="mt-1.5 space-y-1 border-l border-slate-mid pl-2">
+        <ul className={`mt-1.5 space-y-1 border-l pl-2 ${template.nav.megaMenuBorder}`}>
           {node.children.map(greatGrandchild => (
-            <MegaMenuItem key={greatGrandchild.pageId} node={greatGrandchild} activePageId={activePageId} onSelect={onSelect} />
+            <MegaMenuItem key={greatGrandchild.pageId} node={greatGrandchild} activePageId={activePageId} onSelect={onSelect} template={template} />
           ))}
         </ul>
       )}
