@@ -1,3 +1,19 @@
+import { BLOCK_CONTENT_DEFS, DEFAULT_CONTENT_SOURCE } from './blockContentSchemas.js'
+
+function withContent(entry) {
+  const def = BLOCK_CONTENT_DEFS[entry.id]
+  if (!def) return entry
+  return {
+    ...entry,
+    contentSourceTypes: def.sourceTypes,
+    defaultProps: {
+      ...entry.defaultProps,
+      contentSource: { ...DEFAULT_CONTENT_SOURCE, type: def.sourceTypes[0] },
+      contentItems: [],
+    },
+  }
+}
+
 export const CATEGORIES = {
   COMMUNICATION: 'COMMUNICATION',
   LEARNING: 'LEARNING',
@@ -13,7 +29,7 @@ export const CATEGORY_LABELS = {
 }
 
 /** @type {Array<{id:string, label:string, category:string, icon:string, defaultProps:object, configurableProps:string[]}>} */
-export const blockCatalog = [
+const _rawCatalog = [
   // ── COMMUNICATION ──────────────────────────────────────────────────────────
   { id: 'news-corporate',      label: 'News - Corporate',           category: CATEGORIES.COMMUNICATION, icon: 'Newspaper',     defaultProps: { scope: 'corporate', visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible', 'commentsEnabled', 'likesEnabled'] },
   { id: 'news-country',        label: 'News - Country',             category: CATEGORIES.COMMUNICATION, icon: 'Globe',         defaultProps: { scope: 'country',   visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible', 'commentsEnabled', 'likesEnabled'] },
@@ -55,5 +71,7 @@ export const blockCatalog = [
   { id: 'desc-sede',           label: 'Sezione descrittiva Sede',   category: CATEGORIES.KNOWLEDGE_BASE, icon: 'Building',     defaultProps: { scope: 'sede',     visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible'] },
   { id: 'desc-funzione',       label: 'Sezione descrittiva Funzione', category: CATEGORIES.KNOWLEDGE_BASE, icon: 'FolderOpen', defaultProps: { scope: 'funzione', visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible'] },
 ]
+
+export const blockCatalog = _rawCatalog.map(withContent)
 
 export const blockById = Object.fromEntries(blockCatalog.map(b => [b.id, b]))
