@@ -47,7 +47,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
       className={`
         group relative p-4 mb-3 cursor-pointer transition-all
         ${template.card.wrapper}
-        ${isSelected ? 'ring-2 ring-blue' : 'hover:ring-1 hover:ring-[var(--theme-accent)]/30'}
+        ${isSelected ? 'ring-2 ring-blue' : 'hover:ring-1 hover:ring-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)]'}
       `}
     >
       <button

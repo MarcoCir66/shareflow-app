@@ -32,7 +32,7 @@ export const THEME_TEMPLATES = [
       iconBg: 'bg-[var(--theme-accent)]',
       skeleton: 'bg-gray-200',
       skeletonLight: 'bg-gray-100',
-      chip: 'bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20',
+      chip: 'bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)]',
     },
   },
   {
@@ -62,7 +62,7 @@ export const THEME_TEMPLATES = [
       iconBg: 'bg-[var(--theme-accent)] rounded-full',
       skeleton: 'bg-slate-200',
       skeletonLight: 'bg-slate-100',
-      chip: 'bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20',
+      chip: 'bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)]',
     },
   },
   {
@@ -92,7 +92,7 @@ export const THEME_TEMPLATES = [
       iconBg: 'bg-[var(--theme-accent)]',
       skeleton: 'bg-white/20',
       skeletonLight: 'bg-white/10',
-      chip: 'bg-[var(--theme-accent)]/15 border border-[var(--theme-accent)]/30',
+      chip: 'bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)]',
     },
   },
   {
@@ -122,7 +122,7 @@ export const THEME_TEMPLATES = [
       iconBg: 'bg-[var(--theme-accent)]',
       skeleton: 'bg-[#F1E4DC]',
       skeletonLight: 'bg-[#FBF0EA]',
-      chip: 'bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20',
+      chip: 'bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)]',
     },
   },
 ]

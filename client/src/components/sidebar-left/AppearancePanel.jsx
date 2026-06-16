@@ -58,7 +58,7 @@ export default function AppearancePanel() {
             className="w-8 h-8 rounded border border-slate-mid bg-transparent cursor-pointer"
           />
           <span className="text-xs text-slate-light flex-1">{accentColor}</span>
-          {theme.accentColor && (
+          {theme?.accentColor && (
             <button type="button" onClick={resetAccentColor} className="text-xs text-blue-electric hover:underline">
               Reset
             </button>
