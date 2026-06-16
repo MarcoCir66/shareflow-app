@@ -27,6 +27,19 @@ export default function PreviewApp() {
   const { accentColor } = resolveTheme(state.tenantConfiguration.theme)
   const activePage = findPage(state.pages, state.activePageId)
 
+  if (!activePage) {
+    return (
+      <PreviewProvider state={state}>
+        <div className="min-h-screen bg-surface flex flex-col">
+          <PreviewToolbar device={device} onDevice={setDevice} />
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-slate text-sm">Pagina non trovata nella preview.</p>
+          </div>
+        </div>
+      </PreviewProvider>
+    )
+  }
+
   return (
     <PreviewProvider state={state}>
       <div className="min-h-screen bg-surface flex flex-col">

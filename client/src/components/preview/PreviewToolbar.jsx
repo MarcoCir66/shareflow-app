@@ -32,7 +32,7 @@ export default function PreviewToolbar({ device, onDevice }) {
       </div>
 
       <button
-        onClick={() => window.close()}
+        onClick={() => window.opener ? window.close() : (window.location.href = '/')}
         className="flex items-center gap-1 text-slate-light hover:text-white text-[10px] transition-colors"
       >
         <X size={12} />
