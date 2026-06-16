@@ -68,6 +68,7 @@ export const initialState = {
     siteName: 'My Corporate Intranet',
     siteUrl: '',
     widgets: [],
+    theme: { templateId: 'corporate-classic', accentColor: null },
   },
 }
 
