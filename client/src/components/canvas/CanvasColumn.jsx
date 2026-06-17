@@ -6,6 +6,8 @@ import CanvasBlock from './CanvasBlock.jsx'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
 
 export default function CanvasColumn({ sectionId, column, widthHint, readOnly = false }) {
+  const { t } = useTranslation()
+
   if (readOnly) {
     return (
       <div className="min-h-0">
@@ -30,7 +32,6 @@ export default function CanvasColumn({ sectionId, column, widthHint, readOnly = 
     id: `column-${column.columnId}`,
     data: { type: 'column' },
   })
-  const { t } = useTranslation()
 
   return (
     <div
