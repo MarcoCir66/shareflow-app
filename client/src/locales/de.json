@@ -1,0 +1,126 @@
+{
+  "navbar": {
+    "tagline": "The No-Code SharePoint Intranet Factory",
+    "tenant": "Mandant: Contoso Corp",
+    "preview": "Vorschau",
+    "deploy": "Auf SharePoint bereitstellen"
+  },
+  "pages": {
+    "title": "Seiten",
+    "add": "Seite hinzufügen"
+  },
+  "appearance": {
+    "siteNameLabel": "Websitename ({{lang}})",
+    "template": "Vorlage",
+    "brandColor": "Markenfarbe",
+    "reset": "Zurücksetzen"
+  },
+  "blocks": {
+    "search": "Blöcke suchen…",
+    "noResults": "Keine Blöcke entsprechen „{{query}}"",
+    "seeAll": "Alle anzeigen",
+    "days": "Tage",
+    "categories": {
+      "COMMUNICATION": "Kommunikation",
+      "LEARNING": "Lernen",
+      "PRODUCTIVITY": "Produktivität",
+      "KNOWLEDGE_BASE": "Wissensdatenbank"
+    },
+    "labels": {
+      "news-corporate": "Corporate-News",
+      "news-country": "Länder-News",
+      "news-sede": "Standort-News",
+      "news-funzione": "Abteilungs-News",
+      "commenti-contenuto": "Kommentare",
+      "like-contenuto": "Likes",
+      "avvisi-homepage": "Homepage-Warnungen",
+      "eventi-corporate": "Corporate-Veranstaltungen",
+      "eventi-country": "Länder-Veranstaltungen",
+      "eventi-sede": "Standort-Veranstaltungen",
+      "eventi-funzione": "Abteilungs-Veranstaltungen",
+      "sezione-fiere": "Messen",
+      "sezione-mostre": "Ausstellungen",
+      "multimedia-gallery": "Multimedia-Galerie",
+      "countdown-lancio": "Start-Countdown",
+      "rassegna-stampa": "Presseschau",
+      "bacheca-sindacale": "Gewerkschaftstafel",
+      "bacheca-scambio": "Tauschbörse",
+      "new-entry": "Neuzugänge",
+      "oggi-presentiamo": "Heute stellen wir vor…",
+      "polls-survey": "Umfragen",
+      "sezione-welfare": "Wohlfahrt",
+      "procedure": "Verfahren",
+      "sezione-progetti": "Projekte",
+      "meteo": "Wetter",
+      "fusi-orari": "Zeitzonen",
+      "multilingua": "Mehrsprachig",
+      "motore-ricerca": "Suchmaschine",
+      "faq": "FAQ",
+      "come-fare-per": "Anleitungen",
+      "organigramma": "Organigramm",
+      "rubrica-colleghi": "Mitarbeiterverzeichnis",
+      "chi-siamo": "Über uns",
+      "desc-country": "Länderbeschreibung",
+      "desc-sede": "Standortbeschreibung",
+      "desc-funzione": "Abteilungsbeschreibung"
+    }
+  },
+  "canvas": {
+    "preview": "Canvas-Vorschau",
+    "addSection": "Abschnitt hinzufügen",
+    "dropHere": "Block hierher ziehen",
+    "changeLayout": "Abschnittslayout ändern",
+    "deleteSection": "Abschnitt löschen",
+    "moveTo": "Verschieben nach",
+    "sectionCol": "Abschnitt {{section}} · Spalte {{col}}"
+  },
+  "props": {
+    "properties": "Eigenschaften",
+    "content": "Inhalt",
+    "noSelection": "Kein Block ausgewählt",
+    "noSelectionHint": "Klicken Sie auf einen Block im Canvas, um seine Eigenschaften zu konfigurieren",
+    "visible": "Sichtbar",
+    "commentsEnabled": "Kommentare aktiviert",
+    "likesEnabled": "Likes aktiviert"
+  },
+  "content": {
+    "dataSource": "Datenquelle",
+    "urlLabel": "URL",
+    "manualBanner": "Im manuellen Modus wird der hier eingegebene Inhalt in der Produktion veröffentlicht.",
+    "sectionTitle": "Inhalt",
+    "sectionTitleSample": "Beispieldaten",
+    "production": "PRODUKTION",
+    "add": "+ Hinzufügen",
+    "addItem": "+ Element hinzufügen",
+    "urlHint": "Geben Sie eine URL für die externe Quelle ein und fügen Sie dann Beispieldaten für die Vorschau hinzu."
+  },
+  "source": {
+    "sharepoint-list": "SharePoint",
+    "rss": "RSS",
+    "http-api": "HTTP API",
+    "manual": "Manuell",
+    "placeholder_sharepoint-list": "https://tenant.sharepoint.com/sites/.../Lists/...",
+    "placeholder_rss": "https://example.com/feed.xml",
+    "placeholder_http-api": "https://api.example.com/endpoint"
+  },
+  "deploy": {
+    "title": "Auf SharePoint bereitstellen",
+    "step1": "Authentifizierung über MSAL…",
+    "step2": "Verbindung mit Microsoft Graph API…",
+    "step3": "SharePoint-Website erstellen…",
+    "step4": "Listen und Inhaltstypen bereitstellen…",
+    "step5": "Seiten und Webparts konfigurieren…",
+    "step6": "Bereitstellung abgeschlossen!",
+    "siteReady": "Ihre SharePoint-Website ist bereit",
+    "openInSharePoint": "In SharePoint öffnen",
+    "done": "Fertig",
+    "close": "Schließen",
+    "errorDefault": "Der Bereitstellungsdienst ist nicht erreichbar. Stellen Sie sicher, dass das Backend läuft, und versuchen Sie es erneut."
+  },
+  "preview": {
+    "desktop": "Desktop",
+    "tablet": "Tablet",
+    "mobile": "Mobil",
+    "close": "Vorschau schließen"
+  }
+}

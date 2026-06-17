@@ -1,0 +1,126 @@
+{
+  "navbar": {
+    "tagline": "The No-Code SharePoint Intranet Factory",
+    "tenant": "Locataire : Contoso Corp",
+    "preview": "Aperçu",
+    "deploy": "Déployer sur SharePoint"
+  },
+  "pages": {
+    "title": "Pages",
+    "add": "Ajouter une page"
+  },
+  "appearance": {
+    "siteNameLabel": "Nom du site ({{lang}})",
+    "template": "Modèle",
+    "brandColor": "Couleur de marque",
+    "reset": "Réinitialiser"
+  },
+  "blocks": {
+    "search": "Rechercher des blocs…",
+    "noResults": "Aucun bloc ne correspond à « {{query}} »",
+    "seeAll": "Voir tout",
+    "days": "jours",
+    "categories": {
+      "COMMUNICATION": "Communication",
+      "LEARNING": "Formation",
+      "PRODUCTIVITY": "Productivité",
+      "KNOWLEDGE_BASE": "Base de connaissances"
+    },
+    "labels": {
+      "news-corporate": "Actualités Corporate",
+      "news-country": "Actualités Pays",
+      "news-sede": "Actualités Site",
+      "news-funzione": "Actualités Fonction",
+      "commenti-contenuto": "Commentaires",
+      "like-contenuto": "J'aime",
+      "avvisi-homepage": "Alertes page d'accueil",
+      "eventi-corporate": "Événements Corporate",
+      "eventi-country": "Événements Pays",
+      "eventi-sede": "Événements Site",
+      "eventi-funzione": "Événements Fonction",
+      "sezione-fiere": "Foires",
+      "sezione-mostre": "Expositions",
+      "multimedia-gallery": "Galerie multimédia",
+      "countdown-lancio": "Compte à rebours",
+      "rassegna-stampa": "Revue de presse",
+      "bacheca-sindacale": "Tableau syndical",
+      "bacheca-scambio": "Tableau d'échanges",
+      "new-entry": "Nouvelle entrée",
+      "oggi-presentiamo": "Aujourd'hui nous présentons…",
+      "polls-survey": "Sondages",
+      "sezione-welfare": "Bien-être",
+      "procedure": "Procédures",
+      "sezione-progetti": "Projets",
+      "meteo": "Météo",
+      "fusi-orari": "Fuseaux horaires",
+      "multilingua": "Multilingue",
+      "motore-ricerca": "Moteur de recherche",
+      "faq": "FAQ",
+      "come-fare-per": "Comment faire",
+      "organigramma": "Organigramme",
+      "rubrica-colleghi": "Annuaire",
+      "chi-siamo": "Qui sommes-nous",
+      "desc-country": "Description pays",
+      "desc-sede": "Description site",
+      "desc-funzione": "Description fonction"
+    }
+  },
+  "canvas": {
+    "preview": "Aperçu Canvas",
+    "addSection": "Ajouter une section",
+    "dropHere": "Faites glisser un bloc ici",
+    "changeLayout": "Changer la disposition",
+    "deleteSection": "Supprimer la section",
+    "moveTo": "Déplacer vers",
+    "sectionCol": "Section {{section}} · Colonne {{col}}"
+  },
+  "props": {
+    "properties": "Propriétés",
+    "content": "Contenu",
+    "noSelection": "Aucun bloc sélectionné",
+    "noSelectionHint": "Cliquez sur un bloc dans le canvas pour configurer ses propriétés",
+    "visible": "Visible",
+    "commentsEnabled": "Commentaires activés",
+    "likesEnabled": "J'aime activés"
+  },
+  "content": {
+    "dataSource": "Source de données",
+    "urlLabel": "URL",
+    "manualBanner": "En mode manuel, le contenu saisi ici est celui publié en production.",
+    "sectionTitle": "Contenu",
+    "sectionTitleSample": "Données d'exemple",
+    "production": "PRODUCTION",
+    "add": "+ Ajouter",
+    "addItem": "+ Ajouter un élément",
+    "urlHint": "Saisissez une URL pour la source externe, puis ajoutez des données d'exemple pour l'aperçu."
+  },
+  "source": {
+    "sharepoint-list": "SharePoint",
+    "rss": "RSS",
+    "http-api": "HTTP API",
+    "manual": "Manuel",
+    "placeholder_sharepoint-list": "https://tenant.sharepoint.com/sites/.../Lists/...",
+    "placeholder_rss": "https://example.com/feed.xml",
+    "placeholder_http-api": "https://api.example.com/endpoint"
+  },
+  "deploy": {
+    "title": "Déploiement sur SharePoint",
+    "step1": "Authentification via MSAL…",
+    "step2": "Connexion à Microsoft Graph API…",
+    "step3": "Création du site SharePoint…",
+    "step4": "Provisionnement des listes…",
+    "step5": "Configuration des pages…",
+    "step6": "Déploiement terminé !",
+    "siteReady": "Votre site SharePoint est prêt",
+    "openInSharePoint": "Ouvrir dans SharePoint",
+    "done": "Terminé",
+    "close": "Fermer",
+    "errorDefault": "Impossible de contacter le service de provisionnement. Vérifiez que le backend est actif et réessayez."
+  },
+  "preview": {
+    "desktop": "Bureau",
+    "tablet": "Tablette",
+    "mobile": "Mobile",
+    "close": "Fermer l'aperçu"
+  }
+}

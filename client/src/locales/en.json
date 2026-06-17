@@ -1,0 +1,126 @@
+{
+  "navbar": {
+    "tagline": "The No-Code SharePoint Intranet Factory",
+    "tenant": "Tenant: Contoso Corp",
+    "preview": "Preview",
+    "deploy": "Deploy to SharePoint"
+  },
+  "pages": {
+    "title": "Pages",
+    "add": "Add page"
+  },
+  "appearance": {
+    "siteNameLabel": "Site name ({{lang}})",
+    "template": "Template",
+    "brandColor": "Brand color",
+    "reset": "Reset"
+  },
+  "blocks": {
+    "search": "Search blocks…",
+    "noResults": "No blocks match \"{{query}}\"",
+    "seeAll": "See all",
+    "days": "days",
+    "categories": {
+      "COMMUNICATION": "Communication",
+      "LEARNING": "Learning",
+      "PRODUCTIVITY": "Productivity",
+      "KNOWLEDGE_BASE": "Knowledge Base"
+    },
+    "labels": {
+      "news-corporate": "Corporate News",
+      "news-country": "Country News",
+      "news-sede": "Location News",
+      "news-funzione": "Function News",
+      "commenti-contenuto": "Content Comments",
+      "like-contenuto": "Content Likes",
+      "avvisi-homepage": "Homepage Alerts",
+      "eventi-corporate": "Corporate Events",
+      "eventi-country": "Country Events",
+      "eventi-sede": "Location Events",
+      "eventi-funzione": "Function Events",
+      "sezione-fiere": "Trade Shows",
+      "sezione-mostre": "Exhibitions",
+      "multimedia-gallery": "Multimedia Gallery",
+      "countdown-lancio": "Launch Countdown",
+      "rassegna-stampa": "Press Review",
+      "bacheca-sindacale": "Union Board",
+      "bacheca-scambio": "Exchange Board",
+      "new-entry": "New Entry",
+      "oggi-presentiamo": "Today We Present…",
+      "polls-survey": "Polls & Survey",
+      "sezione-welfare": "Welfare Section",
+      "procedure": "Procedures",
+      "sezione-progetti": "Projects Section",
+      "meteo": "Weather",
+      "fusi-orari": "Time Zones",
+      "multilingua": "Multilingual",
+      "motore-ricerca": "Search Engine",
+      "faq": "FAQ",
+      "come-fare-per": "How To",
+      "organigramma": "Org Chart",
+      "rubrica-colleghi": "Staff Directory",
+      "chi-siamo": "About Us",
+      "desc-country": "Country Description",
+      "desc-sede": "Location Description",
+      "desc-funzione": "Function Description"
+    }
+  },
+  "canvas": {
+    "preview": "Canvas Preview",
+    "addSection": "Add section",
+    "dropHere": "Drag a block here",
+    "changeLayout": "Change section layout",
+    "deleteSection": "Delete section",
+    "moveTo": "Move to",
+    "sectionCol": "Section {{section}} · Column {{col}}"
+  },
+  "props": {
+    "properties": "Properties",
+    "content": "Content",
+    "noSelection": "No block selected",
+    "noSelectionHint": "Click a block on the canvas to configure its properties",
+    "visible": "Visible",
+    "commentsEnabled": "Comments enabled",
+    "likesEnabled": "Likes enabled"
+  },
+  "content": {
+    "dataSource": "Data source",
+    "urlLabel": "URL",
+    "manualBanner": "In manual mode, the content entered here is what gets published to production.",
+    "sectionTitle": "Content",
+    "sectionTitleSample": "Sample data",
+    "production": "PRODUCTION",
+    "add": "+ Add",
+    "addItem": "+ Add item",
+    "urlHint": "Enter a URL for the external source, then add sample data for the preview."
+  },
+  "source": {
+    "sharepoint-list": "SharePoint",
+    "rss": "RSS",
+    "http-api": "HTTP API",
+    "manual": "Manual",
+    "placeholder_sharepoint-list": "https://tenant.sharepoint.com/sites/.../Lists/...",
+    "placeholder_rss": "https://example.com/feed.xml",
+    "placeholder_http-api": "https://api.example.com/endpoint"
+  },
+  "deploy": {
+    "title": "Deploying to SharePoint",
+    "step1": "Authenticating via MSAL…",
+    "step2": "Connecting to Microsoft Graph API…",
+    "step3": "Creating SharePoint Communication Site…",
+    "step4": "Provisioning Lists & Content Types…",
+    "step5": "Configuring Pages & Webparts…",
+    "step6": "Deployment complete!",
+    "siteReady": "Your SharePoint site is ready",
+    "openInSharePoint": "Open in SharePoint",
+    "done": "Done",
+    "close": "Close",
+    "errorDefault": "Unable to reach the provisioning service. Make sure the backend is running and try again."
+  },
+  "preview": {
+    "desktop": "Desktop",
+    "tablet": "Tablet",
+    "mobile": "Mobile",
+    "close": "Close preview"
+  }
+}
