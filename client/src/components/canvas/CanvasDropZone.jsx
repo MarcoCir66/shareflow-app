@@ -7,10 +7,13 @@ import SectionLayoutPicker from './SectionLayoutPicker.jsx'
 import CanvasTopNav from './CanvasTopNav.jsx'
 import { useTheme } from '../../hooks/useTheme.js'
 import HeroBanner from './HeroBanner.jsx'
+import { useLang } from '../../hooks/useLang.js'
+import { t2 } from '../../utils/localizedText.js'
 
 export default function CanvasDropZone() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { accentColor } = useTheme()
+  const lang = useLang()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
   const activePage = findPage(state.pages, state.activePageId)
 
@@ -22,7 +25,7 @@ export default function CanvasDropZone() {
 
         <div className="mb-4">
           <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">Canvas Preview</h2>
-          <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — {activePage.title}</p>
+          <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — {t2(activePage.title, lang)}</p>
         </div>
 
         <div className="min-h-96 rounded-2xl border-2 border-dashed border-slate-mid bg-white p-4">

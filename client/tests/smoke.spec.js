@@ -135,7 +135,7 @@ test.describe('ShareFlow configurator smoke test', () => {
     ])
     const { tenantConfiguration } = request.postDataJSON()
     expect(tenantConfiguration.navigation).toEqual([
-      { pageId: 'page-home', title: 'Home', slug: 'home', children: [] },
+      { pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', children: [] },
     ])
     expect(tenantConfiguration.theme).toEqual({ templateId: 'corporate-classic', accentColor: null })
 

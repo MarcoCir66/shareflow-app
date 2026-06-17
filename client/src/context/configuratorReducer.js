@@ -48,7 +48,7 @@ export const initialState = {
   pages: [
     {
       pageId: 'page-home',
-      title: 'Home',
+      title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' },
       slug: 'home',
       parentId: null,
       sections: [
@@ -65,7 +65,7 @@ export const initialState = {
   selectedSectionId: null,
   tenantConfiguration: {
     tenantId: null,
-    siteName: 'My Corporate Intranet',
+    siteName: { it: 'My Corporate Intranet', en: 'My Corporate Intranet', fr: 'My Corporate Intranet', de: 'My Corporate Intranet' },
     siteUrl: '',
     widgets: [],
     theme: { templateId: 'corporate-classic', accentColor: null },
@@ -221,11 +221,11 @@ export function configuratorReducer(state, action) {
       return { ...state, selectedSectionId: action.payload.sectionId, selectedWidgetInstanceId: null }
     case ACTIONS.ADD_PAGE: {
       const { parentId } = action.payload
-      const title = 'Nuova pagina'
+      const titleObj = { it: 'Nuova pagina', en: 'New page', fr: 'Nouvelle page', de: 'Neue Seite' }
       const newPage = {
         pageId: crypto.randomUUID(),
-        title,
-        slug: uniqueSlug(state.pages, slugify(title)),
+        title: titleObj,
+        slug: uniqueSlug(state.pages, slugify(titleObj.it)),
         parentId,
         sections: [
           { sectionId: crypto.randomUUID(), layout: 'oneColumn', columns: emptyColumns('oneColumn') },
@@ -251,13 +251,20 @@ export function configuratorReducer(state, action) {
       }
     }
     case ACTIONS.RENAME_PAGE: {
-      const { pageId, title } = action.payload
+      const { pageId, lang, title } = action.payload
       const trimmed = title.trim()
       if (!trimmed) return state
-      const slug = uniqueSlug(state.pages, slugify(trimmed), pageId)
       return {
         ...state,
-        pages: state.pages.map(p => p.pageId === pageId ? { ...p, title: trimmed, slug } : p),
+        pages: state.pages.map(p => {
+          if (p.pageId !== pageId) return p
+          const current = typeof p.title === 'string'
+            ? { it: p.title, en: p.title, fr: p.title, de: p.title }
+            : p.title
+          const newTitle = { ...current, [lang]: trimmed }
+          const slug = uniqueSlug(state.pages, slugify(newTitle.it ?? trimmed), pageId)
+          return { ...p, title: newTitle, slug }
+        }),
       }
     }
     case ACTIONS.REMOVE_PAGE: {

@@ -8,7 +8,8 @@ const STEP_DELAY_MS = 900
 const jobs = new Map()
 
 function slugify(text) {
-  return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'site'
+  const str = text && typeof text === 'object' ? (text.en ?? text.it ?? Object.values(text)[0] ?? 'site') : text
+  return String(str).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'site'
 }
 
 async function runStep(jobId, step) {
@@ -68,9 +69,11 @@ async function runStep(jobId, step) {
 }
 
 async function createSharePointSite(job) {
-  const mailNickname = slugify(job.tenantConfiguration?.siteName ?? 'site')
+  const rawSiteName = job.tenantConfiguration?.siteName
+  const siteNameStr = rawSiteName && typeof rawSiteName === 'object' ? (rawSiteName.en ?? rawSiteName.it ?? Object.values(rawSiteName)[0] ?? 'site') : (rawSiteName ?? 'site')
+  const mailNickname = slugify(siteNameStr)
   const group = await job.graphClient.api('/groups').post({
-    displayName: job.tenantConfiguration.siteName,
+    displayName: siteNameStr,
     mailNickname,
     groupTypes: ['Unified'],
     mailEnabled: true,
@@ -92,10 +95,12 @@ async function provisionLists(job) {
 }
 
 async function configurePages(job) {
+  const rawSiteName = job.tenantConfiguration?.siteName
+  const siteNameStr = rawSiteName && typeof rawSiteName === 'object' ? (rawSiteName.en ?? rawSiteName.it ?? Object.values(rawSiteName)[0] ?? 'site') : (rawSiteName ?? 'site')
   await job.graphClient.api(`/sites/${job.siteId}/pages`).version('beta').post({
     '@odata.type': '#microsoft.graph.sitePage',
     name: 'Home.aspx',
-    title: job.tenantConfiguration.siteName,
+    title: siteNameStr,
     pageLayout: 'article',
   })
 }

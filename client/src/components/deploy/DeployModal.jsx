@@ -3,6 +3,8 @@ import { CheckCircle2, Loader2, Circle, X, ExternalLink } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { buildTenantExport } from '../../context/pageHelpers.js'
 import { startProvisioning, getProvisioningStatus } from '../../lib/provisioningApi.js'
+import { useLang } from '../../hooks/useLang.js'
+import { t2 } from '../../utils/localizedText.js'
 
 // Real step implementations live in server/src/provisioningJobs.js,
 // using server/src/msalClient.js (app-only MSAL token) and
@@ -64,7 +66,8 @@ export default function DeployModal({ onClose }) {
     return () => clearInterval(interval)
   }, [jobId, status])
 
-  const siteName = state.tenantConfiguration.siteName
+  const lang = useLang()
+  const siteName = t2(state.tenantConfiguration.siteName, lang)
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">

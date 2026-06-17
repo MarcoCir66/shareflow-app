@@ -3,6 +3,8 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { useTheme } from '../../hooks/useTheme.js'
 import { buildPageTree } from '../../context/pageHelpers.js'
+import { useLang } from '../../hooks/useLang.js'
+import { t2 } from '../../utils/localizedText.js'
 import MegaMenuPanel from './MegaMenuPanel.jsx'
 
 function isInSubtree(node, pageId) {
@@ -12,6 +14,7 @@ function isInSubtree(node, pageId) {
 export default function CanvasTopNav() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { template } = useTheme()
+  const lang = useLang()
   const [closedRootId, setClosedRootId] = useState(null)
   const tree = buildPageTree(state.pages)
   const activeRoot = tree.find(root => isInSubtree(root, state.activePageId))
@@ -45,7 +48,7 @@ export default function CanvasTopNav() {
             className={`flex items-center gap-1 px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-colors
               ${activeRoot.pageId === page.pageId ? template.nav.tabActive : template.nav.tabInactive}`}
           >
-            {page.title}
+            {t2(page.title, lang)}
             {page.children.length > 0 && (
               openRoot?.pageId === page.pageId ? <ChevronUp size={12} /> : <ChevronDown size={12} />
             )}
@@ -53,7 +56,7 @@ export default function CanvasTopNav() {
         ))}
       </nav>
       {openRoot && (
-        <MegaMenuPanel node={openRoot} activePageId={state.activePageId} onSelect={select} template={template} />
+        <MegaMenuPanel node={openRoot} activePageId={state.activePageId} onSelect={select} template={template} lang={lang} />
       )}
     </div>
   )

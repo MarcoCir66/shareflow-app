@@ -1,15 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ChevronDown, ChevronRight, GripVertical, Plus, Trash2 } from 'lucide-react'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
+import { useLang } from '../../hooks/useLang.js'
+import { t2 } from '../../utils/localizedText.js'
 
 export const INDENT_WIDTH = 20
 
 export default function PageTreeItem({ page, depth, isActive, hasChildren, expanded, onToggleExpand }) {
   const { dispatch, ACTIONS } = useConfigurator()
+  const lang = useLang()
   const [editing, setEditing] = useState(false)
-  const [titleDraft, setTitleDraft] = useState(page.title)
+  const [titleDraft, setTitleDraft] = useState(t2(page.title, lang))
+
+  useEffect(() => {
+    if (!editing) setTitleDraft(t2(page.title, lang))
+  }, [page.title, lang, editing])
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: page.pageId,
@@ -26,10 +33,11 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
   function commitRename() {
     setEditing(false)
     const trimmed = titleDraft.trim()
-    if (trimmed && trimmed !== page.title) {
-      dispatch({ type: ACTIONS.RENAME_PAGE, payload: { pageId: page.pageId, title: trimmed } })
+    const currentLangTitle = t2(page.title, lang)
+    if (trimmed && trimmed !== currentLangTitle) {
+      dispatch({ type: ACTIONS.RENAME_PAGE, payload: { pageId: page.pageId, lang, title: trimmed } })
     } else {
-      setTitleDraft(page.title)
+      setTitleDraft(currentLangTitle)
     }
   }
 
@@ -69,7 +77,7 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
           onBlur={commitRename}
           onKeyDown={e => {
             if (e.key === 'Enter') commitRename()
-            if (e.key === 'Escape') { setTitleDraft(page.title); setEditing(false) }
+            if (e.key === 'Escape') { setTitleDraft(t2(page.title, lang)); setEditing(false) }
           }}
           onClick={e => e.stopPropagation()}
           className="flex-1 bg-slate-mid text-white text-xs px-1.5 py-0.5 rounded border border-blue-electric focus:outline-none min-w-0"
@@ -79,7 +87,7 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
           onDoubleClick={e => { e.stopPropagation(); setEditing(true) }}
           className={`flex-1 text-xs truncate ${isActive ? 'text-white font-medium' : 'text-slate-light'}`}
         >
-          {page.title}
+          {t2(page.title, lang)}
         </span>
       )}
 

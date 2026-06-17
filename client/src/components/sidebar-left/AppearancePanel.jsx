@@ -1,11 +1,16 @@
 import { Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { useTheme } from '../../hooks/useTheme.js'
 import { THEME_TEMPLATES } from '../../data/themeTemplates.js'
+import { useLang } from '../../hooks/useLang.js'
+import { t2 } from '../../utils/localizedText.js'
 
 export default function AppearancePanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { template, accentColor } = useTheme()
+  const { t } = useTranslation()
+  const lang = useLang()
   const theme = state.tenantConfiguration.theme
 
   function selectTemplate(templateId) {
@@ -20,28 +25,50 @@ export default function AppearancePanel() {
     dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, accentColor: null } } })
   }
 
+  function handleSiteNameChange(value) {
+    const current = state.tenantConfiguration.siteName
+    const updated = typeof current === 'string'
+      ? { it: current, en: current, fr: current, de: current, [lang]: value }
+      : { ...current, [lang]: value }
+    dispatch({ type: ACTIONS.SET_TENANT_META, payload: { siteName: updated } })
+  }
+
   return (
     <div className="p-3 space-y-4 overflow-y-auto h-full">
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">Template</h3>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          {t('appearance.siteNameLabel', { lang: lang.toUpperCase() })}
+        </h3>
+        <input
+          type="text"
+          value={t2(state.tenantConfiguration.siteName, lang)}
+          onChange={e => handleSiteNameChange(e.target.value)}
+          className="w-full bg-slate-mid text-white text-xs px-2.5 py-1.5 rounded border border-slate-mid focus:border-blue-electric focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          {t('appearance.template')}
+        </h3>
         <div className="space-y-2">
-          {THEME_TEMPLATES.map(t => (
+          {THEME_TEMPLATES.map(tmpl => (
             <button
-              key={t.id}
+              key={tmpl.id}
               type="button"
-              onClick={() => selectTemplate(t.id)}
+              onClick={() => selectTemplate(tmpl.id)}
               className={`w-full text-left rounded-lg border p-2 transition-colors
-                ${t.id === template.id ? 'border-blue-electric ring-1 ring-blue-electric/30' : 'border-slate-mid hover:border-slate-light'}`}
+                ${tmpl.id === template.id ? 'border-blue-electric ring-1 ring-blue-electric/30' : 'border-slate-mid hover:border-slate-light'}`}
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-semibold text-white">{t.name}</span>
-                {t.id === template.id && <Check size={14} className="text-blue-electric" />}
+                <span className="text-xs font-semibold text-white">{tmpl.name}</span>
+                {tmpl.id === template.id && <Check size={14} className="text-blue-electric" />}
               </div>
               <div className="flex gap-1">
-                <span className="block w-5 h-5 rounded" style={{ background: t.swatch.nav }} />
-                <span className="block w-5 h-5 rounded" style={{ background: t.swatch.hero }} />
-                <span className="block w-5 h-5 rounded" style={{ background: t.accentColor }} />
-                <span className="block w-5 h-5 rounded border border-slate-mid" style={{ background: t.swatch.card }} />
+                <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.nav }} />
+                <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.hero }} />
+                <span className="block w-5 h-5 rounded" style={{ background: tmpl.accentColor }} />
+                <span className="block w-5 h-5 rounded border border-slate-mid" style={{ background: tmpl.swatch.card }} />
               </div>
             </button>
           ))}
@@ -49,7 +76,9 @@ export default function AppearancePanel() {
       </div>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">Colore brand</h3>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          {t('appearance.brandColor')}
+        </h3>
         <div className="flex items-center gap-2">
           <input
             type="color"
@@ -60,7 +89,7 @@ export default function AppearancePanel() {
           <span className="text-xs text-slate-light flex-1">{accentColor}</span>
           {theme?.accentColor && (
             <button type="button" onClick={resetAccentColor} className="text-xs text-blue-electric hover:underline">
-              Reset
+              {t('appearance.reset')}
             </button>
           )}
         </div>
