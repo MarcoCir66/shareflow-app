@@ -1,12 +1,15 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
+import rateLimit from 'express-rate-limit'
 import provisioningRoutes from './src/provisioningRoutes.js'
+import { requireAuth } from './src/authMiddleware.js'
 import logger from './src/logger.js'
 
 const app = express()
 
-app.use(cors())
+const allowedOrigin = process.env.CLIENT_ORIGIN ?? 'http://localhost:5173'
+app.use(cors({ origin: allowedOrigin }))
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -14,7 +17,17 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/api/provisioning', provisioningRoutes)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+app.use('/api/provisioning', limiter, requireAuth, provisioningRoutes)
 
 const PORT = process.env.PORT ?? 3001
 app.listen(PORT, () => {
