@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { BLOCK_CONTENT_DEFS } from '../../data/blockContentSchemas.js'
 import SourceSelector from './SourceSelector.jsx'
@@ -6,7 +7,8 @@ import ContentItemForm from './ContentItemForm.jsx'
 
 export default function ContentPanel({ widget, block }) {
   const { dispatch, ACTIONS } = useConfigurator()
-  const [editingIndex, setEditingIndex] = useState(null) // null=closed, -1=adding new, N=editing item N
+  const { t } = useTranslation()
+  const [editingIndex, setEditingIndex] = useState(null)
 
   const def = BLOCK_CONTENT_DEFS[block.id]
   const schema = def?.schema ?? []
@@ -37,7 +39,7 @@ export default function ContentPanel({ widget, block }) {
   }
 
   const isManual = contentSource.type === 'manual'
-  const sectionLabel = isManual ? 'Contenuto' : 'Dati campione'
+  const sectionLabel = isManual ? t('content.sectionTitle') : t('content.sectionTitleSample')
 
   function itemLabel(item) {
     return item.title || item.name || item.question || Object.values(item).find(v => typeof v === 'string' && v.trim()) || '—'
@@ -57,7 +59,7 @@ export default function ContentPanel({ widget, block }) {
             {sectionLabel}
             {isManual && (
               <span className="bg-green-600 text-white text-[9px] rounded px-1.5 py-0.5 font-bold normal-case tracking-normal">
-                PRODUZIONE
+                {t('content.production')}
               </span>
             )}
           </span>
@@ -66,14 +68,14 @@ export default function ContentPanel({ widget, block }) {
               onClick={() => setEditingIndex(-1)}
               className="text-[10px] bg-blue text-white rounded px-2 py-0.5 hover:bg-blue/80 transition-colors"
             >
-              + Aggiungi
+              {t('content.add')}
             </button>
           )}
         </div>
 
         {!isManual && contentSource.url === '' && contentItems.length === 0 && editingIndex === null && (
           <p className="text-[10px] text-slate-light italic mb-3">
-            Inserisci un URL per la fonte esterna, poi aggiungi dati campione per l&apos;anteprima.
+            {t('content.urlHint')}
           </p>
         )}
 
@@ -120,7 +122,7 @@ export default function ContentPanel({ widget, block }) {
             onClick={() => setEditingIndex(-1)}
             className="w-full border border-dashed border-slate-mid rounded p-2 text-xs text-slate-light hover:text-white hover:border-slate-light transition-colors"
           >
-            + Aggiungi item
+            {t('content.addItem')}
           </button>
         )}
       </div>

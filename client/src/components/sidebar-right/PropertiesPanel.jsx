@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import * as icons from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
-import { blockById, CATEGORY_LABELS } from '../../data/blockCatalog.js'
+import { blockById } from '../../data/blockCatalog.js'
 import { findWidget } from '../../context/sectionHelpers.js'
 import { findPage } from '../../context/pageHelpers.js'
 import EmptyState from './EmptyState.jsx'
@@ -28,19 +29,13 @@ function InstanceIdSection({ instanceId }) {
   )
 }
 
-const PROP_LABELS = {
-  visible:         'Visible',
-  commentsEnabled: 'Comments enabled',
-  likesEnabled:    'Likes enabled',
-}
-
 export default function PropertiesPanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
+  const { t } = useTranslation()
   const { selectedWidgetInstanceId, selectedSectionId } = state
   const activePage = findPage(state.pages, state.activePageId)
   const [activeTab, setActiveTab] = useState('props')
 
-  // Reset to Proprietà tab whenever the selected widget changes
   useEffect(() => { setActiveTab('props') }, [selectedWidgetInstanceId])
 
   if (selectedSectionId) {
@@ -66,8 +61,12 @@ export default function PropertiesPanel() {
           <Icon size={18} className="text-blue-electric" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-white leading-tight">{block.label}</h3>
-          <span className="text-xs text-slate-light">{CATEGORY_LABELS[block.category]}</span>
+          <h3 className="text-sm font-semibold text-white leading-tight">
+            {t(`blocks.labels.${block.id}`, { defaultValue: block.label })}
+          </h3>
+          <span className="text-xs text-slate-light">
+            {t(`blocks.categories.${block.category}`)}
+          </span>
         </div>
       </div>
 
@@ -81,7 +80,7 @@ export default function PropertiesPanel() {
                 : 'text-slate-light hover:text-white'
             }`}
           >
-            Proprietà
+            {t('props.properties')}
           </button>
           <button
             onClick={() => setActiveTab('content')}
@@ -91,7 +90,7 @@ export default function PropertiesPanel() {
                 : 'text-slate-light hover:text-white'
             }`}
           >
-            Contenuto
+            {t('props.content')}
           </button>
         </div>
       )}
@@ -111,7 +110,7 @@ export default function PropertiesPanel() {
             return (
               <ToggleField
                 key={key}
-                label={PROP_LABELS[key] ?? key}
+                label={t(`props.${key}`, { defaultValue: key })}
                 value={widget.props[key]}
                 onChange={v => updateProp(key, v)}
               />
