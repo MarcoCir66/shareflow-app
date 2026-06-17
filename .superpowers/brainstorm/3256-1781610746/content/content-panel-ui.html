@@ -1,0 +1,183 @@
+<h2>Design — Tab "Contenuto" nel PropertiesPanel</h2>
+<p class="subtitle">
+  La sidebar destra acquista un terzo tab "Contenuto" (accanto a "Proprietà" e "Stile").
+  Qui sotto vedi i due stati principali: blocco con <b>fonte esterna</b> e blocco con <b>gestione manuale</b>.
+</p>
+
+<div class="split" style="gap:20px">
+
+  <!-- Stato A: fonte esterna (es. news-corporate) -->
+  <div class="mockup">
+    <div class="mockup-header">News Corporate — fonte esterna (SharePoint List)</div>
+    <div class="mockup-body" style="font-family:system-ui,sans-serif; font-size:12px; padding:0">
+
+      <!-- Tab bar -->
+      <div style="display:flex; border-bottom:1px solid #E2E8F0; background:#F8FAFC">
+        <div style="padding:8px 14px; color:#94A3B8; cursor:pointer">Proprietà</div>
+        <div style="padding:8px 14px; color:#94A3B8; cursor:pointer">Stile</div>
+        <div style="padding:8px 14px; color:#0F1C2E; font-weight:600; border-bottom:2px solid #0078D4; margin-bottom:-1px">Contenuto</div>
+      </div>
+
+      <div style="padding:14px; display:flex; flex-direction:column; gap:14px">
+
+        <!-- Source section -->
+        <div>
+          <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#64748B; margin-bottom:8px">Fonte dati</div>
+
+          <!-- Type selector -->
+          <div style="display:flex; gap:4px; margin-bottom:10px">
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#0078D4; color:#fff; font-size:10px; font-weight:600; cursor:pointer">SharePoint</div>
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#F1F5F9; color:#64748B; font-size:10px; cursor:pointer">RSS</div>
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#F1F5F9; color:#64748B; font-size:10px; cursor:pointer">HTTP API</div>
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#F1F5F9; color:#64748B; font-size:10px; cursor:pointer">Manuale</div>
+          </div>
+
+          <!-- URL field -->
+          <div style="margin-bottom:6px">
+            <div style="font-size:10px; color:#475569; margin-bottom:3px">URL lista SharePoint</div>
+            <div style="border:1px solid #CBD5E1; border-radius:5px; padding:5px 8px; background:#fff; color:#0F1C2E; font-size:10px">
+              https://contoso.sharepoint.com/sites/hr/Lists/News
+            </div>
+          </div>
+
+          <!-- Column mapping (collapsed) -->
+          <div style="border:1px solid #E2E8F0; border-radius:5px; padding:6px 8px; background:#F8FAFC; display:flex; justify-content:space-between; align-items:center; cursor:pointer">
+            <span style="font-size:10px; color:#475569">Mappatura colonne SP</span>
+            <span style="font-size:10px; color:#94A3B8">▸</span>
+          </div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid #E2E8F0; margin:0"/>
+
+        <!-- Sample data section -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#64748B">Dati campione <span style="color:#94A3B8; font-weight:400">(anteprima)</span></div>
+            <div style="background:#0078D4; color:#fff; font-size:9px; border-radius:4px; padding:3px 7px; cursor:pointer">+ Aggiungi</div>
+          </div>
+
+          <!-- Item 1 -->
+          <div style="border:1px solid #E2E8F0; border-radius:6px; padding:8px; background:#fff; margin-bottom:6px">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start">
+              <div>
+                <div style="font-size:11px; font-weight:600; color:#0F1C2E; margin-bottom:2px">Lancio del nuovo piano welfare 2026</div>
+                <div style="font-size:9px; color:#64748B">HR · 10 giu 2026 · Mario Rossi</div>
+              </div>
+              <div style="display:flex; gap:6px; font-size:9px; color:#94A3B8">
+                <span style="cursor:pointer">✎</span>
+                <span style="cursor:pointer">✕</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div style="border:1px solid #E2E8F0; border-radius:6px; padding:8px; background:#fff; margin-bottom:6px">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start">
+              <div>
+                <div style="font-size:11px; font-weight:600; color:#0F1C2E; margin-bottom:2px">Aggiornamento policy smart working</div>
+                <div style="font-size:9px; color:#64748B">Operations · 5 giu 2026 · Laura Bianchi</div>
+              </div>
+              <div style="display:flex; gap:6px; font-size:9px; color:#94A3B8">
+                <span style="cursor:pointer">✎</span>
+                <span style="cursor:pointer">✕</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 placeholder -->
+          <div style="border:1px dashed #CBD5E1; border-radius:6px; padding:8px; text-align:center; color:#94A3B8; font-size:10px; cursor:pointer">
+            + Aggiungi news campione
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Stato B: manuale (es. avvisi-homepage) -->
+  <div class="mockup">
+    <div class="mockup-header">Avvisi Homepage — gestione manuale (produzione)</div>
+    <div class="mockup-body" style="font-family:system-ui,sans-serif; font-size:12px; padding:0">
+
+      <!-- Tab bar -->
+      <div style="display:flex; border-bottom:1px solid #E2E8F0; background:#F8FAFC">
+        <div style="padding:8px 14px; color:#94A3B8; cursor:pointer">Proprietà</div>
+        <div style="padding:8px 14px; color:#94A3B8; cursor:pointer">Stile</div>
+        <div style="padding:8px 14px; color:#0F1C2E; font-weight:600; border-bottom:2px solid #0078D4; margin-bottom:-1px">Contenuto</div>
+      </div>
+
+      <div style="padding:14px; display:flex; flex-direction:column; gap:14px">
+
+        <!-- Source section -->
+        <div>
+          <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#64748B; margin-bottom:8px">Fonte dati</div>
+
+          <!-- Type selector -->
+          <div style="display:flex; gap:4px; margin-bottom:10px">
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#F1F5F9; color:#64748B; font-size:10px; cursor:pointer">SharePoint</div>
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#F1F5F9; color:#64748B; font-size:10px; cursor:pointer">RSS</div>
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#F1F5F9; color:#64748B; font-size:10px; cursor:pointer">HTTP API</div>
+            <div style="flex:1; text-align:center; padding:5px 4px; border-radius:5px; background:#0078D4; color:#fff; font-size:10px; font-weight:600; cursor:pointer">Manuale</div>
+          </div>
+
+          <!-- Info badge -->
+          <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:5px; padding:7px 9px; font-size:10px; color:#1D4ED8">
+            ℹ️ In modalità manuale il contenuto inserito qui è quello pubblicato in produzione — non serve una fonte esterna.
+          </div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid #E2E8F0; margin:0"/>
+
+        <!-- Content items section (produzione) -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#64748B">Avvisi <span style="background:#22C55E; color:#fff; font-size:8px; border-radius:3px; padding:1px 5px; font-weight:600; vertical-align:middle">PRODUZIONE</span></div>
+            <div style="background:#0078D4; color:#fff; font-size:9px; border-radius:4px; padding:3px 7px; cursor:pointer">+ Aggiungi</div>
+          </div>
+
+          <!-- Avviso 1 -->
+          <div style="border:1px solid #E2E8F0; border-radius:6px; padding:8px; background:#fff; margin-bottom:6px">
+            <div style="display:flex; align-items:center; gap:6px">
+              <div style="width:6px; height:6px; border-radius:50%; background:#EF4444; flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:11px; font-weight:600; color:#0F1C2E">🔴 Manutenzione server — 14 giu 2026</div>
+                <div style="font-size:9px; color:#64748B; margin-top:2px">Il portale sarà offline dalle 22:00 alle 02:00</div>
+              </div>
+              <div style="display:flex; gap:6px; font-size:9px; color:#94A3B8">
+                <span style="cursor:pointer">✎</span>
+                <span style="cursor:pointer">✕</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Avviso 2 -->
+          <div style="border:1px solid #E2E8F0; border-radius:6px; padding:8px; background:#fff; margin-bottom:6px">
+            <div style="display:flex; align-items:center; gap:6px">
+              <div style="width:6px; height:6px; border-radius:50%; background:#F59E0B; flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:11px; font-weight:600; color:#0F1C2E">🟡 Scadenza rimborsi spese Q2</div>
+                <div style="font-size:9px; color:#64748B; margin-top:2px">Inserire entro il 30 giugno</div>
+              </div>
+              <div style="display:flex; gap:6px; font-size:9px; color:#94A3B8">
+                <span style="cursor:pointer">✎</span>
+                <span style="cursor:pointer">✕</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="border:1px dashed #CBD5E1; border-radius:6px; padding:8px; text-align:center; color:#94A3B8; font-size:10px; cursor:pointer">
+            + Aggiungi avviso
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">
+  La distinzione chiave: con fonte esterna gli item sono <b>dati campione</b> (solo anteprima editor),
+  con "Manuale" gli item sono il <b>contenuto di produzione</b> — quello che viene esportato e pubblicato.
+  Stessa UI, semantica diversa chiaramente indicata.
+</p>

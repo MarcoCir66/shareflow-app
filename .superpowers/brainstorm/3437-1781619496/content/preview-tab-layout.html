@@ -1,0 +1,101 @@
+<h2>Design — Tab Preview della Intranet</h2>
+<p class="subtitle">
+  Sezione 1 di 3: Layout del tab preview e posizione del device switcher.<br>
+  Il tab si apre separato dall'editor; contiene una toolbar sottile in cima e la pagina renderizzata sotto.
+</p>
+
+<div class="mockup" style="max-width:860px;margin:0 auto">
+  <div class="mockup-header">Tab Preview — http://localhost:5173/?mode=preview</div>
+  <div class="mockup-body" style="padding:0; font-family:system-ui,sans-serif; font-size:12px; background:#F3F6F9; min-height:520px">
+
+    <!-- Preview toolbar -->
+    <div style="background:#0F1C2E; display:flex; align-items:center; justify-content:space-between; padding:8px 16px; gap:12px">
+      <!-- Left: logo + live badge -->
+      <div style="display:flex; align-items:center; gap:10px">
+        <span style="color:#00B4FF; font-weight:700; font-size:13px">ShareFlow</span>
+        <span style="background:#22C55E; color:#fff; font-size:9px; font-weight:700; border-radius:3px; padding:2px 6px; letter-spacing:.4px">LIVE</span>
+      </div>
+
+      <!-- Center: device switcher -->
+      <div style="display:flex; gap:4px; background:#1A2F4A; border-radius:6px; padding:3px">
+        <button style="display:flex; align-items:center; gap:4px; background:#0078D4; color:#fff; border:none; border-radius:4px; padding:4px 10px; font-size:10px; font-weight:600; cursor:pointer">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Desktop
+        </button>
+        <button style="display:flex; align-items:center; gap:4px; background:transparent; color:#8899AA; border:none; border-radius:4px; padding:4px 10px; font-size:10px; cursor:pointer">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+          Tablet
+        </button>
+        <button style="display:flex; align-items:center; gap:4px; background:transparent; color:#8899AA; border:none; border-radius:4px; padding:4px 10px; font-size:10px; cursor:pointer">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+          Mobile
+        </button>
+      </div>
+
+      <!-- Right: close / back to editor -->
+      <button style="color:#8899AA; background:none; border:none; font-size:10px; cursor:pointer; display:flex; align-items:center; gap:4px">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Chiudi preview
+      </button>
+    </div>
+
+    <!-- Page content area: simulated intranet page at desktop width -->
+    <div style="overflow-y:auto; padding:16px; display:flex; justify-content:center;">
+      <div style="width:100%; max-width:680px; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.1)">
+
+        <!-- Simulated SharePoint top nav -->
+        <div style="background:#0F1C2E; padding:10px 20px; display:flex; align-items:center; gap:20px">
+          <span style="color:#00B4FF; font-weight:700; font-size:13px">My Corporate Intranet</span>
+          <div style="display:flex; gap:16px; margin-left:12px">
+            <span style="color:#fff; font-size:11px; border-bottom:2px solid #0078D4; padding-bottom:2px">Home</span>
+            <span style="color:#8899AA; font-size:11px">News</span>
+            <span style="color:#8899AA; font-size:11px">Events</span>
+          </div>
+        </div>
+
+        <!-- Hero -->
+        <div style="background:linear-gradient(135deg,#1A2F4A,#0078D4); padding:28px 20px">
+          <div style="color:#fff; font-size:20px; font-weight:700; margin-bottom:4px">Benvenuto nella tua intranet</div>
+          <div style="color:#8899AA; font-size:11px">SharePoint Communication Site — Home</div>
+        </div>
+
+        <!-- Section with blocks -->
+        <div style="padding:16px 20px; display:grid; grid-template-columns:1fr 1fr; gap:12px">
+          <!-- Block 1: News -->
+          <div style="background:#F3F6F9; border-radius:6px; padding:12px">
+            <div style="font-size:10px; font-weight:700; color:#0078D4; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px">News Corporate</div>
+            <div style="font-size:11px; font-weight:600; color:#0F1C2E; margin-bottom:3px">Lancio piano welfare 2026</div>
+            <div style="font-size:9px; color:#8899AA">HR · 10 giu 2026 · Mario Rossi</div>
+            <div style="height:1px; background:#E2E8F0; margin:8px 0"></div>
+            <div style="font-size:11px; font-weight:600; color:#0F1C2E; margin-bottom:3px">Aggiornamento policy smart working</div>
+            <div style="font-size:9px; color:#8899AA">Operations · 5 giu 2026</div>
+          </div>
+
+          <!-- Block 2: Events -->
+          <div style="background:#F3F6F9; border-radius:6px; padding:12px">
+            <div style="font-size:10px; font-weight:700; color:#0078D4; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px">Eventi</div>
+            <div style="display:flex; gap:8px; align-items:flex-start">
+              <div style="background:#0078D4; color:#fff; border-radius:4px; padding:4px 7px; text-align:center; font-size:9px; flex-shrink:0"><div style="font-size:14px; font-weight:700; line-height:1">20</div><div>GIU</div></div>
+              <div>
+                <div style="font-size:11px; font-weight:600; color:#0F1C2E">Town Hall Q2 2026</div>
+                <div style="font-size:9px; color:#8899AA">Sala Conferenze A · 10:00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nota read-only: no edit chrome! -->
+        <div style="text-align:center; padding:8px; font-size:9px; color:#8899AA; border-top:1px solid #E2E8F0">
+          ✓ Nessun bordo tratteggiato · nessun drag handle · nessuna sidebar
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:20px; text-align:center">
+  La toolbar navy in cima è l'unico chrome di preview. Tutto il resto è la pagina pura.<br>
+  Il badge "LIVE" indica che la preview è sincronizzata in tempo reale con l'editor.<br><br>
+  <b>Questo layout ti convince? Hai feedback sulla toolbar o su cosa manca?</b>
+</p>
