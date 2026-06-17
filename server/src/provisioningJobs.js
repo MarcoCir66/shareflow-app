@@ -7,9 +7,16 @@ const STEP_DELAY_MS = 900
 
 const jobs = new Map()
 
+export function resolveSiteName(siteName) {
+  const value = siteName && typeof siteName === 'object'
+    ? (siteName.en ?? siteName.it ?? Object.values(siteName)[0] ?? 'site')
+    : (siteName ?? 'site')
+  return String(value)
+}
+
 function slugify(text) {
-  const str = text && typeof text === 'object' ? (text.en ?? text.it ?? Object.values(text)[0] ?? 'site') : text
-  return String(str).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'site'
+  const str = resolveSiteName(text)
+  return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'site'
 }
 
 async function runStep(jobId, step) {
@@ -60,7 +67,7 @@ async function runStep(jobId, step) {
   if (job.currentStep >= STEP_COUNT) {
     job.status = 'done'
     job.result = {
-      siteUrl: job.siteUrl ?? `https://contoso.sharepoint.com/sites/${slugify(job.tenantConfiguration?.siteName ?? 'site')}`,
+      siteUrl: job.siteUrl ?? `https://contoso.sharepoint.com/sites/${slugify(job.tenantConfiguration?.siteName)}`,
     }
     return
   }
@@ -69,8 +76,7 @@ async function runStep(jobId, step) {
 }
 
 async function createSharePointSite(job) {
-  const rawSiteName = job.tenantConfiguration?.siteName
-  const siteNameStr = rawSiteName && typeof rawSiteName === 'object' ? (rawSiteName.en ?? rawSiteName.it ?? Object.values(rawSiteName)[0] ?? 'site') : (rawSiteName ?? 'site')
+  const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   const mailNickname = slugify(siteNameStr)
   const group = await job.graphClient.api('/groups').post({
     displayName: siteNameStr,
@@ -95,8 +101,7 @@ async function provisionLists(job) {
 }
 
 async function configurePages(job) {
-  const rawSiteName = job.tenantConfiguration?.siteName
-  const siteNameStr = rawSiteName && typeof rawSiteName === 'object' ? (rawSiteName.en ?? rawSiteName.it ?? Object.values(rawSiteName)[0] ?? 'site') : (rawSiteName ?? 'site')
+  const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   await job.graphClient.api(`/sites/${job.siteId}/pages`).version('beta').post({
     '@odata.type': '#microsoft.graph.sitePage',
     name: 'Home.aspx',
