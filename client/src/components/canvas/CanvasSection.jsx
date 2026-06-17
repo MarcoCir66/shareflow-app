@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { LayoutGrid, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { SECTION_LAYOUTS } from '../../data/sectionLayouts.js'
 import CanvasColumn from './CanvasColumn.jsx'
@@ -8,6 +9,7 @@ import SectionLayoutPicker from './SectionLayoutPicker.jsx'
 export default function CanvasSection({ section, readOnly = false }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const [pickerOpen, setPickerOpen] = useState(false)
+  const { t } = useTranslation()
 
   const layout = SECTION_LAYOUTS[section.layout]
 
@@ -43,7 +45,7 @@ export default function CanvasSection({ section, readOnly = false }) {
           type="button"
           onClick={e => { e.stopPropagation(); setPickerOpen(o => !o) }}
           className="p-1.5 rounded-md bg-white border border-gray-200 shadow-sm text-slate hover:text-blue hover:border-blue transition-colors"
-          title="Cambia layout sezione"
+          title={t('canvas.changeLayout')}
         >
           <LayoutGrid size={14} />
         </button>
@@ -55,7 +57,7 @@ export default function CanvasSection({ section, readOnly = false }) {
               dispatch({ type: ACTIONS.REMOVE_SECTION, payload: { sectionId: section.sectionId } })
             }}
             className="p-1.5 rounded-md bg-white border border-gray-200 shadow-sm text-slate hover:text-red-500 hover:border-red-300 transition-colors"
-            title="Elimina sezione"
+            title={t('canvas.deleteSection')}
           >
             <Trash2 size={14} />
           </button>

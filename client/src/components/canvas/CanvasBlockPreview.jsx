@@ -1,4 +1,5 @@
 import * as icons from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../hooks/useTheme.js'
 
 const EVENT_IDS = new Set([
@@ -23,14 +24,19 @@ function SkeletonLine({ template, w = 'w-full', h = 'h-2', light = false }) {
 }
 
 function Header({ template, block, Icon, showSeeAll = true }) {
+  const { t } = useTranslation()
   return (
     <div className="flex items-center justify-between gap-3 mb-3">
       <div className="flex items-center gap-2 min-w-0">
         <Icon size={16} className={`${template.card.accentText} flex-shrink-0`} />
-        <span className={`text-sm font-semibold truncate ${template.card.text}`}>{block.label}</span>
+        <span className={`text-sm font-semibold truncate ${template.card.text}`}>
+          {t(`blocks.labels.${block.id}`, { defaultValue: block.label })}
+        </span>
       </div>
       {showSeeAll && (
-        <span className={`text-xs font-medium flex-shrink-0 ${template.card.accentText}`}>See all</span>
+        <span className={`text-xs font-medium flex-shrink-0 ${template.card.accentText}`}>
+          {t('blocks.seeAll')}
+        </span>
       )}
     </div>
   )
@@ -38,6 +44,7 @@ function Header({ template, block, Icon, showSeeAll = true }) {
 
 export default function CanvasBlockPreview({ block, width = 'full', contentItems = [] }) {
   const { template } = useTheme()
+  const { t } = useTranslation()
   const Icon = icons[block.icon] ?? icons.Box
   const gridColsClass = GRID_COLS_BY_WIDTH[width] ?? GRID_COLS_BY_WIDTH.full
   const itemCount = ITEM_COUNT_BY_WIDTH[width] ?? ITEM_COUNT_BY_WIDTH.full
@@ -219,7 +226,7 @@ export default function CanvasBlockPreview({ block, width = 'full', contentItems
           <div className="flex justify-center">
             <div className={`flex items-baseline gap-1 px-4 py-2 rounded-md ${template.card.iconBg}`}>
               <span className="text-xl font-bold text-white">{days}</span>
-              <span className="text-xs text-white/70">giorni</span>
+              <span className="text-xs text-white/70">{t('blocks.days')}</span>
             </div>
           </div>
         </div>

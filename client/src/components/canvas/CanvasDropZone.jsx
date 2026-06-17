@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { findPage } from '../../context/pageHelpers.js'
 import CanvasSection from './CanvasSection.jsx'
@@ -13,6 +14,7 @@ import { t2 } from '../../utils/localizedText.js'
 export default function CanvasDropZone() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { accentColor } = useTheme()
+  const { t } = useTranslation()
   const lang = useLang()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
   const activePage = findPage(state.pages, state.activePageId)
@@ -25,7 +27,7 @@ export default function CanvasDropZone() {
         <HeroBanner />
 
         <div className="mb-4">
-          <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">Canvas Preview</h2>
+          <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">{t('canvas.preview')}</h2>
           <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — {t2(activePage.title, lang)}</p>
         </div>
 
@@ -40,7 +42,7 @@ export default function CanvasDropZone() {
               onClick={() => setAddPickerOpen(o => !o)}
               className="flex items-center gap-1.5 text-xs font-medium text-slate-light hover:text-blue border border-dashed border-slate-mid hover:border-blue rounded-lg px-3 py-1.5 transition-colors"
             >
-              <Plus size={14} /> Aggiungi sezione
+              <Plus size={14} /> {t('canvas.addSection')}
             </button>
             {addPickerOpen && (
               <div className="absolute top-full mt-2 z-20">

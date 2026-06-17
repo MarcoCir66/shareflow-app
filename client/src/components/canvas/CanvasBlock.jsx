@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { X, GripVertical, ArrowRightLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { useTheme } from '../../hooks/useTheme.js'
 import { blockById } from '../../data/blockCatalog.js'
@@ -13,6 +14,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
   const { template } = useTheme()
   const [moveMenuOpen, setMoveMenuOpen] = useState(false)
   const block = blockById[widget.blockId]
+  const { t } = useTranslation()
   const isSelected = state.selectedWidgetInstanceId === widget.instanceId
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -31,7 +33,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
     section.columns.map((column, ci) => ({
       sectionId: section.sectionId,
       columnId: column.columnId,
-      label: `Sezione ${si + 1} · Colonna ${ci + 1}`,
+      label: t('canvas.sectionCol', { section: si + 1, col: ci + 1 }),
     }))
   ).filter(c => !(c.sectionId === sectionId && c.columnId === columnId))
 
@@ -84,7 +86,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
           onClick={e => e.stopPropagation()}
           className="absolute right-2 top-9 z-20 w-48 bg-white rounded-lg border border-gray-200 shadow-lg py-1"
         >
-          <p className="px-3 py-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Sposta in</p>
+          <p className="px-3 py-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">{t('canvas.moveTo')}</p>
           {otherColumns.map(target => (
             <button
               key={target.columnId}

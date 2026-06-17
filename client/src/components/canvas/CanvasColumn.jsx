@@ -1,5 +1,6 @@
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useTranslation } from 'react-i18next'
 import { blockById } from '../../data/blockCatalog.js'
 import CanvasBlock from './CanvasBlock.jsx'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
@@ -29,6 +30,7 @@ export default function CanvasColumn({ sectionId, column, widthHint, readOnly = 
     id: `column-${column.columnId}`,
     data: { type: 'column' },
   })
+  const { t } = useTranslation()
 
   return (
     <div
@@ -38,7 +40,7 @@ export default function CanvasColumn({ sectionId, column, widthHint, readOnly = 
       <SortableContext items={column.widgets.map(w => w.instanceId)} strategy={verticalListSortingStrategy}>
         {column.widgets.length === 0 ? (
           <div className="h-28 flex items-center justify-center text-center text-xs text-slate-light border-2 border-dashed border-slate-mid rounded-xl px-3">
-            Trascina qui un blocco
+            {t('canvas.dropHere')}
           </div>
         ) : (
           column.widgets.map(widget => (
