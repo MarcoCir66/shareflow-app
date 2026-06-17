@@ -1,15 +1,15 @@
 import { Router } from 'express'
 import { createJob, getJob } from './provisioningJobs.js'
+import { createJobSchema } from './schemas.js'
 
 const router = Router()
 
 router.post('/jobs', (req, res) => {
-  const { tenantConfiguration } = req.body ?? {}
-  if (!tenantConfiguration?.siteName) {
-    return res.status(400).json({ error: 'tenantConfiguration.siteName is required' })
+  const parsed = createJobSchema.safeParse(req.body)
+  if (!parsed.success) {
+    return res.status(400).json({ error: 'Invalid request body', details: parsed.error.issues })
   }
-
-  const job = createJob(tenantConfiguration)
+  const job = createJob(parsed.data.tenantConfiguration)
   res.status(201).json({ jobId: job.id, totalSteps: job.totalSteps })
 })
 
@@ -18,14 +18,9 @@ router.get('/jobs/:jobId', (req, res) => {
   if (!job) {
     return res.status(404).json({ error: 'Job not found' })
   }
-
   res.json({
-    jobId: job.id,
-    status: job.status,
-    currentStep: job.currentStep,
-    totalSteps: job.totalSteps,
-    result: job.result,
-    error: job.error,
+    jobId: job.id, status: job.status, currentStep: job.currentStep,
+    totalSteps: job.totalSteps, result: job.result, error: job.error,
   })
 })
 
