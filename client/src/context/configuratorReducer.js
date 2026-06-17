@@ -262,7 +262,7 @@ export function configuratorReducer(state, action) {
             ? { it: p.title, en: p.title, fr: p.title, de: p.title }
             : p.title
           const newTitle = { ...current, [lang]: trimmed }
-          const slug = uniqueSlug(state.pages, slugify(newTitle.it ?? trimmed), pageId)
+          const slug = uniqueSlug(state.pages, slugify(newTitle.it ?? newTitle[lang] ?? trimmed), pageId)
           return { ...p, title: newTitle, slug }
         }),
       }

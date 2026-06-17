@@ -9,6 +9,7 @@ export default function HeroBanner() {
   const { template } = useTheme()
   const lang = useLang()
   const activePage = findPage(state.pages, state.activePageId)
+  if (!activePage) return null
 
   return (
     <div className={`mb-4 rounded-2xl px-5 py-6 ${template.hero.wrapper}`}>

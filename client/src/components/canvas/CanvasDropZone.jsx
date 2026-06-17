@@ -16,6 +16,7 @@ export default function CanvasDropZone() {
   const lang = useLang()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
   const activePage = findPage(state.pages, state.activePageId)
+  if (!activePage) return null
 
   return (
     <div className="min-h-full p-6">
