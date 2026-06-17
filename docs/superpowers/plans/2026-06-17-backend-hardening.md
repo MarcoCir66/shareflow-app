@@ -411,7 +411,7 @@ git commit -m "feat(server): validate provisioning request bodies with zod"
 - Create: `server/src/jobStore.test.js`
 - Create: `server/data/.gitkeep`
 - Modify: `server/package.json` (add `better-sqlite3` dependency)
-- Modify: `.gitignore` (root, alongside the existing `shareflow-app` entries — see Step 6)
+- Modify: `.gitignore` (root, alongside the existing `shareflow-app` entries — see Step 3)
 
 **Interfaces:**
 - Produces: `export function persistJob(job)` and `export function loadJob(id)` from `server/src/jobStore.js`. `persistJob` accepts an object with `{ id, status, currentStep, totalSteps, tenantConfiguration, result, error, siteId, siteUrl, createdAt }`. `loadJob` returns an object with the same shape (camelCase) or `null`. Task 5 imports both.
@@ -587,7 +587,7 @@ Expected: PASS (15 tests passing: 12 from Tasks 1-3 + 3 new)
 - [ ] **Step 8: Commit**
 
 ```bash
-git add server/src/jobStore.js server/src/jobStore.test.js server/data/.gitkeep server/package.json server/package-lock.json ../.gitignore
+git add server/src/jobStore.js server/src/jobStore.test.js server/data/.gitkeep server/package.json server/package-lock.json .gitignore
 git commit -m "feat(server): add SQLite-backed job persistence store"
 ```
 
