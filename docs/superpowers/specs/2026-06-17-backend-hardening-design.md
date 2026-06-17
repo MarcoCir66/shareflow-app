@@ -26,6 +26,8 @@ The client already obtains an ID token via `instance.loginPopup(loginRequest)` (
 
 This reuses the login the user already performs, requires no new Azure Portal configuration, and avoids minting or storing any server-side secret shared with the client.
 
+**Important distinction:** `server/src/msalClient.js` already uses `AZURE_CLIENT_ID` + `AZURE_CLIENT_SECRET` for a separate **app-only, confidential-client** App Registration (used solely for Graph API calls during provisioning). The user's ID token from the SPA login has `aud` set to the **SPA's** App Registration ID (`VITE_AZURE_CLIENT_ID` on the client) — a different registration. The server therefore needs its own env var, `SPA_CLIENT_ID`, set to the same value as the client's `VITE_AZURE_CLIENT_ID`, used only for audience validation in `authMiddleware.js`. `AZURE_TENANT_ID` is shared as-is since both registrations live in the same tenant.
+
 **Persistence approach: SQLite-backed job store, replacing the in-memory `Map`.**
 
 `better-sqlite3` writes to a single file (`server/data/jobs.db`, path configurable via `JOBS_DB_PATH` env var). Only serializable job fields are persisted; the non-serializable runtime objects (`graphClient`, `timer` handle) stay in a separate in-memory-only `Map`, scoped to jobs actively running in the current process.
@@ -45,7 +47,7 @@ import jwksRsa from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 
 const TENANT_ID = process.env.AZURE_TENANT_ID
-const CLIENT_ID = process.env.AZURE_CLIENT_ID
+const SPA_CLIENT_ID = process.env.SPA_CLIENT_ID
 
 const jwksClient = jwksRsa({
   jwksUri: `https://login.microsoftonline.com/${TENANT_ID}/discovery/v2.0/keys`,
@@ -74,7 +76,7 @@ export function requireAuth(req, res, next) {
   jwt.verify(
     token,
     getSigningKey,
-    { audience: CLIENT_ID, issuer: `https://login.microsoftonline.com/${TENANT_ID}/v2.0` },
+    { audience: SPA_CLIENT_ID, issuer: `https://login.microsoftonline.com/${TENANT_ID}/v2.0` },
     (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: 'Invalid or expired token' })
@@ -470,7 +472,7 @@ export function getJob(id) {
 | `server/src/provisioningRoutes.js` | Validate body with `createJobSchema`; return 400 with issue details on failure |
 | `server/src/provisioningJobs.js` | Add `resolveSiteName` helper (replaces 3x duplicated unwrap logic); call `persistJob` on every state mutation; `getJob` falls back to `loadJob` |
 | `server/package.json` | Add `jsonwebtoken`, `jwks-rsa`, `zod`, `pino`, `better-sqlite3`, `express-rate-limit` |
-| `server/.env.example` (or equivalent docs) | Document new env vars: `CLIENT_ORIGIN`, `JOBS_DB_PATH` (optional), `LOG_LEVEL` (optional) |
+| `server/.env.example` (or equivalent docs) | Document new env vars: `SPA_CLIENT_ID` (required — same value as client's `VITE_AZURE_CLIENT_ID`), `CLIENT_ORIGIN`, `JOBS_DB_PATH` (optional), `LOG_LEVEL` (optional) |
 | `.gitignore` (server-level or root) | Add `server/data/*.db` |
 | `client/src/auth/msalConfig.js` / API call site | Attach `Authorization: Bearer <idToken>` header to provisioning API requests |
 
