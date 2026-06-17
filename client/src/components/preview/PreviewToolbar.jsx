@@ -1,12 +1,15 @@
 import { Monitor, Tablet, Smartphone, X } from 'lucide-react'
-
-const DEVICES = [
-  { key: 'desktop', label: 'Desktop', Icon: Monitor },
-  { key: 'tablet',  label: 'Tablet',  Icon: Tablet },
-  { key: 'mobile',  label: 'Mobile',  Icon: Smartphone },
-]
+import { useTranslation } from 'react-i18next'
 
 export default function PreviewToolbar({ device, onDevice }) {
+  const { t } = useTranslation()
+
+  const DEVICES = [
+    { key: 'desktop', label: t('preview.desktop'), Icon: Monitor },
+    { key: 'tablet',  label: t('preview.tablet'),  Icon: Tablet },
+    { key: 'mobile',  label: t('preview.mobile'),  Icon: Smartphone },
+  ]
+
   return (
     <div className="flex items-center justify-between bg-navy h-10 px-4 flex-shrink-0 border-b border-slate">
       <div className="flex items-center gap-2">
@@ -36,7 +39,7 @@ export default function PreviewToolbar({ device, onDevice }) {
         className="flex items-center gap-1 text-slate-light hover:text-white text-[10px] transition-colors"
       >
         <X size={12} />
-        Chiudi preview
+        {t('preview.close')}
       </button>
     </div>
   )

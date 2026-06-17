@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { DndContext, PointerSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
@@ -22,6 +23,7 @@ export default function PagesPanel() {
   const [collapsedIds, setCollapsedIds] = useState(() => new Set())
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
+  const { t } = useTranslation()
 
   function toggleExpand(pageId) {
     setCollapsedIds(prev => {
@@ -49,12 +51,12 @@ export default function PagesPanel() {
   return (
     <div className="flex flex-col h-full">
       <div className="p-3 border-b border-slate-mid flex items-center justify-between gap-2">
-        <span className="text-xs font-semibold text-slate-light uppercase tracking-wider">Pagine</span>
+        <span className="text-xs font-semibold text-slate-light uppercase tracking-wider">{t('pages.title')}</span>
         <button
           onClick={() => dispatch({ type: ACTIONS.ADD_PAGE, payload: { parentId: null } })}
           className="flex items-center gap-1 text-xs font-medium text-blue-electric hover:text-white transition-colors"
         >
-          <Plus size={14} /> Aggiungi pagina
+          <Plus size={14} /> {t('pages.add')}
         </button>
       </div>
       <div className="flex-1 overflow-y-auto py-2 px-2">
