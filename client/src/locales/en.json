@@ -72,6 +72,7 @@
     "changeLayout": "Change section layout",
     "deleteSection": "Delete section",
     "moveTo": "Move to",
+    "moveToOtherColumn": "Move to another column",
     "sectionCol": "Section {{section}} · Column {{col}}"
   },
   "props": {

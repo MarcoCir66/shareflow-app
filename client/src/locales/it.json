@@ -72,6 +72,7 @@
     "changeLayout": "Cambia layout sezione",
     "deleteSection": "Elimina sezione",
     "moveTo": "Sposta in",
+    "moveToOtherColumn": "Sposta in un'altra colonna",
     "sectionCol": "Sezione {{section}} · Colonna {{col}}"
   },
   "props": {

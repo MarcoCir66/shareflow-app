@@ -72,6 +72,7 @@
     "changeLayout": "Abschnittslayout ändern",
     "deleteSection": "Abschnitt löschen",
     "moveTo": "Verschieben nach",
+    "moveToOtherColumn": "In eine andere Spalte verschieben",
     "sectionCol": "Abschnitt {{section}} · Spalte {{col}}"
   },
   "props": {

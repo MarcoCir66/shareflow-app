@@ -65,7 +65,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
           <button
             onClick={e => { e.stopPropagation(); setMoveMenuOpen(o => !o) }}
             className="text-gray-300 hover:text-blue transition-colors"
-            title="Sposta in un'altra colonna"
+            title={t('canvas.moveToOtherColumn')}
           >
             <ArrowRightLeft size={14} />
           </button>
