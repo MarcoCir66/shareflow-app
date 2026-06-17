@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function ContentItemForm({ schema, item, onSave, onCancel }) {
+  const { t } = useTranslation()
   const [values, setValues] = useState(() => {
     const init = {}
     schema.forEach(field => { init[field.key] = item[field.key] ?? '' })
@@ -49,7 +51,7 @@ export default function ContentItemForm({ schema, item, onSave, onCancel }) {
                 errors[field.key] ? 'border-red-400' : 'border-slate-mid focus:border-blue'
               }`}
             >
-              <option value="">— seleziona —</option>
+              <option value="">{t('content.selectPlaceholder')}</option>
               {field.options.map(opt => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
@@ -59,7 +61,7 @@ export default function ContentItemForm({ schema, item, onSave, onCancel }) {
               value={Array.isArray(values[field.key]) ? values[field.key].join('\n') : values[field.key]}
               onChange={e => set(field.key, e.target.value.split('\n').filter(Boolean))}
               rows={3}
-              placeholder="Un'opzione per riga"
+              placeholder={t('content.onePerLine')}
               className={`w-full text-xs bg-navy border rounded px-2 py-1 text-white placeholder-slate-mid focus:outline-none resize-none ${
                 errors[field.key] ? 'border-red-400' : 'border-slate-mid focus:border-blue'
               }`}
@@ -82,13 +84,13 @@ export default function ContentItemForm({ schema, item, onSave, onCancel }) {
           onClick={onCancel}
           className="text-xs text-slate-light hover:text-white px-2 py-1 transition-colors"
         >
-          Annulla
+          {t('content.cancel')}
         </button>
         <button
           onClick={handleSave}
           className="text-xs bg-blue hover:bg-blue/80 text-white rounded px-3 py-1 transition-colors"
         >
-          Salva
+          {t('content.save')}
         </button>
       </div>
     </div>

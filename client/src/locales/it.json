@@ -82,7 +82,10 @@
     "noSelectionHint": "Click a block on the canvas to configure its properties",
     "visible": "Visible",
     "commentsEnabled": "Comments enabled",
-    "likesEnabled": "Likes enabled"
+    "likesEnabled": "Likes enabled",
+    "sectionHeading": "Sezione {{n}}",
+    "columnLayout": "Layout colonne",
+    "scope": "Scope"
   },
   "content": {
     "dataSource": "Fonte dati",
@@ -95,7 +98,17 @@
     "addItem": "+ Aggiungi item",
     "urlHint": "Inserisci un URL per la fonte esterna, poi aggiungi dati campione per l'anteprima.",
     "edit": "Modifica",
-    "remove": "Rimuovi"
+    "remove": "Rimuovi",
+    "selectPlaceholder": "— seleziona —",
+    "onePerLine": "Un'opzione per riga",
+    "cancel": "Annulla",
+    "save": "Salva"
+  },
+  "scope": {
+    "corporate": "Corporate",
+    "country": "Country",
+    "sede": "Sede",
+    "funzione": "Funzione"
   },
   "source": {
     "sharepoint-list": "SharePoint",

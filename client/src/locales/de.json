@@ -82,7 +82,10 @@
     "noSelectionHint": "Klicken Sie auf einen Block im Canvas, um seine Eigenschaften zu konfigurieren",
     "visible": "Sichtbar",
     "commentsEnabled": "Kommentare aktiviert",
-    "likesEnabled": "Likes aktiviert"
+    "likesEnabled": "Likes aktiviert",
+    "sectionHeading": "Abschnitt {{n}}",
+    "columnLayout": "Spaltenlayout",
+    "scope": "Bereich"
   },
   "content": {
     "dataSource": "Datenquelle",
@@ -95,7 +98,17 @@
     "addItem": "+ Element hinzufügen",
     "urlHint": "Geben Sie eine URL für die externe Quelle ein und fügen Sie dann Beispieldaten für die Vorschau hinzu.",
     "edit": "Bearbeiten",
-    "remove": "Entfernen"
+    "remove": "Entfernen",
+    "selectPlaceholder": "— auswählen —",
+    "onePerLine": "Eine Option pro Zeile",
+    "cancel": "Abbrechen",
+    "save": "Speichern"
+  },
+  "scope": {
+    "corporate": "Corporate",
+    "country": "Land",
+    "sede": "Standort",
+    "funzione": "Abteilung"
   },
   "source": {
     "sharepoint-list": "SharePoint",
