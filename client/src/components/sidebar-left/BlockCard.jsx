@@ -1,9 +1,11 @@
 import * as icons from 'lucide-react'
 import { useDraggable } from '@dnd-kit/core'
+import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 
 export default function BlockCard({ block }) {
   const { dispatch, ACTIONS } = useConfigurator()
+  const { t } = useTranslation()
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `catalog-${block.id}`,
     data: { type: 'catalog-block', blockId: block.id },
@@ -25,7 +27,9 @@ export default function BlockCard({ block }) {
       `}
     >
       <Icon size={20} className="text-blue-electric flex-shrink-0" />
-      <span className="text-xs text-slate-light leading-tight">{block.label}</span>
+      <span className="text-xs text-slate-light leading-tight">
+        {t(`blocks.labels.${block.id}`, { defaultValue: block.label })}
+      </span>
     </div>
   )
 }

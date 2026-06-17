@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
-import { CATEGORY_LABELS } from '../../data/blockCatalog.js'
+import { useTranslation } from 'react-i18next'
 import BlockCard from './BlockCard.jsx'
 
 export default function CategoryGroup({ category, blocks }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(true)
   return (
     <div className="mb-1">
@@ -12,7 +13,7 @@ export default function CategoryGroup({ category, blocks }) {
         className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-slate-mid transition-colors"
       >
         <span className="text-xs font-semibold text-slate-light uppercase tracking-wider">
-          {CATEGORY_LABELS[category]}
+          {t(`blocks.categories.${category}`)}
         </span>
         <div className="flex items-center gap-2">
           <span className="text-xs bg-slate-mid text-slate-light px-1.5 py-0.5 rounded-full">

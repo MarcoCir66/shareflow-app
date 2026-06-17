@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Search } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { blockCatalog, CATEGORIES } from '../../data/blockCatalog.js'
 import CategoryGroup from './CategoryGroup.jsx'
 
 export default function BlockLibrary() {
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
@@ -26,7 +28,7 @@ export default function BlockLibrary() {
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Search blocks…"
+            placeholder={t('blocks.search')}
             className="w-full bg-slate-mid text-white text-xs pl-8 pr-3 py-2 rounded-lg border border-slate-mid focus:border-blue-electric focus:outline-none placeholder-slate-light"
           />
         </div>
@@ -36,7 +38,9 @@ export default function BlockLibrary() {
           <CategoryGroup key={category} category={category} blocks={blocks} />
         ))}
         {grouped.length === 0 && (
-          <p className="text-slate-light text-xs text-center py-8">No blocks match "{query}"</p>
+          <p className="text-slate-light text-xs text-center py-8">
+            {t('blocks.noResults', { query })}
+          </p>
         )}
       </div>
     </div>
