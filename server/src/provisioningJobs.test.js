@@ -1,3 +1,7 @@
+import os from 'node:os'
+import path from 'node:path'
+process.env.JOBS_DB_PATH = path.join(os.tmpdir(), `provisioning-jobs-test-${process.pid}.db`)
+
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { resolveSiteName } from './provisioningJobs.js'

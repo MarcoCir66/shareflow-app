@@ -1,6 +1,8 @@
 import crypto from 'node:crypto'
 import { isGraphConfigured, getGraphAccessToken } from './msalClient.js'
 import { getGraphClient } from './graphClient.js'
+import { persistJob, loadJob } from './jobStore.js'
+import logger from './logger.js'
 
 const STEP_COUNT = 6
 const STEP_DELAY_MS = 900
@@ -57,8 +59,10 @@ async function runStep(jobId, step) {
         break
     }
   } catch (err) {
+    logger.error({ jobId, step, err: err.message }, 'provisioning step failed')
     job.status = 'error'
     job.error = err.message
+    persistJob(job)
     return
   }
 
@@ -69,9 +73,12 @@ async function runStep(jobId, step) {
     job.result = {
       siteUrl: job.siteUrl ?? `https://contoso.sharepoint.com/sites/${slugify(job.tenantConfiguration?.siteName)}`,
     }
+    logger.info({ jobId, siteUrl: job.result.siteUrl }, 'provisioning completed')
+    persistJob(job)
     return
   }
 
+  persistJob(job)
   job.timer = setTimeout(() => runStep(jobId, job.currentStep), STEP_DELAY_MS)
 }
 
@@ -124,12 +131,14 @@ export function createJob(tenantConfiguration) {
     siteUrl: null,
     graphClient: null,
     timer: null,
+    createdAt: new Date().toISOString(),
   }
   jobs.set(id, job)
+  persistJob(job)
   job.timer = setTimeout(() => runStep(id, 0), STEP_DELAY_MS)
   return job
 }
 
 export function getJob(id) {
-  return jobs.get(id)
+  return jobs.get(id) ?? loadJob(id)
 }
