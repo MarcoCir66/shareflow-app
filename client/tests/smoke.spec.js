@@ -8,15 +8,15 @@ test.describe('ShareFlow configurator smoke test', () => {
 
   test('loads the 3-column workspace with the default Home page', async ({ page }) => {
     await expect(page.getByText('ShareFlow', { exact: true })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Deploy to SharePoint' })).toBeVisible()
-    await expect(page.getByText('Communication', { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Pubblica su SharePoint' })).toBeVisible()
+    await expect(page.getByText('Comunicazione', { exact: true })).toBeVisible()
     await expect(page.getByText('SharePoint Communication Site — Home')).toBeVisible()
-    await expect(page.getByText('No block selected')).toBeVisible()
+    await expect(page.getByText('Nessun blocco selezionato')).toBeVisible()
     await expect(page.locator('main').getByRole('button', { name: 'Home', exact: true }).locator('svg')).toHaveCount(0)
   })
 
   test('search filters the block library', async ({ page }) => {
-    await page.getByPlaceholder('Search blocks…').fill('news')
+    await page.getByPlaceholder('Cerca blocchi…').fill('news')
     await expect(page.getByText('News - Corporate', { exact: true })).toBeVisible()
     await expect(page.getByText('Procedure', { exact: true })).not.toBeVisible()
   })
@@ -36,7 +36,7 @@ test.describe('ShareFlow configurator smoke test', () => {
     await page.getByText('News - Corporate', { exact: true }).click()
     await page.locator('main').getByText('News - Corporate', { exact: true }).click()
 
-    const visibleRow = page.locator('div', { hasText: 'Visible' }).filter({ has: page.locator('button') }).last()
+    const visibleRow = page.locator('div', { hasText: 'Visibile' }).filter({ has: page.locator('button') }).last()
     await visibleRow.locator('button').click()
     await expect(page.getByText('Instance ID')).toBeVisible()
   })
@@ -50,7 +50,7 @@ test.describe('ShareFlow configurator smoke test', () => {
     await blockCard.hover()
     await blockCard.locator('button').last().click()
 
-    await expect(page.getByText('No block selected')).toBeVisible()
+    await expect(page.getByText('Nessun blocco selezionato')).toBeVisible()
     await expect(canvasBlock).not.toBeVisible()
   })
 
@@ -131,7 +131,7 @@ test.describe('ShareFlow configurator smoke test', () => {
 
     const [request] = await Promise.all([
       page.waitForRequest(req => req.url().includes('/api/provisioning/jobs') && req.method() === 'POST'),
-      page.getByRole('button', { name: 'Deploy to SharePoint' }).click(),
+      page.getByRole('button', { name: 'Pubblica su SharePoint' }).click(),
     ])
     const { tenantConfiguration } = request.postDataJSON()
     expect(tenantConfiguration.navigation).toEqual([
@@ -139,9 +139,9 @@ test.describe('ShareFlow configurator smoke test', () => {
     ])
     expect(tenantConfiguration.theme).toEqual({ templateId: 'corporate-classic', accentColor: null })
 
-    await expect(page.getByText('Deploying to SharePoint')).toBeVisible()
-    await expect(page.getByText('Deployment complete!')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Done' })).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText('Pubblicazione su SharePoint in corso')).toBeVisible()
+    await expect(page.getByText('Distribuzione completata!')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Fine' })).toBeVisible({ timeout: 15000 })
   })
 
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
@@ -189,7 +189,7 @@ test.describe('ShareFlow configurator smoke test', () => {
   })
 
   test('Preview button is visible in the navbar', async ({ page }) => {
-    await expect(page.getByRole('button', { name: 'Preview', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Anteprima', exact: true })).toBeVisible()
   })
 
   test('Preview tab opens and shows page without edit chrome', async ({ page, context }) => {
@@ -198,7 +198,7 @@ test.describe('ShareFlow configurator smoke test', () => {
 
     const [previewPage] = await Promise.all([
       context.waitForEvent('page'),
-      page.getByRole('button', { name: 'Preview', exact: true }).click(),
+      page.getByRole('button', { name: 'Anteprima', exact: true }).click(),
     ])
     await previewPage.waitForLoadState('domcontentloaded')
 
@@ -208,7 +208,7 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(previewPage.getByText('My Corporate Intranet')).toBeVisible()
     // No editing chrome: no "Aggiungi sezione" button, no Deploy button
     await expect(previewPage.getByRole('button', { name: 'Aggiungi sezione' })).not.toBeVisible()
-    await expect(previewPage.getByRole('button', { name: 'Deploy to SharePoint' })).not.toBeVisible()
+    await expect(previewPage.getByRole('button', { name: 'Pubblica su SharePoint' })).not.toBeVisible()
   })
 
   test('Preview tab shows block content added in the editor', async ({ page, context }) => {
@@ -225,7 +225,7 @@ test.describe('ShareFlow configurator smoke test', () => {
 
     const [previewPage] = await Promise.all([
       context.waitForEvent('page'),
-      page.getByRole('button', { name: 'Preview', exact: true }).click(),
+      page.getByRole('button', { name: 'Anteprima', exact: true }).click(),
     ])
     await previewPage.waitForLoadState('domcontentloaded')
 
@@ -238,7 +238,7 @@ test.describe('ShareFlow configurator smoke test', () => {
 
     const [previewPage] = await Promise.all([
       context.waitForEvent('page'),
-      page.getByRole('button', { name: 'Preview', exact: true }).click(),
+      page.getByRole('button', { name: 'Anteprima', exact: true }).click(),
     ])
     await previewPage.waitForLoadState('domcontentloaded')
 
