@@ -93,7 +93,9 @@
     "production": "PRODUZIONE",
     "add": "+ Aggiungi",
     "addItem": "+ Aggiungi item",
-    "urlHint": "Inserisci un URL per la fonte esterna, poi aggiungi dati campione per l'anteprima."
+    "urlHint": "Inserisci un URL per la fonte esterna, poi aggiungi dati campione per l'anteprima.",
+    "edit": "Modifica",
+    "remove": "Rimuovi"
   },
   "source": {
     "sharepoint-list": "SharePoint",

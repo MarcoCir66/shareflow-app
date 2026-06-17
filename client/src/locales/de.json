@@ -93,7 +93,9 @@
     "production": "PRODUKTION",
     "add": "+ Hinzufügen",
     "addItem": "+ Element hinzufügen",
-    "urlHint": "Geben Sie eine URL für die externe Quelle ein und fügen Sie dann Beispieldaten für die Vorschau hinzu."
+    "urlHint": "Geben Sie eine URL für die externe Quelle ein und fügen Sie dann Beispieldaten für die Vorschau hinzu.",
+    "edit": "Bearbeiten",
+    "remove": "Entfernen"
   },
   "source": {
     "sharepoint-list": "SharePoint",

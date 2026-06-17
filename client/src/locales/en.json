@@ -93,7 +93,9 @@
     "production": "PRODUCTION",
     "add": "+ Add",
     "addItem": "+ Add item",
-    "urlHint": "Enter a URL for the external source, then add sample data for the preview."
+    "urlHint": "Enter a URL for the external source, then add sample data for the preview.",
+    "edit": "Edit",
+    "remove": "Remove"
   },
   "source": {
     "sharepoint-list": "SharePoint",

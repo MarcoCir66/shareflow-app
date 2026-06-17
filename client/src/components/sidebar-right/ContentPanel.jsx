@@ -97,12 +97,12 @@ export default function ContentPanel({ widget, block }) {
               <button
                 onClick={() => setEditingIndex(i)}
                 className="text-slate-light hover:text-white text-xs flex-shrink-0 transition-colors"
-                title="Modifica"
+                title={t('content.edit')}
               >✎</button>
               <button
                 onClick={() => removeItem(i)}
                 className="text-slate-light hover:text-red-400 text-xs flex-shrink-0 transition-colors"
-                title="Rimuovi"
+                title={t('content.remove')}
               >✕</button>
             </div>
           )
