@@ -1,9 +1,9 @@
 {
   "navbar": {
-    "tagline": "The No-Code SharePoint Intranet Factory",
+    "tagline": "La piattaforma no-code per intranet SharePoint",
     "tenant": "Tenant: Contoso Corp",
-    "preview": "Preview",
-    "deploy": "Deploy to SharePoint"
+    "preview": "Anteprima",
+    "deploy": "Pubblica su SharePoint"
   },
   "pages": {
     "title": "Pagine",
@@ -11,20 +11,20 @@
   },
   "appearance": {
     "siteNameLabel": "Nome sito ({{lang}})",
-    "template": "Template",
+    "template": "Modello",
     "brandColor": "Colore brand",
-    "reset": "Reset"
+    "reset": "Ripristina"
   },
   "blocks": {
-    "search": "Search blocks…",
-    "noResults": "No blocks match \"{{query}}\"",
-    "seeAll": "See all",
+    "search": "Cerca blocchi…",
+    "noResults": "Nessun blocco corrisponde a \"{{query}}\"",
+    "seeAll": "Vedi tutti",
     "days": "giorni",
     "categories": {
-      "COMMUNICATION": "Communication",
-      "LEARNING": "Learning",
-      "PRODUCTIVITY": "Productivity",
-      "KNOWLEDGE_BASE": "Knowledge Base"
+      "COMMUNICATION": "Comunicazione",
+      "LEARNING": "Formazione",
+      "PRODUCTIVITY": "Produttività",
+      "KNOWLEDGE_BASE": "Base di conoscenza"
     },
     "labels": {
       "news-corporate": "News - Corporate",
@@ -40,14 +40,14 @@
       "eventi-funzione": "Eventi - Funzione",
       "sezione-fiere": "Sezione Fiere",
       "sezione-mostre": "Sezione Mostre",
-      "multimedia-gallery": "Multimedia Gallery",
+      "multimedia-gallery": "Galleria multimediale",
       "countdown-lancio": "Count down di lancio",
       "rassegna-stampa": "Rassegna stampa",
       "bacheca-sindacale": "Bacheca Sindacale",
       "bacheca-scambio": "Bacheca Cerco/scambio",
       "new-entry": "New entry",
       "oggi-presentiamo": "Oggi presentiamo…",
-      "polls-survey": "Polls & Survey",
+      "polls-survey": "Sondaggi",
       "sezione-welfare": "Sezione Welfare",
       "procedure": "Procedure",
       "sezione-progetti": "Sezione Progetti",
@@ -66,7 +66,7 @@
     }
   },
   "canvas": {
-    "preview": "Canvas Preview",
+    "preview": "Anteprima canvas",
     "addSection": "Aggiungi sezione",
     "dropHere": "Trascina qui un blocco",
     "changeLayout": "Cambia layout sezione",
@@ -78,14 +78,14 @@
   "props": {
     "properties": "Proprietà",
     "content": "Contenuto",
-    "noSelection": "No block selected",
-    "noSelectionHint": "Click a block on the canvas to configure its properties",
-    "visible": "Visible",
-    "commentsEnabled": "Comments enabled",
-    "likesEnabled": "Likes enabled",
+    "noSelection": "Nessun blocco selezionato",
+    "noSelectionHint": "Clicca su un blocco nel canvas per configurarne le proprietà",
+    "visible": "Visibile",
+    "commentsEnabled": "Commenti abilitati",
+    "likesEnabled": "Like abilitati",
     "sectionHeading": "Sezione {{n}}",
     "columnLayout": "Layout colonne",
-    "scope": "Scope"
+    "scope": "Ambito"
   },
   "content": {
     "dataSource": "Fonte dati",
@@ -120,18 +120,18 @@
     "placeholder_http-api": "https://api.example.com/endpoint"
   },
   "deploy": {
-    "title": "Deploying to SharePoint",
-    "step1": "Authenticating via MSAL…",
-    "step2": "Connecting to Microsoft Graph API…",
-    "step3": "Creating SharePoint Communication Site…",
-    "step4": "Provisioning Lists & Content Types…",
-    "step5": "Configuring Pages & Webparts…",
-    "step6": "Deployment complete!",
-    "siteReady": "Your SharePoint site is ready",
-    "openInSharePoint": "Open in SharePoint",
-    "done": "Done",
-    "close": "Close",
-    "errorDefault": "Unable to reach the provisioning service. Make sure the backend is running and try again."
+    "title": "Pubblicazione su SharePoint in corso",
+    "step1": "Autenticazione tramite MSAL…",
+    "step2": "Connessione alle API di Microsoft Graph…",
+    "step3": "Creazione del sito di comunicazione SharePoint…",
+    "step4": "Provisioning di liste e tipi di contenuto…",
+    "step5": "Configurazione di pagine e webpart…",
+    "step6": "Distribuzione completata!",
+    "siteReady": "Il tuo sito SharePoint è pronto",
+    "openInSharePoint": "Apri in SharePoint",
+    "done": "Fine",
+    "close": "Chiudi",
+    "errorDefault": "Impossibile contattare il servizio di provisioning. Verifica che il backend sia in esecuzione e riprova."
   },
   "preview": {
     "desktop": "Desktop",
