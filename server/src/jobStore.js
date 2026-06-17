@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3'
 import path from 'node:path'
+import logger from './logger.js'
 
 const dbPath = process.env.JOBS_DB_PATH ?? path.join(import.meta.dirname, '..', 'data', 'jobs.db')
 const db = new Database(dbPath)
@@ -24,7 +25,8 @@ const upsertStmt = db.prepare(`
   INSERT INTO jobs (id, status, current_step, total_steps, tenant_configuration, result, error, site_id, site_url, created_at, updated_at)
   VALUES (@id, @status, @currentStep, @totalSteps, @tenantConfiguration, @result, @error, @siteId, @siteUrl, @createdAt, @updatedAt)
   ON CONFLICT(id) DO UPDATE SET
-    status = @status, current_step = @currentStep, result = @result, error = @error,
+    status = @status, current_step = @currentStep, total_steps = @totalSteps,
+    tenant_configuration = @tenantConfiguration, result = @result, error = @error,
     site_id = @siteId, site_url = @siteUrl, updated_at = @updatedAt
 `)
 
@@ -50,15 +52,20 @@ export function persistJob(job) {
 export function loadJob(id) {
   const row = selectStmt.get(id)
   if (!row) return null
-  return {
-    id: row.id,
-    status: row.status,
-    currentStep: row.current_step,
-    totalSteps: row.total_steps,
-    tenantConfiguration: JSON.parse(row.tenant_configuration),
-    result: row.result ? JSON.parse(row.result) : null,
-    error: row.error,
-    siteId: row.site_id,
-    siteUrl: row.site_url,
+  try {
+    return {
+      id: row.id,
+      status: row.status,
+      currentStep: row.current_step,
+      totalSteps: row.total_steps,
+      tenantConfiguration: JSON.parse(row.tenant_configuration),
+      result: row.result ? JSON.parse(row.result) : null,
+      error: row.error,
+      siteId: row.site_id,
+      siteUrl: row.site_url,
+    }
+  } catch (err) {
+    logger.error({ id, err: err.message }, 'failed to parse persisted job row')
+    return null
   }
 }
