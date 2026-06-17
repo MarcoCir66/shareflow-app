@@ -255,3 +255,80 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(previewPage.locator('[data-device="tablet"]')).toBeVisible()
   })
 })
+
+test.describe('i18n language switching', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('i18nextLng', 'it'))
+    await page.goto('/')
+  })
+
+  test('LanguageSwitcher renders all four language buttons', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Switch language to IT', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Switch language to EN', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Switch language to FR', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Switch language to DE', exact: true })).toBeVisible()
+  })
+
+  test('switching to EN translates Pages panel header and Add page button', async ({ page }) => {
+    await page.getByRole('button', { name: 'Pagine' }).click()
+
+    const pagesPanelHeader = page.locator('aside.border-r span.uppercase')
+
+    // IT baseline
+    await expect(pagesPanelHeader.filter({ hasText: 'Pagine' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Aggiungi pagina' })).toBeVisible()
+
+    // Switch to EN
+    await page.getByRole('button', { name: 'Switch language to EN', exact: true }).click()
+
+    await expect(pagesPanelHeader.filter({ hasText: 'Pages' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Add page' })).toBeVisible()
+  })
+
+  test('switching back to IT restores Italian strings', async ({ page }) => {
+    await page.getByRole('button', { name: 'Pagine' }).click()
+    const pagesPanelHeader = page.locator('aside.border-r span.uppercase')
+
+    await page.getByRole('button', { name: 'Switch language to EN', exact: true }).click()
+    await expect(pagesPanelHeader.filter({ hasText: 'Pages' })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Switch language to IT', exact: true }).click()
+    await expect(pagesPanelHeader.filter({ hasText: 'Pagine' })).toBeVisible()
+  })
+
+  test('switching to EN translates canvas drop hint', async ({ page }) => {
+    // Fill the existing column first
+    await page.getByText('News - Corporate', { exact: true }).click()
+
+    // Add a second, empty section so a drop zone remains visible
+    await page.getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.getByRole('button', { name: 'Una colonna' }).click()
+
+    // IT drop hint exists
+    await expect(page.getByText('Trascina qui un blocco').first()).toBeVisible()
+
+    // Switch to EN
+    await page.getByRole('button', { name: 'Switch language to EN', exact: true }).click()
+    await expect(page.getByText('Drag a block here').first()).toBeVisible()
+  })
+
+  test('page title rename in IT does not change EN variant', async ({ page }) => {
+    await page.getByRole('button', { name: 'Pagine' }).click()
+
+    // Double-click "Home" label in sidebar to start rename
+    const homeLabel = page.locator('aside.border-r').getByText('Home', { exact: true })
+    await homeLabel.dblclick()
+
+    // Type new IT title
+    const input = page.locator('aside.border-r').getByRole('textbox')
+    await input.fill('Principale')
+    await input.press('Enter')
+
+    // IT shows new title
+    await expect(page.getByText('Principale').first()).toBeVisible()
+
+    // Switch to EN — the EN variant should still be "Home"
+    await page.getByRole('button', { name: 'Switch language to EN', exact: true }).click()
+    await expect(page.locator('aside.border-r').getByText('Home', { exact: true })).toBeVisible()
+  })
+})
