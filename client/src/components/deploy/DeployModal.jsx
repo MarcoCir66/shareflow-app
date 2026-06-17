@@ -21,6 +21,10 @@ export default function DeployModal({ onClose }) {
   const done = status === 'done'
   const failed = status === 'error'
 
+  // Real step implementations live in server/src/provisioningJobs.js,
+  // using server/src/msalClient.js (app-only MSAL token) and
+  // server/src/graphClient.js (Graph SDK client) when Azure credentials are
+  // configured; otherwise each step is simulated.
   const STEPS = [
     { id: 1, label: t('deploy.step1') },
     { id: 2, label: t('deploy.step2') },
