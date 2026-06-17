@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test.describe('ShareFlow configurator smoke test', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('i18nextLng', 'it'))
     await page.goto('/')
   })
 

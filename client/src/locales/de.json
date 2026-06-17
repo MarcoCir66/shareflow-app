@@ -17,7 +17,7 @@
   },
   "blocks": {
     "search": "Blöcke suchen…",
-    "noResults": "Keine Blöcke entsprechen „{{query}}"",
+    "noResults": "Keine Blöcke entsprechen „{{query}}“",
     "seeAll": "Alle anzeigen",
     "days": "Tage",
     "categories": {

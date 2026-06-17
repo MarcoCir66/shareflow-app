@@ -1,12 +1,16 @@
 import { Layers, Eye } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { isMsalConfigured } from '../../auth/msalInstance.js'
 import AuthSection from './AuthSection.jsx'
+import LanguageSwitcher from './LanguageSwitcher.jsx'
 
 function openPreview() {
   window.open('/?mode=preview', 'shareflow-preview')
 }
 
 export default function Navbar({ onDeployClick }) {
+  const { t } = useTranslation()
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-navy flex items-center justify-between px-6 border-b border-slate">
       <div className="flex items-center gap-3">
@@ -16,28 +20,29 @@ export default function Navbar({ onDeployClick }) {
         <div>
           <span className="text-white font-semibold text-sm tracking-wide">ShareFlow</span>
           <span className="text-slate-light text-xs ml-2 hidden md:inline">
-            The No-Code SharePoint Intranet Factory
+            {t('navbar.tagline')}
           </span>
         </div>
       </div>
       <div className="flex items-center gap-3">
         {isMsalConfigured ? <AuthSection /> : (
           <span className="text-xs text-slate-light bg-slate px-3 py-1 rounded-full border border-slate-mid">
-            Tenant: Contoso Corp
+            {t('navbar.tenant')}
           </span>
         )}
+        <LanguageSwitcher />
         <button
           onClick={openPreview}
           className="flex items-center gap-2 text-slate-light hover:text-white border border-slate-mid hover:border-slate text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <Eye size={14} />
-          Preview
+          {t('navbar.preview')}
         </button>
         <button
           onClick={onDeployClick}
           className="flex items-center gap-2 bg-blue-electric hover:bg-blue text-navy font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
         >
-          Deploy to SharePoint
+          {t('navbar.deploy')}
         </button>
       </div>
     </header>
