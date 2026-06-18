@@ -4,6 +4,9 @@
   "description": "ShareFlow Node.js backend — provisioning API",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">=21.2"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
