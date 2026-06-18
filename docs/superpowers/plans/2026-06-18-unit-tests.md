@@ -801,7 +801,7 @@ test('createJob returns a running job at step 0 and persists it immediately', ()
   assert.equal(persisted.status, 'running')
 })
 
-test('a job created without Graph configured reaches done with a generated siteUrl', { timeout: 2000 }, async () => {
+test('a job created without Graph configured reaches done with a generated siteUrl', { timeout: 15000 }, async () => {
   const job = createJob({ siteName: 'Acme Corp', widgets: [] })
   await new Promise(resolve => {
     const interval = setInterval(() => {
@@ -839,7 +839,7 @@ test('getJob falls back to loadJob (SQLite) when the in-memory map does not have
 - [ ] **Step 6: Run the tests**
 
 Run: `cd "server" && npm test`
-Expected: PASS — 26 tests passing (22 from before this task + 4 new).
+Expected: PASS — 26 tests passing (22 from before this task + 4 new). (The `{ timeout: 15000 }` on the lifecycle test gives headroom for slower timer resolution — e.g. Windows' ~15.6ms system timer quantum can inflate a chain of 5ms `setTimeout` hops well past a couple hundred milliseconds; the test was found to take ~5.5s wall-clock on one such machine during implementation, so 15s leaves comfortable margin without making a real bug invisible.)
 
 - [ ] **Step 7: Run the full e2e suite to confirm no regression**
 
