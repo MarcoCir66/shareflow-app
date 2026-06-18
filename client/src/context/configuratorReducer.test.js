@@ -198,3 +198,184 @@ test('EXPORT_CONFIGURATION rebuilds tenantConfiguration via buildTenantExport', 
     { pageId: 'page-home', title: state.pages[0].title, slug: 'home', children: [] },
   ])
 })
+
+test('CHANGE_SECTION_LAYOUT increasing columns appends empty columns', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.CHANGE_SECTION_LAYOUT, payload: { sectionId: 'section-1', layout: 'threeColumn' } })
+  const section = next.pages[0].sections[0]
+  expect(section.layout).toBe('threeColumn')
+  expect(section.columns).toHaveLength(3)
+  expect(section.columns[0].widgets).toEqual([])
+})
+
+test('CHANGE_SECTION_LAYOUT decreasing columns redistributes overflow widgets into the last kept column', () => {
+  const state = makeState({
+    pages: [{
+      pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null,
+      sections: [{
+        sectionId: 'section-1',
+        layout: 'threeColumn',
+        columns: [
+          { columnId: 'col-1', widgets: [{ instanceId: 'w1', blockId: 'a', props: {} }] },
+          { columnId: 'col-2', widgets: [{ instanceId: 'w2', blockId: 'b', props: {} }] },
+          { columnId: 'col-3', widgets: [{ instanceId: 'w3', blockId: 'c', props: {} }] },
+        ],
+      }],
+    }],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.CHANGE_SECTION_LAYOUT, payload: { sectionId: 'section-1', layout: 'oneColumn' } })
+  const section = next.pages[0].sections[0]
+  expect(section.columns).toHaveLength(1)
+  expect(section.columns[0].widgets.map(w => w.instanceId)).toEqual(['w1', 'w2', 'w3'])
+})
+
+test('REMOVE_SECTION removes an empty section when more than one section exists', () => {
+  const state = makeState({
+    pages: [{
+      pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null,
+      sections: [
+        { sectionId: 'section-1', layout: 'oneColumn', columns: [{ columnId: 'col-1', widgets: [] }] },
+        { sectionId: 'section-2', layout: 'oneColumn', columns: [{ columnId: 'col-2', widgets: [] }] },
+      ],
+    }],
+    selectedSectionId: 'section-2',
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_SECTION, payload: { sectionId: 'section-2' } })
+  expect(next.pages[0].sections).toHaveLength(1)
+  expect(next.selectedSectionId).toBeNull()
+})
+
+test('REMOVE_SECTION on a non-empty section returns the same state', () => {
+  const state = makeState({
+    pages: [{
+      pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null,
+      sections: [
+        { sectionId: 'section-1', layout: 'oneColumn', columns: [{ columnId: 'col-1', widgets: [{ instanceId: 'w1', blockId: 'a', props: {} }] }] },
+        { sectionId: 'section-2', layout: 'oneColumn', columns: [{ columnId: 'col-2', widgets: [] }] },
+      ],
+    }],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_SECTION, payload: { sectionId: 'section-1' } })
+  expect(next).toBe(state)
+})
+
+test('REMOVE_SECTION on the last remaining section returns the same state', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_SECTION, payload: { sectionId: 'section-1' } })
+  expect(next).toBe(state)
+})
+
+test('ADD_PAGE with parentId null appends a top-level page and selects it', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.ADD_PAGE, payload: { parentId: null } })
+  expect(next.pages).toHaveLength(2)
+  const newPage = next.pages[1]
+  expect(newPage.parentId).toBeNull()
+  expect(newPage.slug).toBe('nuova-pagina')
+  expect(next.activePageId).toBe(newPage.pageId)
+})
+
+test('ADD_PAGE with a parentId inserts the new page immediately after the parent subtree', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null, sections: [] },
+      { pageId: 'page-about', title: { it: 'About', en: 'About', fr: 'About', de: 'About' }, slug: 'about', parentId: null, sections: [] },
+    ],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.ADD_PAGE, payload: { parentId: 'page-home' } })
+  expect(next.pages).toHaveLength(3)
+  expect(next.pages[1].parentId).toBe('page-home')
+  expect(next.pages[2].pageId).toBe('page-about')
+})
+
+test('ADD_PAGE with an unknown parentId returns the same state', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.ADD_PAGE, payload: { parentId: 'does-not-exist' } })
+  expect(next).toBe(state)
+})
+
+test('RENAME_PAGE updates the title for the given language and recomputes the slug from the Italian title', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.RENAME_PAGE, payload: { pageId: 'page-home', lang: 'it', title: 'Pagina Principale' } })
+  expect(next.pages[0].title.it).toBe('Pagina Principale')
+  expect(next.pages[0].slug).toBe('pagina-principale')
+})
+
+test('RENAME_PAGE normalizes a legacy string title into the multilingual shape before updating', () => {
+  const state = makeState({
+    pages: [{ pageId: 'page-home', title: 'Home', slug: 'home', parentId: null, sections: [] }],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.RENAME_PAGE, payload: { pageId: 'page-home', lang: 'en', title: 'Main Page' } })
+  expect(next.pages[0].title).toEqual({ it: 'Home', en: 'Main Page', fr: 'Home', de: 'Home' })
+})
+
+test('RENAME_PAGE appends a numeric suffix when the new slug collides with another page', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null, sections: [] },
+      { pageId: 'page-other', title: { it: 'Altra', en: 'Other', fr: 'Autre', de: 'Andere' }, slug: 'altra', parentId: null, sections: [] },
+    ],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.RENAME_PAGE, payload: { pageId: 'page-other', lang: 'it', title: 'Home' } })
+  expect(next.pages[1].slug).toBe('home-2')
+})
+
+test('RENAME_PAGE with a blank title (after trim) returns the same state', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.RENAME_PAGE, payload: { pageId: 'page-home', lang: 'it', title: '   ' } })
+  expect(next).toBe(state)
+})
+
+test('REMOVE_PAGE removes a leaf page and switches activePageId if it was active', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null, sections: [] },
+      { pageId: 'page-about', title: { it: 'About', en: 'About', fr: 'About', de: 'About' }, slug: 'about', parentId: null, sections: [] },
+    ],
+    activePageId: 'page-about',
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_PAGE, payload: { pageId: 'page-about' } })
+  expect(next.pages).toHaveLength(1)
+  expect(next.activePageId).toBe('page-home')
+})
+
+test('REMOVE_PAGE on the only remaining page returns the same state', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_PAGE, payload: { pageId: 'page-home' } })
+  expect(next).toBe(state)
+})
+
+test('REMOVE_PAGE on a page with children returns the same state', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null, sections: [] },
+      { pageId: 'page-child', title: { it: 'Figlia', en: 'Child', fr: 'Enfant', de: 'Kind' }, slug: 'figlia', parentId: 'page-home', sections: [] },
+    ],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_PAGE, payload: { pageId: 'page-home' } })
+  expect(next).toBe(state)
+})
+
+test('MOVE_PAGE reorders pages and resolves the new parentId from the target depth', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-a', title: { it: 'A', en: 'A', fr: 'A', de: 'A' }, slug: 'a', parentId: null, sections: [] },
+      { pageId: 'page-b', title: { it: 'B', en: 'B', fr: 'B', de: 'B' }, slug: 'b', parentId: null, sections: [] },
+      { pageId: 'page-c', title: { it: 'C', en: 'C', fr: 'C', de: 'C' }, slug: 'c', parentId: null, sections: [] },
+    ],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.MOVE_PAGE, payload: { activeId: 'page-c', overId: 'page-a', depth: 0 } })
+  expect(next.pages.map(p => p.pageId)).toEqual(['page-c', 'page-a', 'page-b'])
+  expect(next.pages[0].parentId).toBeNull()
+})
+
+test('MOVE_PAGE dropping a page onto its own descendant returns the same state', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-a', title: { it: 'A', en: 'A', fr: 'A', de: 'A' }, slug: 'a', parentId: null, sections: [] },
+      { pageId: 'page-a-child', title: { it: 'AC', en: 'AC', fr: 'AC', de: 'AC' }, slug: 'a-child', parentId: 'page-a', sections: [] },
+    ],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.MOVE_PAGE, payload: { activeId: 'page-a', overId: 'page-a-child', depth: 0 } })
+  expect(next).toBe(state)
+})
