@@ -5,7 +5,7 @@ import { persistJob, loadJob } from './jobStore.js'
 import logger from './logger.js'
 
 const STEP_COUNT = 6
-const STEP_DELAY_MS = 900
+const STEP_DELAY_MS = Number(process.env.PROVISIONING_STEP_DELAY_MS ?? 900)
 
 const jobs = new Map()
 
