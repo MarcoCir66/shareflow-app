@@ -98,18 +98,20 @@ return (
 import { useEffect, useRef } from 'react'
 import { useFocusTrap } from '../../hooks/useFocusTrap.js'
 
-export default function AccessibleMenu({ isOpen, onClose, trigger, children, className }) {
+export default function AccessibleMenu({ isOpen, onClose, triggerRef, onClick, className, children }) {
   const menuRef = useRef(null)
   useFocusTrap(menuRef, { active: isOpen, onEscape: onClose })
 
   useEffect(() => {
     if (!isOpen) return
     function handleClickOutside(e) {
-      if (!menuRef.current?.contains(e.target)) onClose()
+      if (menuRef.current?.contains(e.target)) return
+      if (triggerRef?.current?.contains(e.target)) return
+      onClose()
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isOpen, onClose])
+  }, [isOpen, onClose, triggerRef])
 
   function handleArrowKey(e) {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
@@ -121,30 +123,30 @@ export default function AccessibleMenu({ isOpen, onClose, trigger, children, cla
     items[next]?.focus()
   }
 
+  if (!isOpen) return null
+
   return (
-    <>
-      {trigger}
-      {isOpen && (
-        <div ref={menuRef} role="menu" onKeyDown={handleArrowKey} className={className}>
-          {children}
-        </div>
-      )}
-    </>
+    <div ref={menuRef} role="menu" onKeyDown={handleArrowKey} onClick={onClick} className={className}>
+      {children}
+    </div>
   )
 }
 ```
 
+**Revised during plan-writing:** the primitive does not render a `trigger` prop itself — it renders only the popup, and callers keep their existing trigger button exactly where it already is, passing a ref to it as `triggerRef` (used only to exclude clicks on the trigger from the click-outside-closes logic). This was necessary because `CanvasSection`'s trigger button and its popup are *not* adjacent in the JSX tree (they live in two separate `<div>`s), so a "render the trigger for me" API would not fit that call site, while a plain "wrap the popup, take an optional trigger ref" API fits both `CanvasBlock` (where trigger and popup are adjacent) and `CanvasSection` (where they aren't) uniformly.
+
 `CanvasBlock.jsx` usage — the existing trigger button and menu markup are kept; only the wrapper and `role="menuitem"` on each item change:
 
 ```jsx
+<button ref={moveTriggerRef} onClick={e => { e.stopPropagation(); setMoveMenuOpen(o => !o) }} title={t('canvas.moveToOtherColumn')}>
+  <ArrowRightLeft size={14} />
+</button>
+...
 <AccessibleMenu
   isOpen={moveMenuOpen}
   onClose={() => setMoveMenuOpen(false)}
-  trigger={
-    <button onClick={e => { e.stopPropagation(); setMoveMenuOpen(o => !o) }} title={t('canvas.moveToOtherColumn')}>
-      <ArrowRightLeft size={14} />
-    </button>
-  }
+  triggerRef={moveTriggerRef}
+  onClick={e => e.stopPropagation()}
   className="absolute right-2 top-9 z-20 w-48 bg-white rounded-lg border border-gray-200 shadow-lg py-1"
 >
   <p className="px-3 py-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">{t('canvas.moveTo')}</p>
@@ -156,7 +158,7 @@ export default function AccessibleMenu({ isOpen, onClose, trigger, children, cla
 </AccessibleMenu>
 ```
 
-`SectionLayoutPicker.jsx` gets the same treatment: its trigger button becomes `trigger`, and each layout-choice button gains `role="menuitem"`.
+`SectionLayoutPicker.jsx` gets the same treatment via a new `asMenuItems` prop (default `false`, so its other call site in `SectionPropertiesPanel.jsx` — an always-visible inline control, not a popup — is untouched): when `true`, each layout-choice button gains `role="menuitem"`. `CanvasSection.jsx`'s popup wraps it in `AccessibleMenu` with `triggerRef` pointing at its own (unmoved) trigger button.
 
 No dispatch/business logic changes in either component — only the accessibility wrapper around already-existing markup.
 
@@ -185,6 +187,8 @@ This single change enables Tab → Space (pick up) → Arrow keys (move) → Spa
 // before: <button {...listeners} onClick={...}><GripVertical /></button>
 // after:  <button {...listeners} {...attributes} onClick={...}><GripVertical /></button>
 ```
+
+**Discovered during plan-writing, via a live axe-core scan of the running app with a canvas block added:** beyond the `nested-interactive` violation this fix already targets, `CanvasBlock`'s grip-handle and remove ("X") buttons are icon-only with no accessible name — a `button-name` (critical) violation. Both buttons are touched by this same fix, so `aria-label`s are added at the same time: `aria-label={t('canvas.dragHandle')}` on the grip handle, `aria-label={t('canvas.removeBlock')}` on the remove button. (The third icon button on the card, "move to another column", was not flagged — it already has a `title` attribute, which axe accepts as a valid accessible name source.) Two new translation keys (`canvas.dragHandle`, `canvas.removeBlock`) are added to all four locale files.
 
 No other change needed — dnd-kit manages its own live-region announcements during keyboard drag internally.
 
@@ -241,13 +245,16 @@ Single global boundary, not per-region — consistent with the chosen scope (sim
 1. Default editor load (Home page) — no violations.
 2. `DeployModal` open — no violations (confirms the new `role="dialog"`/`aria-modal` doesn't introduce new issues).
 3. `AccessibleMenu` open (both the block "move to" menu and the section layout picker) — no violations.
+4. Canvas block present (validates the `CanvasBlock` ARIA fix from Section 4) — no violations.
+
+**Confirmed by manually scanning the running, unmodified app during plan-writing:** the full editor page already has three pre-existing, out-of-scope violations regardless of any change in this plan — `color-contrast` (visual design), `landmark-unique` and `page-has-heading-one` (document landmark/heading structure). None of the four gaps above are about visual contrast or document structure, so every scan in this plan disables those rule IDs (plus `region`, which appears only once a block/modal is added) via `disableRules([...])`, rather than asserting an unconditional zero that these unrelated, pre-existing issues would permanently fail. A scoped scan (`.include(selector)` on just the dialog or menu subtree) is used instead of `disableRules` wherever scoping to that subtree alone is sufficient, since it was confirmed to return zero violations even without excluding anything.
 
 **Keyboard-interaction e2e tests (behavior, not just static violations):**
 4. Open `DeployModal`, Tab repeatedly — focus stays inside the dialog; Escape closes it and focus returns to the Navbar's "Deploy to SharePoint" button.
 5. Tab to a block's "move to" button, Enter opens the menu — assert `role="menu"`/`menuitem"`, ArrowDown moves focus between items, Escape closes and returns focus to the trigger button.
 6. Tab to a canvas block's grip handle, Space to pick up, ArrowDown, Space to drop — assert block order changed in state (same pattern as the existing mega-menu interaction tests).
 
-**Vitest unit test** for `ErrorBoundary` (reuses the Vitest infrastructure added in the prior unit-tests sub-project): render a child that throws during render, assert the fallback UI is shown instead of the error propagating.
+**Vitest unit test** for `ErrorBoundary` (reuses the Vitest infrastructure added in the prior unit-tests sub-project). The project's Vitest config has no DOM environment (no jsdom, no `@testing-library/react`), so the test does not mount anything: it calls `ErrorBoundary.getDerivedStateFromError()` directly and asserts `{ hasError: true }`, and separately constructs the class manually (`new ErrorBoundary(props)`) and calls `.render()` to assert it returns `this.props.children` unchanged when `state.hasError` is falsy, and a `role="alert"` element when `state.hasError` is `true`.
 
 No coverage threshold enforcement, consistent with the decision made in the unit-tests sub-project — tests exist, no automated minimum-percentage gate.
 
