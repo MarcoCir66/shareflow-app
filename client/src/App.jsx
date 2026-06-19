@@ -25,6 +25,15 @@ function resolveColumnTarget(overId, sections) {
   return findWidgetLocation(sections, overId)
 }
 
+function collisionDetectionStrategy(args) {
+  const itemCollisions = closestCenter({
+    ...args,
+    droppableContainers: args.droppableContainers.filter(c => c.data.current?.type !== 'column'),
+  })
+  if (itemCollisions.length > 0) return itemCollisions
+  return closestCenter(args)
+}
+
 function AppInner() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   usePreviewSync(state)
@@ -76,7 +85,7 @@ function AppInner() {
     : null
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={collisionDetectionStrategy} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Navbar onDeployClick={() => setDeployOpen(true)} />
       <WorkspaceShell
         left={<LeftSidebar />}

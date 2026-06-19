@@ -227,16 +227,8 @@ test.describe('ShareFlow configurator smoke test', () => {
   })
 
   test('canvas blocks can be reordered with the keyboard', async ({ page }) => {
-    // A third block is added so the column's own droppable (which spans the
-    // full column height) isn't the closest-center match for the keyboard
-    // sensor's one-step move — with only two items in the column, the
-    // column container's rect center can be closer to the nudged collision
-    // rect than the sibling widget's, swallowing the reorder as a no-op.
-    // With three items, ArrowDown unambiguously resolves to the sibling
-    // widget below, matching real assistive-tech usage on a populated column.
     await page.getByText('News - Corporate', { exact: true }).click()
     await page.getByText('Procedure', { exact: true }).click()
-    await page.getByText('News - Country', { exact: true }).click()
 
     const newsBlock = page.locator('main div.group.bg-white', { hasText: 'News - Corporate' })
     await newsBlock.hover()
@@ -253,10 +245,9 @@ test.describe('ShareFlow configurator smoke test', () => {
 
     const order = await page.locator('main').evaluate(el => {
       const text = el.textContent
-      return [text.indexOf('Procedure'), text.indexOf('News - Corporate'), text.indexOf('News - Country')]
+      return text.indexOf('Procedure') < text.indexOf('News - Corporate')
     })
-    expect(order[0]).toBeLessThan(order[1])
-    expect(order[1]).toBeLessThan(order[2])
+    expect(order).toBe(true)
   })
 
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
