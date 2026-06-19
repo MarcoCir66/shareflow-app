@@ -1,9 +1,21 @@
 import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
+
+// Pre-existing, out-of-scope violations (visual contrast, document landmark
+// structure) — not part of the four accessibility gaps this plan addresses.
+// Excluded so these tests guard against regressions in scope, not flag
+// unrelated issues that would never go to zero here.
+const OUT_OF_SCOPE_AXE_RULES = ['color-contrast', 'landmark-unique', 'page-has-heading-one', 'region']
 
 test.describe('ShareFlow configurator smoke test', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('i18nextLng', 'it'))
     await page.goto('/')
+  })
+
+  test('default editor view has no in-scope accessibility violations', async ({ page }) => {
+    const results = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(results.violations).toEqual([])
   })
 
   test('loads the 3-column workspace with the default Home page', async ({ page }) => {
