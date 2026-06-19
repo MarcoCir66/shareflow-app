@@ -1,7 +1,7 @@
 {
   "navbar": {
     "tagline": "La piattaforma no-code per intranet SharePoint",
-    "tenant": "Tenant: Contoso Corp",
+    "tenant": "Tenant: Nome Azienda",
     "preview": "Anteprima",
     "deploy": "Pubblica su SharePoint"
   },

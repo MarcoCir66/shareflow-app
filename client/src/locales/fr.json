@@ -1,7 +1,7 @@
 {
   "navbar": {
     "tagline": "The No-Code SharePoint Intranet Factory",
-    "tenant": "Locataire : Contoso Corp",
+    "tenant": "Locataire : Nom de l'entreprise",
     "preview": "Aperçu",
     "deploy": "Déployer sur SharePoint"
   },
