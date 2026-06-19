@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
+import { DndContext, DragOverlay, PointerSensor, KeyboardSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useConfigurator } from './hooks/useConfigurator.js'
 import { usePreviewSync } from './hooks/usePreviewSync.js'
 import PreviewApp from './components/preview/PreviewApp.jsx'
@@ -30,7 +31,10 @@ function AppInner() {
   const [deployOpen, setDeployOpen] = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  )
   const activePage = findPage(state.pages, state.activePageId)
 
   function handleDragStart({ active }) {

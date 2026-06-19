@@ -73,7 +73,9 @@
     "deleteSection": "Supprimer la section",
     "moveTo": "Déplacer vers",
     "moveToOtherColumn": "Déplacer vers une autre colonne",
-    "sectionCol": "Section {{section}} · Colonne {{col}}"
+    "sectionCol": "Section {{section}} · Colonne {{col}}",
+    "dragHandle": "Poignée de déplacement",
+    "removeBlock": "Supprimer le bloc"
   },
   "props": {
     "properties": "Propriétés",

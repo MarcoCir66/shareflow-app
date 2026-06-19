@@ -43,7 +43,6 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
       onClick={e => {
         e.stopPropagation()
         dispatch({ type: ACTIONS.SELECT_WIDGET, payload: { instanceId: widget.instanceId } })
@@ -56,7 +55,9 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
     >
       <button
         {...listeners}
+        {...attributes}
         onClick={e => e.stopPropagation()}
+        aria-label={t('canvas.dragHandle')}
         className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300 opacity-0 group-hover:opacity-100 hover:text-navy cursor-grab active:cursor-grabbing transition-opacity"
       >
         <GripVertical size={16} />
@@ -78,6 +79,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
             e.stopPropagation()
             dispatch({ type: ACTIONS.REMOVE_WIDGET, payload: { instanceId: widget.instanceId } })
           }}
+          aria-label={t('canvas.removeBlock')}
           className="text-gray-300 hover:text-red-500 transition-colors"
         >
           <X size={14} />

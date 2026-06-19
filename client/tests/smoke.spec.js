@@ -219,6 +219,46 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(menu).not.toBeVisible()
   })
 
+  test('canvas block has no in-scope accessibility violations', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+
+    const results = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(results.violations).toEqual([])
+  })
+
+  test('canvas blocks can be reordered with the keyboard', async ({ page }) => {
+    // A third block is added so the column's own droppable (which spans the
+    // full column height) isn't the closest-center match for the keyboard
+    // sensor's one-step move — with only two items in the column, the
+    // column container's rect center can be closer to the nudged collision
+    // rect than the sibling widget's, swallowing the reorder as a no-op.
+    // With three items, ArrowDown unambiguously resolves to the sibling
+    // widget below, matching real assistive-tech usage on a populated column.
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByText('Procedure', { exact: true }).click()
+    await page.getByText('News - Country', { exact: true }).click()
+
+    const newsBlock = page.locator('main div.group.bg-white', { hasText: 'News - Corporate' })
+    await newsBlock.hover()
+    const grip = newsBlock.getByRole('button', { name: 'Maniglia di trascinamento' })
+    await grip.focus()
+    await page.keyboard.press('Space')
+    // dnd-kit's KeyboardSensor attaches its keydown listener via a deferred
+    // setTimeout(0) on pickup; without a tick to let that run, the very next
+    // ArrowDown can race the attach and be dropped or mis-measure rects.
+    await page.waitForTimeout(100)
+    await page.keyboard.press('ArrowDown')
+    await page.waitForTimeout(100)
+    await page.keyboard.press('Space')
+
+    const order = await page.locator('main').evaluate(el => {
+      const text = el.textContent
+      return [text.indexOf('Procedure'), text.indexOf('News - Corporate'), text.indexOf('News - Country')]
+    })
+    expect(order[0]).toBeLessThan(order[1])
+    expect(order[1]).toBeLessThan(order[2])
+  })
+
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
     // News block has content schema → tab appears
     await page.getByText('News - Corporate', { exact: true }).click()

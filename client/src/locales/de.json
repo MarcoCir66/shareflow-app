@@ -73,7 +73,9 @@
     "deleteSection": "Abschnitt löschen",
     "moveTo": "Verschieben nach",
     "moveToOtherColumn": "In eine andere Spalte verschieben",
-    "sectionCol": "Abschnitt {{section}} · Spalte {{col}}"
+    "sectionCol": "Abschnitt {{section}} · Spalte {{col}}",
+    "dragHandle": "Ziehgriff",
+    "removeBlock": "Block entfernen"
   },
   "props": {
     "properties": "Eigenschaften",
