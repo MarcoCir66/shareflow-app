@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { X, GripVertical, ArrowRightLeft } from 'lucide-react'
@@ -8,11 +8,13 @@ import { useTheme } from '../../hooks/useTheme.js'
 import { blockById } from '../../data/blockCatalog.js'
 import { findPage } from '../../context/pageHelpers.js'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
+import AccessibleMenu from '../common/AccessibleMenu.jsx'
 
 export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { template } = useTheme()
   const [moveMenuOpen, setMoveMenuOpen] = useState(false)
+  const moveTriggerRef = useRef(null)
   const block = blockById[widget.blockId]
   const { t } = useTranslation()
   const isSelected = state.selectedWidgetInstanceId === widget.instanceId
@@ -63,6 +65,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
       <div className="absolute right-2 top-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         {otherColumns.length > 0 && (
           <button
+            ref={moveTriggerRef}
             onClick={e => { e.stopPropagation(); setMoveMenuOpen(o => !o) }}
             className="text-gray-300 hover:text-blue transition-colors"
             title={t('canvas.moveToOtherColumn')}
@@ -81,29 +84,31 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
         </button>
       </div>
 
-      {moveMenuOpen && (
-        <div
-          onClick={e => e.stopPropagation()}
-          className="absolute right-2 top-9 z-20 w-48 bg-white rounded-lg border border-gray-200 shadow-lg py-1"
-        >
-          <p className="px-3 py-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">{t('canvas.moveTo')}</p>
-          {otherColumns.map(target => (
-            <button
-              key={target.columnId}
-              onClick={() => {
-                dispatch({
-                  type: ACTIONS.MOVE_WIDGET,
-                  payload: { instanceId: widget.instanceId, toSectionId: target.sectionId, toColumnId: target.columnId },
-                })
-                setMoveMenuOpen(false)
-              }}
-              className="w-full text-left px-3 py-1.5 text-xs text-navy hover:bg-surface transition-colors"
-            >
-              {target.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <AccessibleMenu
+        isOpen={moveMenuOpen}
+        onClose={() => setMoveMenuOpen(false)}
+        triggerRef={moveTriggerRef}
+        onClick={e => e.stopPropagation()}
+        className="absolute right-2 top-9 z-20 w-48 bg-white rounded-lg border border-gray-200 shadow-lg py-1"
+      >
+        <p className="px-3 py-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">{t('canvas.moveTo')}</p>
+        {otherColumns.map(target => (
+          <button
+            key={target.columnId}
+            role="menuitem"
+            onClick={() => {
+              dispatch({
+                type: ACTIONS.MOVE_WIDGET,
+                payload: { instanceId: widget.instanceId, toSectionId: target.sectionId, toColumnId: target.columnId },
+              })
+              setMoveMenuOpen(false)
+            }}
+            className="w-full text-left px-3 py-1.5 text-xs text-navy hover:bg-surface transition-colors"
+          >
+            {target.label}
+          </button>
+        ))}
+      </AccessibleMenu>
 
       <div className="pl-4">
         {block && (

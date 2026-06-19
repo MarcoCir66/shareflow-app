@@ -176,6 +176,31 @@ test.describe('ShareFlow configurator smoke test', () => {
     expect(results.violations).toEqual([])
   })
 
+  test('block move-to menu is keyboard accessible', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.locator('main').getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.locator('main').getByRole('button', { name: 'Una colonna' }).click()
+    await page.locator('main').getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.locator('main').getByRole('button', { name: 'Una colonna' }).click()
+
+    const newsBlock = page.locator('main div.group.bg-white', { hasText: 'News - Corporate' })
+    await newsBlock.hover()
+    await newsBlock.getByTitle('Sposta in un\'altra colonna').click()
+
+    const menu = page.getByRole('menu')
+    await expect(menu).toBeVisible()
+    await expect(menu.getByRole('menuitem').first()).toBeFocused()
+
+    await page.keyboard.press('ArrowDown')
+    await expect(menu.getByRole('menuitem').nth(1)).toBeFocused()
+
+    await page.keyboard.press('Escape')
+    await expect(menu).not.toBeVisible()
+
+    const results = await new AxeBuilder({ page }).include('main').disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(results.violations.filter(v => v.id !== 'nested-interactive' && v.id !== 'button-name')).toEqual([])
+  })
+
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
     // News block has content schema → tab appears
     await page.getByText('News - Corporate', { exact: true }).click()
