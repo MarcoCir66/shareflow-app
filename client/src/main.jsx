@@ -6,6 +6,7 @@ import App from './App.jsx'
 import { ConfiguratorProvider } from './context/ConfiguratorContext.jsx'
 import { MsalProvider } from '@azure/msal-react'
 import { msalInstance, isMsalConfigured } from './auth/msalInstance.js'
+import ErrorBoundary from './components/common/ErrorBoundary.jsx'
 
 const app = (
   <ConfiguratorProvider>
@@ -15,6 +16,8 @@ const app = (
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {isMsalConfigured ? <MsalProvider instance={msalInstance}>{app}</MsalProvider> : app}
+    <ErrorBoundary>
+      {isMsalConfigured ? <MsalProvider instance={msalInstance}>{app}</MsalProvider> : app}
+    </ErrorBoundary>
   </StrictMode>
 )
