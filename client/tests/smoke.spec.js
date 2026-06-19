@@ -156,6 +156,26 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByRole('button', { name: 'Fine' })).toBeVisible({ timeout: 15000 })
   })
 
+  test('Deploy modal is a dialog and Escape closes it, returning focus to the Deploy button', async ({ page }) => {
+    const deployButton = page.getByRole('button', { name: 'Pubblica su SharePoint' })
+    await deployButton.click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+
+    await page.keyboard.press('Escape')
+    await expect(dialog).not.toBeVisible()
+    await expect(deployButton).toBeFocused()
+  })
+
+  test('Deploy modal has no in-scope accessibility violations while open', async ({ page }) => {
+    await page.getByRole('button', { name: 'Pubblica su SharePoint' }).click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+
+    const results = await new AxeBuilder({ page }).include('[role="dialog"]').analyze()
+    expect(results.violations).toEqual([])
+  })
+
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
     // News block has content schema → tab appears
     await page.getByText('News - Corporate', { exact: true }).click()

@@ -6,6 +6,7 @@ import { buildTenantExport } from '../../context/pageHelpers.js'
 import { startProvisioning, getProvisioningStatus } from '../../lib/provisioningApi.js'
 import { useLang } from '../../hooks/useLang.js'
 import { t2 } from '../../utils/localizedText.js'
+import { useFocusTrap } from '../../hooks/useFocusTrap.js'
 
 export default function DeployModal({ onClose }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
@@ -70,12 +71,14 @@ export default function DeployModal({ onClose }) {
   }, [jobId, status])
 
   const siteName = t2(state.tenantConfiguration.siteName, lang)
+  const dialogRef = useRef(null)
+  useFocusTrap(dialogRef, { active: true, onEscape: onClose })
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate rounded-2xl border border-slate-mid w-full max-w-md shadow-2xl">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="deploy-modal-title" className="bg-slate rounded-2xl border border-slate-mid w-full max-w-md shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-slate-mid">
-          <h2 className="text-white font-semibold">{t('deploy.title')}</h2>
+          <h2 id="deploy-modal-title" className="text-white font-semibold">{t('deploy.title')}</h2>
           {(done || failed) && (
             <button onClick={onClose} className="text-slate-light hover:text-white transition-colors">
               <X size={18} />
