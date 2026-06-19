@@ -201,6 +201,24 @@ test.describe('ShareFlow configurator smoke test', () => {
     expect(results.violations.filter(v => v.id !== 'nested-interactive' && v.id !== 'button-name')).toEqual([])
   })
 
+  test('section layout picker popup is keyboard accessible', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+
+    // The section wrapper is the .group div containing the "change layout"
+    // trigger button — distinct from the block's own .group.bg-white wrapper,
+    // which does not contain that button.
+    const sectionBox = page.locator('main div.group').filter({ has: page.getByTitle('Cambia layout sezione') }).first()
+    await sectionBox.hover()
+    await sectionBox.getByTitle('Cambia layout sezione').click()
+
+    const menu = page.getByRole('menu')
+    await expect(menu).toBeVisible()
+    await expect(menu.getByRole('menuitem').first()).toBeVisible()
+
+    await page.keyboard.press('Escape')
+    await expect(menu).not.toBeVisible()
+  })
+
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
     // News block has content schema → tab appears
     await page.getByText('News - Corporate', { exact: true }).click()

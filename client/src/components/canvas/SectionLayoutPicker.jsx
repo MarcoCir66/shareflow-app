@@ -1,12 +1,13 @@
 import { SECTION_LAYOUTS } from '../../data/sectionLayouts.js'
 
-export default function SectionLayoutPicker({ value, onSelect }) {
+export default function SectionLayoutPicker({ value, onSelect, asMenuItems = false }) {
   return (
     <div className="flex gap-1.5 bg-white rounded-lg border border-gray-200 shadow-lg p-1.5">
       {Object.entries(SECTION_LAYOUTS).map(([key, layout]) => (
         <button
           key={key}
           type="button"
+          role={asMenuItems ? 'menuitem' : undefined}
           onClick={() => onSelect(key)}
           title={layout.label}
           className={`
