@@ -4,6 +4,10 @@ import { useEffect } from 'react'
  * Traps Tab/Shift+Tab focus inside containerRef while active, calls
  * onEscape on the Escape key, and restores focus to whatever had it
  * before activation when the effect's cleanup runs.
+ *
+ * Assumes only one trap is ever active at a time — nesting two (e.g. a
+ * menu opened from inside a trapped dialog) would have the inner trap's
+ * cleanup restore focus to the outer trap's trigger, not the dialog.
  */
 export function useFocusTrap(containerRef, { active, onEscape }) {
   useEffect(() => {
