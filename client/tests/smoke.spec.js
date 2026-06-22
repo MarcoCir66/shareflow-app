@@ -310,6 +310,13 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.locator('main').getByText('Organigramma', { exact: true })).toBeVisible()
   })
 
+  test('applying the HR Portal template includes the Documenti block', async ({ page }) => {
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    await expect(page.locator('main').getByText('Documenti', { exact: true })).toBeVisible()
+  })
+
   test('Template tab and its confirmation dialog have no in-scope accessibility violations', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
     await page.getByRole('button', { name: 'Template', exact: true }).click()

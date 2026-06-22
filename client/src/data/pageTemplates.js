@@ -31,6 +31,7 @@ export const PAGE_TEMPLATES = [
       { layout: 'twoColumn', blocks: [['sezione-welfare'], ['new-entry']] },
       { layout: 'oneColumn', blocks: [['organigramma']] },
       { layout: 'twoColumn', blocks: [['faq'], ['rubrica-colleghi']] },
+      { layout: 'oneColumn', blocks: [['documenti']] },
     ],
   },
   {
@@ -45,6 +46,7 @@ export const PAGE_TEMPLATES = [
       { layout: 'twoColumn', blocks: [['procedure'], ['come-fare-per']] },
       { layout: 'oneColumn', blocks: [['faq']] },
       { layout: 'oneColumn', blocks: [['organigramma']] },
+      { layout: 'oneColumn', blocks: [['documenti']] },
     ],
   },
   {

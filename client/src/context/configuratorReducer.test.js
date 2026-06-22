@@ -512,3 +512,10 @@ test('APPLY_TEMPLATE with a multi-page payload gives each new page a distinct sl
   const slugs = next.pages.map(p => p.slug)
   expect(new Set(slugs).size).toBe(slugs.length)
 })
+
+test('documenti block is wired into both the hr-portal and onboarding page templates', () => {
+  const hrBlocks = pageTemplateById['hr-portal'].sections.flatMap(s => s.blocks.flat())
+  const onboardingBlocks = pageTemplateById['onboarding'].sections.flatMap(s => s.blocks.flat())
+  expect(hrBlocks).toContain('documenti')
+  expect(onboardingBlocks).toContain('documenti')
+})

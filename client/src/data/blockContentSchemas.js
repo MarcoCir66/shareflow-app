@@ -224,6 +224,19 @@ export const BLOCK_CONTENT_DEFS = {
       { key: 'imageUrl',   label: 'Foto',     type: 'url',  required: false },
     ],
   },
+  'documenti':         {
+    sourceTypes: SP_MANUAL,
+    schema: [
+      { key: 'title',        label: 'Titolo',         type: 'text',   required: true  },
+      { key: 'category',     label: 'Categoria',      type: 'text',   required: false },
+      { key: 'fileType',     label: 'Tipo file',      type: 'select', required: false,
+        options: ['pdf', 'docx', 'xlsx', 'pptx', 'other'] },
+      { key: 'modifiedDate', label: 'Data modifica',  type: 'date',   required: false },
+      { key: 'modifiedBy',   label: 'Modificato da',  type: 'text',   required: false },
+      { key: 'validUntil',   label: 'Valido fino al', type: 'date',   required: false },
+      { key: 'url',          label: 'Link',           type: 'url',    required: true  },
+    ],
+  },
   'chi-siamo':         {
     sourceTypes: ['manual'],
     schema: [
