@@ -513,6 +513,24 @@ test('APPLY_TEMPLATE with a multi-page payload gives each new page a distinct sl
   expect(new Set(slugs).size).toBe(slugs.length)
 })
 
+test('ADD_WIDGET still works when crypto.randomUUID is unavailable (insecure context, e.g. a plain-HTTP LAN origin)', () => {
+  const original = globalThis.crypto.randomUUID
+  globalThis.crypto.randomUUID = undefined
+  try {
+    const state = makeState()
+    const next = configuratorReducer(state, {
+      type: ACTIONS.ADD_WIDGET,
+      payload: { blockId: 'faq', sectionId: 'section-1', columnId: 'col-1' },
+    })
+    const widgets = next.pages[0].sections[0].columns[0].widgets
+    expect(widgets).toHaveLength(1)
+    expect(widgets[0].instanceId).toBeTruthy()
+    expect(new Set(widgets.map(w => w.instanceId)).size).toBe(widgets.length)
+  } finally {
+    globalThis.crypto.randomUUID = original
+  }
+})
+
 test('documenti block is wired into both the hr-portal and onboarding page templates', () => {
   const hrBlocks = pageTemplateById['hr-portal'].sections.flatMap(s => s.blocks.flat())
   const onboardingBlocks = pageTemplateById['onboarding'].sections.flatMap(s => s.blocks.flat())

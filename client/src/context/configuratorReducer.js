@@ -1,6 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { blockById } from '../data/blockCatalog.js'
 import { SECTION_LAYOUTS } from '../data/sectionLayouts.js'
+import { generateId } from '../lib/id.js'
 import { findWidgetLocation, mapColumn } from './sectionHelpers.js'
 import {
   slugify, uniqueSlug, hasChildren, getSubtreeEndIndex, moveSubtree, resolveParentAtDepth, buildTenantExport,
@@ -30,7 +31,7 @@ export const ACTIONS = {
 
 function emptyColumns(layoutKey) {
   return Array.from({ length: SECTION_LAYOUTS[layoutKey].columns }, () => ({
-    columnId: crypto.randomUUID(),
+    columnId: generateId(),
     widgets: [],
   }))
 }
@@ -47,12 +48,12 @@ function updateActivePageSections(state, updaterFn) {
 
 function expandTemplateSections(sections) {
   return sections.map(section => ({
-    sectionId: crypto.randomUUID(),
+    sectionId: generateId(),
     layout: section.layout,
     columns: section.blocks.map(columnBlocks => ({
-      columnId: crypto.randomUUID(),
+      columnId: generateId(),
       widgets: columnBlocks.map(blockId => ({
-        instanceId: crypto.randomUUID(),
+        instanceId: generateId(),
         blockId,
         props: { ...blockById[blockId].defaultProps },
       })),
@@ -104,7 +105,7 @@ export function configuratorReducer(state, action) {
       }
 
       const newWidget = {
-        instanceId: crypto.randomUUID(),
+        instanceId: generateId(),
         blockId: action.payload.blockId,
         props: { ...block.defaultProps },
       }
@@ -185,7 +186,7 @@ export function configuratorReducer(state, action) {
     case ACTIONS.ADD_SECTION: {
       const { layout } = action.payload
       const newSection = {
-        sectionId: crypto.randomUUID(),
+        sectionId: generateId(),
         layout,
         columns: emptyColumns(layout),
       }
@@ -207,7 +208,7 @@ export function configuratorReducer(state, action) {
           if (newLayout.columns >= oldColumns.length) {
             newColumns = [...oldColumns]
             while (newColumns.length < newLayout.columns) {
-              newColumns.push({ columnId: crypto.randomUUID(), widgets: [] })
+              newColumns.push({ columnId: generateId(), widgets: [] })
             }
           } else {
             const kept = oldColumns.slice(0, newLayout.columns)
@@ -239,12 +240,12 @@ export function configuratorReducer(state, action) {
       const { parentId } = action.payload
       const titleObj = { it: 'Nuova pagina', en: 'New page', fr: 'Nouvelle page', de: 'Neue Seite' }
       const newPage = {
-        pageId: crypto.randomUUID(),
+        pageId: generateId(),
         title: titleObj,
         slug: uniqueSlug(state.pages, slugify(titleObj.it)),
         parentId,
         sections: [
-          { sectionId: crypto.randomUUID(), layout: 'oneColumn', columns: emptyColumns('oneColumn') },
+          { sectionId: generateId(), layout: 'oneColumn', columns: emptyColumns('oneColumn') },
         ],
       }
 
@@ -342,7 +343,7 @@ export function configuratorReducer(state, action) {
       }
 
       // Phase 5b: multi-page site bundle — replaces the entire site.
-      const pageIds = pages.map(() => crypto.randomUUID())
+      const pageIds = pages.map(() => generateId())
       const newPages = pages.reduce((acc, { title, sections, parentIndex }, i) => {
         const baseTitle = title.it ?? Object.values(title)[0]
         acc.push({
