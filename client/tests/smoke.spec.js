@@ -596,4 +596,16 @@ test.describe('i18n language switching', () => {
     await page.getByRole('button', { name: 'Switch language to EN', exact: true }).click()
     await expect(page.locator('aside.border-r').getByText('Home', { exact: true })).toBeVisible()
   })
+
+  test('switching to EN translates the sidebar tab labels', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Blocchi', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Pagine', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Aspetto', exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Switch language to EN', exact: true }).click()
+
+    await expect(page.getByRole('button', { name: 'Blocks', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Pages', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Appearance', exact: true })).toBeVisible()
+  })
 })

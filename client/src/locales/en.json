@@ -5,6 +5,11 @@
     "preview": "Preview",
     "deploy": "Deploy to SharePoint"
   },
+  "sidebar": {
+    "tabBlocks": "Blocks",
+    "tabPages": "Pages",
+    "tabAppearance": "Appearance"
+  },
   "pages": {
     "title": "Pages",
     "add": "Add page"

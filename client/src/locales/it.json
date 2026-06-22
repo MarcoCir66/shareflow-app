@@ -5,6 +5,11 @@
     "preview": "Anteprima",
     "deploy": "Pubblica su SharePoint"
   },
+  "sidebar": {
+    "tabBlocks": "Blocchi",
+    "tabPages": "Pagine",
+    "tabAppearance": "Aspetto"
+  },
   "pages": {
     "title": "Pagine",
     "add": "Aggiungi pagina"

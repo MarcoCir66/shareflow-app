@@ -5,6 +5,11 @@
     "preview": "Vorschau",
     "deploy": "Auf SharePoint bereitstellen"
   },
+  "sidebar": {
+    "tabBlocks": "Blöcke",
+    "tabPages": "Seiten",
+    "tabAppearance": "Erscheinungsbild"
+  },
   "pages": {
     "title": "Seiten",
     "add": "Seite hinzufügen"
