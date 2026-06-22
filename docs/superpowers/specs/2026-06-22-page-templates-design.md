@@ -37,7 +37,7 @@ Three decisions are locked in from the start specifically so Phase 5b doesn't re
   Note: `sections[].blocks` is an array of column-arrays of block ids (no `sectionId`/`columnId`/`instanceId`, no `props` — those are minted fresh at apply time from `blockById[id].defaultProps`, exactly like `ADD_WIDGET` already does). This keeps the static catalog free of any ID that could collide on reuse.
 
 **New components:**
-- `client/src/components/sidebar-left/TemplateGallery.jsx` — the 4th tab's content. Cards grouped by category with a collapsible header (visual pattern matching `BlockLibrary.jsx`'s category groups), each card showing icon + translated label (`t('templates.labels.${id}', { defaultValue: label })`) + translated category badge + translated description.
+- `client/src/components/sidebar-left/TemplateGallery.jsx` — the 4th tab's content. **Simplified from the initial design** (found during plan-writing): with exactly 5 templates across 5 distinct categories, every category would contain exactly one card — `BlockLibrary.jsx`'s collapsible-group-per-category pattern buys nothing at this scale and is dead weight (YAGNI). Phase 5a renders a flat card grid instead (same 2-column grid styling as `CategoryGroup.jsx`'s card container), with each card showing icon + translated label (`t('templates.labels.${id}', { defaultValue: label })`) + a small translated category badge inline on the card + translated description. If the catalog grows enough that categories start holding multiple templates, switching to grouped sections is a follow-up UI change, not a data/reducer change.
 - `client/src/components/sidebar-left/ApplyTemplateDialog.jsx` — confirmation dialog shown only when the active page already has content. `role="dialog"`, `aria-modal="true"`, wired to `useFocusTrap` (reused from Phase 4, no changes to the hook itself) with Escape-to-cancel.
 
 **Modified files:**
@@ -115,7 +115,7 @@ The Phase 5b guard (`pages.length !== 1 || navigation || theme`) is a deliberate
 - `APPLY_TEMPLATE` with `pages.length > 1` or a `navigation`/`theme` present returns the state unchanged (Phase 5b guard regression test).
 
 **E2e tests** (Playwright, `client/tests/smoke.spec.js`):
-- The Template tab renders all 5 cards grouped by category.
+- The Template tab renders all 5 cards, each with its category badge.
 - Applying a template to the default empty Home page applies immediately; the expected blocks appear in the canvas.
 - Applying a template to a page with existing content opens the confirm dialog; Annulla leaves the page untouched; Conferma replaces it.
 - The confirm dialog is `role="dialog"` and Escape closes it without applying (reusing `useFocusTrap`'s already-tested behavior).
