@@ -25,6 +25,7 @@ export const ACTIONS = {
   MOVE_PAGE:            'MOVE_PAGE',
   SET_TENANT_META:      'SET_TENANT_META',
   EXPORT_CONFIGURATION: 'EXPORT_CONFIGURATION',
+  APPLY_TEMPLATE:       'APPLY_TEMPLATE',
 }
 
 function emptyColumns(layoutKey) {
@@ -309,6 +310,32 @@ export function configuratorReducer(state, action) {
         ...state,
         tenantConfiguration: buildTenantExport(state.pages, state.tenantConfiguration),
       }
+    case ACTIONS.APPLY_TEMPLATE: {
+      const { pages, navigation, theme } = action.payload
+      if (pages.length !== 1 || navigation || theme) {
+        // Phase 5b: multi-page site bundles with navigation/theme — not implemented yet.
+        return state
+      }
+      const [{ title, sections }] = pages
+      const newSections = sections.map(section => ({
+        sectionId: crypto.randomUUID(),
+        layout: section.layout,
+        columns: section.blocks.map(columnBlocks => ({
+          columnId: crypto.randomUUID(),
+          widgets: columnBlocks.map(blockId => ({
+            instanceId: crypto.randomUUID(),
+            blockId,
+            props: { ...blockById[blockId].defaultProps },
+          })),
+        })),
+      }))
+      return {
+        ...state,
+        pages: state.pages.map(p => p.pageId === state.activePageId ? { ...p, title, sections: newSections } : p),
+        selectedWidgetInstanceId: null,
+        selectedSectionId: null,
+      }
+    }
     default:
       return state
   }

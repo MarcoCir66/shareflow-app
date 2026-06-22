@@ -1,6 +1,7 @@
 import { test, expect } from 'vitest'
 import { configuratorReducer, ACTIONS } from './configuratorReducer.js'
 import { blockById } from '../data/blockCatalog.js'
+import { pageTemplateById } from '../data/pageTemplates.js'
 
 function makeState(overrides = {}) {
   return {
@@ -27,6 +28,13 @@ function makeState(overrides = {}) {
     },
     ...overrides,
   }
+}
+
+function collectIds(sections) {
+  return sections.flatMap(s => [
+    s.sectionId,
+    ...s.columns.flatMap(c => [c.columnId, ...c.widgets.map(w => w.instanceId)]),
+  ])
 }
 
 test('ADD_WIDGET appends a widget with the block defaultProps to the last column of the last section', () => {
@@ -378,4 +386,50 @@ test('MOVE_PAGE dropping a page onto its own descendant returns the same state',
   })
   const next = configuratorReducer(state, { type: ACTIONS.MOVE_PAGE, payload: { activeId: 'page-a', overId: 'page-a-child', depth: 0 } })
   expect(next).toBe(state)
+})
+
+test('APPLY_TEMPLATE replaces the active page sections and sets its title from the template', () => {
+  const state = makeState()
+  const template = pageTemplateById['communication-home']
+  const next = configuratorReducer(state, {
+    type: ACTIONS.APPLY_TEMPLATE,
+    payload: { pages: [{ title: template.defaultPageTitle, sections: template.sections }] },
+  })
+  expect(next.pages[0].title).toEqual(template.defaultPageTitle)
+  expect(next.pages[0].sections).toHaveLength(3)
+  expect(next.pages[0].sections[0].columns).toHaveLength(2)
+  expect(next.pages[0].sections[0].columns[0].widgets[0].blockId).toBe('news-corporate')
+  expect(next.pages[0].sections[0].columns[0].widgets[0].props).toEqual(blockById['news-corporate'].defaultProps)
+  expect(next.selectedWidgetInstanceId).toBeNull()
+  expect(next.selectedSectionId).toBeNull()
+})
+
+test('APPLY_TEMPLATE mints fresh, disjoint ids on every application', () => {
+  const state = makeState()
+  const template = pageTemplateById['communication-home']
+  const payload = { pages: [{ title: template.defaultPageTitle, sections: template.sections }] }
+  const first = configuratorReducer(state, { type: ACTIONS.APPLY_TEMPLATE, payload })
+  const second = configuratorReducer(first, { type: ACTIONS.APPLY_TEMPLATE, payload })
+
+  const firstIds = collectIds(first.pages[0].sections)
+  const secondIds = collectIds(second.pages[0].sections)
+  expect(new Set([...firstIds, ...secondIds]).size).toBe(firstIds.length + secondIds.length)
+})
+
+test('APPLY_TEMPLATE with a multi-page or navigation/theme payload returns the same state (Phase 5b not implemented)', () => {
+  const state = makeState()
+  const template = pageTemplateById['communication-home']
+  const single = { title: template.defaultPageTitle, sections: template.sections }
+
+  const multiPage = configuratorReducer(state, {
+    type: ACTIONS.APPLY_TEMPLATE,
+    payload: { pages: [single, single] },
+  })
+  expect(multiPage).toBe(state)
+
+  const withNavigation = configuratorReducer(state, {
+    type: ACTIONS.APPLY_TEMPLATE,
+    payload: { pages: [single], navigation: [] },
+  })
+  expect(withNavigation).toBe(state)
 })
