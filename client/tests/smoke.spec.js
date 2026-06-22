@@ -324,6 +324,91 @@ test.describe('ShareFlow configurator smoke test', () => {
     expect(dialogResults.violations).toEqual([])
   })
 
+  test('Sito mode in the Template tab renders the site bundle gallery', async ({ page }) => {
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByRole('button', { name: 'Sito', exact: true }).click()
+    await expect(page.getByText('Comunicazione Corporate', { exact: true })).toBeVisible()
+    await expect(page.getByText('Portale HR', { exact: true })).toBeVisible()
+    await expect(page.getByText('Percorso Onboarding', { exact: true })).toBeVisible()
+    await expect(page.getByText('Employee Hub', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Centro Formazione', { exact: true })).toBeVisible()
+  })
+
+  test('applying a site bundle to the pristine default site scaffolds the whole site immediately', async ({ page }) => {
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByRole('button', { name: 'Sito', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const canvas = page.locator('main')
+    await expect(canvas.getByText('SharePoint Communication Site — Risorse Umane')).toBeVisible()
+    const rootTab = canvas.getByRole('button', { name: 'Risorse Umane', exact: true })
+    await expect(rootTab).toBeVisible()
+    await expect(rootTab.locator('svg')).toBeVisible()
+    await expect(canvas.getByRole('button', { name: 'Onboarding', exact: true })).toBeVisible()
+    await expect(page.locator('main nav').locator('..')).toHaveClass(/bg-white/)
+  })
+
+  test('applying a site bundle to a non-empty site opens a confirmation dialog; cancelling leaves it untouched', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByRole('button', { name: 'Sito', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await expect(dialog).toContainText("Sostituire l'intero sito con 'Portale HR'?")
+    await dialog.getByRole('button', { name: 'Annulla', exact: true }).click()
+    await expect(dialog).not.toBeVisible()
+
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByRole('button', { name: 'Risorse Umane', exact: true })).not.toBeVisible()
+  })
+
+  test('Escape also cancels the site bundle confirmation dialog', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByRole('button', { name: 'Sito', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(dialog).not.toBeVisible()
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
+  })
+
+  test('confirming the site bundle dialog replaces the entire site, including the theme', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByRole('button', { name: 'Sito', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Conferma', exact: true }).click()
+    await expect(dialog).not.toBeVisible()
+
+    const canvas = page.locator('main')
+    await expect(canvas.getByText('News - Corporate', { exact: true })).not.toBeVisible()
+    await expect(canvas.getByRole('button', { name: 'Risorse Umane', exact: true })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: 'Onboarding', exact: true })).toBeVisible()
+    await expect(page.locator('main nav').locator('..')).toHaveClass(/bg-white/)
+  })
+
+  test('Sito mode and its confirmation dialog have no in-scope accessibility violations', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByRole('button', { name: 'Sito', exact: true }).click()
+
+    const galleryResults = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(galleryResults.violations).toEqual([])
+
+    await page.getByText('Portale HR', { exact: true }).click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+
+    const dialogResults = await new AxeBuilder({ page }).include('[role="dialog"]').analyze()
+    expect(dialogResults.violations).toEqual([])
+  })
+
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
     // News block has content schema → tab appears
     await page.getByText('News - Corporate', { exact: true }).click()

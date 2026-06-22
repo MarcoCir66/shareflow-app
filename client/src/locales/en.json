@@ -67,8 +67,11 @@
   },
   "templates": {
     "tabLabel": "Templates",
+    "modePage": "Page",
+    "modeSite": "Site",
     "confirmTitle": "Apply template",
     "confirmBody": "Apply '{{name}}'? This will replace the page's current content.",
+    "confirmBodySite": "Replace the entire site with '{{name}}'? All current pages will be deleted and replaced, and the theme will change. This action cannot be undone.",
     "confirmApply": "Confirm",
     "confirmCancel": "Cancel",
     "categories": {
@@ -91,6 +94,20 @@
       "onboarding": "An onboarding journey with procedures, FAQ and org chart.",
       "employee-hub": "An employee hub with search, directory, polls and a swap board.",
       "training": "A training page with spotlights, procedures and FAQ."
+    },
+    "siteLabels": {
+      "communication-site": "Corporate Communication",
+      "hr-site": "HR Portal",
+      "onboarding-site": "Onboarding Journey",
+      "employee-hub-site": "Employee Hub",
+      "training-site": "Training Center"
+    },
+    "siteDescriptions": {
+      "communication-site": "A corporate communication site with a news homepage and a linked training section.",
+      "hr-site": "An HR site with an HR portal and a linked onboarding journey.",
+      "onboarding-site": "An onboarding site with a guided journey and a linked HR portal.",
+      "employee-hub-site": "An employee hub site with search, directory and a linked communication section.",
+      "training-site": "A training site with a linked onboarding journey."
     }
   },
   "canvas": {

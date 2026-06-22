@@ -67,8 +67,11 @@
   },
   "templates": {
     "tabLabel": "Template",
+    "modePage": "Pagina",
+    "modeSite": "Sito",
     "confirmTitle": "Applica template",
     "confirmBody": "Applicare '{{name}}'? Sostituirà il contenuto attuale della pagina.",
+    "confirmBodySite": "Sostituire l'intero sito con '{{name}}'? Tutte le pagine attuali verranno eliminate e sostituite, e il tema cambierà. Questa azione non può essere annullata.",
     "confirmApply": "Conferma",
     "confirmCancel": "Annulla",
     "categories": {
@@ -91,6 +94,20 @@
       "onboarding": "Un percorso di onboarding con procedure, FAQ e organigramma.",
       "employee-hub": "Un hub per i dipendenti con ricerca, rubrica, sondaggi e bacheca.",
       "training": "Una pagina di formazione con presentazioni, procedure e FAQ."
+    },
+    "siteLabels": {
+      "communication-site": "Comunicazione Corporate",
+      "hr-site": "Portale HR",
+      "onboarding-site": "Percorso Onboarding",
+      "employee-hub-site": "Employee Hub",
+      "training-site": "Centro Formazione"
+    },
+    "siteDescriptions": {
+      "communication-site": "Un sito di comunicazione corporate con homepage news e una sezione formazione collegata.",
+      "hr-site": "Un sito HR con portale risorse umane e percorso di onboarding collegato.",
+      "onboarding-site": "Un sito di onboarding con percorso guidato e portale HR collegato.",
+      "employee-hub-site": "Un sito hub dipendenti con ricerca, rubrica e una sezione comunicazione collegata.",
+      "training-site": "Un sito di formazione con un percorso di onboarding collegato."
     }
   },
   "canvas": {

@@ -67,8 +67,11 @@
   },
   "templates": {
     "tabLabel": "Vorlagen",
+    "modePage": "Seite",
+    "modeSite": "Website",
     "confirmTitle": "Vorlage anwenden",
     "confirmBody": "'{{name}}' anwenden? Dies ersetzt den aktuellen Inhalt der Seite.",
+    "confirmBodySite": "Die gesamte Website durch '{{name}}' ersetzen? Alle aktuellen Seiten werden gelöscht und ersetzt, und das Design ändert sich. Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmApply": "Bestätigen",
     "confirmCancel": "Abbrechen",
     "categories": {
@@ -91,6 +94,20 @@
       "onboarding": "Ein Onboarding-Pfad mit Verfahren, FAQ und Organigramm.",
       "employee-hub": "Ein Mitarbeiter-Hub mit Suche, Verzeichnis, Umfragen und Tauschbörse.",
       "training": "Eine Schulungsseite mit Vorstellungen, Verfahren und FAQ."
+    },
+    "siteLabels": {
+      "communication-site": "Unternehmenskommunikation",
+      "hr-site": "HR-Portal",
+      "onboarding-site": "Onboarding-Pfad",
+      "employee-hub-site": "Mitarbeiter-Hub",
+      "training-site": "Schulungszentrum"
+    },
+    "siteDescriptions": {
+      "communication-site": "Eine Unternehmenskommunikations-Website mit einer News-Startseite und einem verlinkten Schulungsbereich.",
+      "hr-site": "Eine HR-Website mit einem HR-Portal und einem verlinkten Onboarding-Pfad.",
+      "onboarding-site": "Eine Onboarding-Website mit einem geführten Pfad und einem verlinkten HR-Portal.",
+      "employee-hub-site": "Eine Mitarbeiter-Hub-Website mit Suche, Verzeichnis und einem verlinkten Kommunikationsbereich.",
+      "training-site": "Eine Schulungswebsite mit einem verlinkten Onboarding-Pfad."
     }
   },
   "canvas": {
