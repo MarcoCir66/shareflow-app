@@ -65,6 +65,34 @@
       "desc-funzione": "Function Description"
     }
   },
+  "templates": {
+    "tabLabel": "Templates",
+    "confirmTitle": "Apply template",
+    "confirmBody": "Apply '{{name}}'? This will replace the page's current content.",
+    "confirmApply": "Confirm",
+    "confirmCancel": "Cancel",
+    "categories": {
+      "COMMUNICATION": "Communication",
+      "HR": "HR",
+      "ONBOARDING": "Onboarding",
+      "EMPLOYEE_HUB": "Employee Hub",
+      "LEARNING": "Training"
+    },
+    "labels": {
+      "communication-home": "Communication Homepage",
+      "hr-portal": "HR Portal",
+      "onboarding": "Onboarding",
+      "employee-hub": "Employee Hub",
+      "training": "Training"
+    },
+    "descriptions": {
+      "communication-home": "A communication homepage with news, announcements, events and a media gallery.",
+      "hr-portal": "An HR page with welfare, new hires, org chart and FAQ.",
+      "onboarding": "An onboarding journey with procedures, FAQ and org chart.",
+      "employee-hub": "An employee hub with search, directory, polls and a swap board.",
+      "training": "A training page with spotlights, procedures and FAQ."
+    }
+  },
   "canvas": {
     "preview": "Canvas Preview",
     "addSection": "Add section",

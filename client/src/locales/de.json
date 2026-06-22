@@ -65,6 +65,34 @@
       "desc-funzione": "Abteilungsbeschreibung"
     }
   },
+  "templates": {
+    "tabLabel": "Vorlagen",
+    "confirmTitle": "Vorlage anwenden",
+    "confirmBody": "'{{name}}' anwenden? Dies ersetzt den aktuellen Inhalt der Seite.",
+    "confirmApply": "Bestätigen",
+    "confirmCancel": "Abbrechen",
+    "categories": {
+      "COMMUNICATION": "Kommunikation",
+      "HR": "Personalwesen",
+      "ONBOARDING": "Onboarding",
+      "EMPLOYEE_HUB": "Mitarbeiter-Hub",
+      "LEARNING": "Schulung"
+    },
+    "labels": {
+      "communication-home": "Kommunikations-Startseite",
+      "hr-portal": "HR-Portal",
+      "onboarding": "Onboarding",
+      "employee-hub": "Mitarbeiter-Hub",
+      "training": "Schulung"
+    },
+    "descriptions": {
+      "communication-home": "Eine Kommunikations-Startseite mit News, Ankündigungen, Terminen und einer Mediengalerie.",
+      "hr-portal": "Eine HR-Seite mit Sozialleistungen, Neueinstellungen, Organigramm und FAQ.",
+      "onboarding": "Ein Onboarding-Pfad mit Verfahren, FAQ und Organigramm.",
+      "employee-hub": "Ein Mitarbeiter-Hub mit Suche, Verzeichnis, Umfragen und Tauschbörse.",
+      "training": "Eine Schulungsseite mit Vorstellungen, Verfahren und FAQ."
+    }
+  },
   "canvas": {
     "preview": "Canvas-Vorschau",
     "addSection": "Abschnitt hinzufügen",

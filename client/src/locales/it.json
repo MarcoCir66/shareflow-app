@@ -65,6 +65,34 @@
       "desc-funzione": "Sezione descrittiva Funzione"
     }
   },
+  "templates": {
+    "tabLabel": "Template",
+    "confirmTitle": "Applica template",
+    "confirmBody": "Applicare '{{name}}'? Sostituirà il contenuto attuale della pagina.",
+    "confirmApply": "Conferma",
+    "confirmCancel": "Annulla",
+    "categories": {
+      "COMMUNICATION": "Comunicazione",
+      "HR": "Risorse Umane",
+      "ONBOARDING": "Onboarding",
+      "EMPLOYEE_HUB": "Employee Hub",
+      "LEARNING": "Formazione"
+    },
+    "labels": {
+      "communication-home": "Homepage Comunicazione",
+      "hr-portal": "Portale HR",
+      "onboarding": "Onboarding",
+      "employee-hub": "Employee Hub",
+      "training": "Formazione"
+    },
+    "descriptions": {
+      "communication-home": "Una homepage di comunicazione con news, avvisi, eventi e galleria multimedia.",
+      "hr-portal": "Una pagina HR con welfare, nuovi assunti, organigramma e FAQ.",
+      "onboarding": "Un percorso di onboarding con procedure, FAQ e organigramma.",
+      "employee-hub": "Un hub per i dipendenti con ricerca, rubrica, sondaggi e bacheca.",
+      "training": "Una pagina di formazione con presentazioni, procedure e FAQ."
+    }
+  },
   "canvas": {
     "preview": "Anteprima canvas",
     "addSection": "Aggiungi sezione",

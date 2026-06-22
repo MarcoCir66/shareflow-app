@@ -65,6 +65,34 @@
       "desc-funzione": "Description fonction"
     }
   },
+  "templates": {
+    "tabLabel": "Modèles",
+    "confirmTitle": "Appliquer le modèle",
+    "confirmBody": "Appliquer « {{name}} » ? Cela remplacera le contenu actuel de la page.",
+    "confirmApply": "Confirmer",
+    "confirmCancel": "Annuler",
+    "categories": {
+      "COMMUNICATION": "Communication",
+      "HR": "RH",
+      "ONBOARDING": "Intégration",
+      "EMPLOYEE_HUB": "Espace collaborateurs",
+      "LEARNING": "Formation"
+    },
+    "labels": {
+      "communication-home": "Page d'accueil Communication",
+      "hr-portal": "Portail RH",
+      "onboarding": "Intégration",
+      "employee-hub": "Espace collaborateurs",
+      "training": "Formation"
+    },
+    "descriptions": {
+      "communication-home": "Une page d'accueil de communication avec actualités, annonces, événements et une galerie multimédia.",
+      "hr-portal": "Une page RH avec bien-être, nouvelles arrivées, organigramme et FAQ.",
+      "onboarding": "Un parcours d'intégration avec procédures, FAQ et organigramme.",
+      "employee-hub": "Un espace collaborateurs avec recherche, annuaire, sondages et petites annonces.",
+      "training": "Une page de formation avec mises en avant, procédures et FAQ."
+    }
+  },
   "canvas": {
     "preview": "Aperçu Canvas",
     "addSection": "Ajouter une section",

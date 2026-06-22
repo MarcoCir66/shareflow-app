@@ -250,6 +250,80 @@ test.describe('ShareFlow configurator smoke test', () => {
     expect(order).toBe(true)
   })
 
+  test('Template tab renders the page template gallery', async ({ page }) => {
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await expect(page.getByText('Homepage Comunicazione', { exact: true })).toBeVisible()
+    await expect(page.getByText('Portale HR', { exact: true })).toBeVisible()
+    await expect(page.getByText('Onboarding', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Employee Hub', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Formazione', { exact: true }).first()).toBeVisible()
+  })
+
+  test('applying a template to the default empty Home page scaffolds it immediately', async ({ page }) => {
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Homepage Comunicazione', { exact: true }).click()
+
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Avvisi in home page', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Eventi - Corporate', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Galleria multimediale', { exact: true })).toBeVisible()
+  })
+
+  test('applying a template to a non-empty page opens a confirmation dialog; cancelling leaves it untouched', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await dialog.getByRole('button', { name: 'Annulla', exact: true }).click()
+    await expect(dialog).not.toBeVisible()
+
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Sezione Welfare', { exact: true })).not.toBeVisible()
+  })
+
+  test('Escape also cancels the template confirmation dialog', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(dialog).not.toBeVisible()
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
+  })
+
+  test('confirming the dialog applies the template, replacing existing content', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Portale HR', { exact: true }).click()
+
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Conferma', exact: true }).click()
+    await expect(dialog).not.toBeVisible()
+
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).not.toBeVisible()
+    await expect(page.locator('main').getByText('Sezione Welfare', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('New entry', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Organigramma', { exact: true })).toBeVisible()
+  })
+
+  test('Template tab and its confirmation dialog have no in-scope accessibility violations', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+
+    const galleryResults = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(galleryResults.violations).toEqual([])
+
+    await page.getByText('Portale HR', { exact: true }).click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+
+    const dialogResults = await new AxeBuilder({ page }).include('[role="dialog"]').analyze()
+    expect(dialogResults.violations).toEqual([])
+  })
+
   test('Contenuto tab appears for content-enabled blocks and is absent for widget-only blocks', async ({ page }) => {
     // News block has content schema → tab appears
     await page.getByText('News - Corporate', { exact: true }).click()
