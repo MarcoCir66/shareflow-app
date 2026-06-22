@@ -1,4 +1,4 @@
-import { Layers, Eye } from 'lucide-react'
+import { Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { isMsalConfigured } from '../../auth/msalInstance.js'
 import AuthSection from './AuthSection.jsx'
@@ -14,9 +14,7 @@ export default function Navbar({ onDeployClick }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-navy flex items-center justify-between px-6 border-b border-slate">
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-electric">
-          <Layers size={18} className="text-navy" />
-        </div>
+        <img src="/favicon.svg" alt="" className="w-8 h-8" />
         <div>
           <span className="text-white font-semibold text-sm tracking-wide">ShareFlow</span>
           <span className="text-slate-light text-xs ml-2 hidden md:inline">

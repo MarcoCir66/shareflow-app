@@ -13,6 +13,7 @@ export default function PreviewToolbar({ device, onDevice }) {
   return (
     <div className="flex items-center justify-between bg-navy h-10 px-4 flex-shrink-0 border-b border-slate">
       <div className="flex items-center gap-2">
+        <img src="/favicon.svg" alt="" className="w-5 h-5" />
         <span className="text-blue-electric font-bold text-sm">ShareFlow</span>
         <span className="bg-green-500 text-white text-[9px] font-bold rounded px-1.5 py-0.5 tracking-wide">
           LIVE
