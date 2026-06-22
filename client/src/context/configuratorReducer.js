@@ -45,6 +45,21 @@ function updateActivePageSections(state, updaterFn) {
   }
 }
 
+function expandTemplateSections(sections) {
+  return sections.map(section => ({
+    sectionId: crypto.randomUUID(),
+    layout: section.layout,
+    columns: section.blocks.map(columnBlocks => ({
+      columnId: crypto.randomUUID(),
+      widgets: columnBlocks.map(blockId => ({
+        instanceId: crypto.randomUUID(),
+        blockId,
+        props: { ...blockById[blockId].defaultProps },
+      })),
+    })),
+  }))
+}
+
 export const initialState = {
   pages: [
     {
@@ -311,27 +326,42 @@ export function configuratorReducer(state, action) {
         tenantConfiguration: buildTenantExport(state.pages, state.tenantConfiguration),
       }
     case ACTIONS.APPLY_TEMPLATE: {
-      const { pages, navigation, theme } = action.payload
-      if (pages.length !== 1 || navigation || theme) {
-        // Phase 5b: multi-page site bundles with navigation/theme — not implemented yet.
-        return state
+      const { pages, theme } = action.payload
+      if (pages.length === 0) return state
+
+      if (pages.length === 1) {
+        const [{ title, sections }] = pages
+        return {
+          ...state,
+          pages: state.pages.map(p =>
+            p.pageId === state.activePageId ? { ...p, title, sections: expandTemplateSections(sections) } : p
+          ),
+          selectedWidgetInstanceId: null,
+          selectedSectionId: null,
+        }
       }
-      const [{ title, sections }] = pages
-      const newSections = sections.map(section => ({
-        sectionId: crypto.randomUUID(),
-        layout: section.layout,
-        columns: section.blocks.map(columnBlocks => ({
-          columnId: crypto.randomUUID(),
-          widgets: columnBlocks.map(blockId => ({
-            instanceId: crypto.randomUUID(),
-            blockId,
-            props: { ...blockById[blockId].defaultProps },
-          })),
-        })),
-      }))
+
+      // Phase 5b: multi-page site bundle — replaces the entire site.
+      const pageIds = pages.map(() => crypto.randomUUID())
+      const newPages = pages.reduce((acc, { title, sections, parentIndex }, i) => {
+        const baseTitle = title.it ?? Object.values(title)[0]
+        acc.push({
+          pageId: pageIds[i],
+          title,
+          slug: uniqueSlug(acc, slugify(baseTitle)),
+          parentId: parentIndex == null ? null : pageIds[parentIndex],
+          sections: expandTemplateSections(sections),
+        })
+        return acc
+      }, [])
+
       return {
         ...state,
-        pages: state.pages.map(p => p.pageId === state.activePageId ? { ...p, title, sections: newSections } : p),
+        pages: newPages,
+        activePageId: pageIds[pages.findIndex(p => p.parentIndex == null)],
+        tenantConfiguration: theme
+          ? { ...state.tenantConfiguration, theme }
+          : state.tenantConfiguration,
         selectedWidgetInstanceId: null,
         selectedSectionId: null,
       }

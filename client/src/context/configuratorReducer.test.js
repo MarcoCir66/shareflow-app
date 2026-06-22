@@ -2,6 +2,7 @@ import { test, expect } from 'vitest'
 import { configuratorReducer, ACTIONS } from './configuratorReducer.js'
 import { blockById } from '../data/blockCatalog.js'
 import { pageTemplateById } from '../data/pageTemplates.js'
+import { siteTemplateById } from '../data/siteTemplates.js'
 
 function makeState(overrides = {}) {
   return {
@@ -416,20 +417,98 @@ test('APPLY_TEMPLATE mints fresh, disjoint ids on every application', () => {
   expect(new Set([...firstIds, ...secondIds]).size).toBe(firstIds.length + secondIds.length)
 })
 
-test('APPLY_TEMPLATE with a multi-page or navigation/theme payload returns the same state (Phase 5b not implemented)', () => {
+test('APPLY_TEMPLATE with an empty pages array returns the same state', () => {
   const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.APPLY_TEMPLATE, payload: { pages: [] } })
+  expect(next).toBe(state)
+})
+
+test('APPLY_TEMPLATE with a multi-page payload replaces the entire site and resolves parentIndex into real parentId', () => {
+  const state = makeState()
+  const bundle = siteTemplateById['hr-site']
+  const pages = bundle.pages.map(({ pageTemplateId, parentIndex }) => ({
+    title: pageTemplateById[pageTemplateId].defaultPageTitle,
+    sections: pageTemplateById[pageTemplateId].sections,
+    parentIndex,
+  }))
+  const next = configuratorReducer(state, { type: ACTIONS.APPLY_TEMPLATE, payload: { pages } })
+
+  expect(next.pages).toHaveLength(2)
+  expect(next.pages[0].parentId).toBeNull()
+  expect(next.pages[1].parentId).toBe(next.pages[0].pageId)
+  expect(next.activePageId).toBe(next.pages[0].pageId)
+  expect(next.pages[0].title).toEqual(pageTemplateById['hr-portal'].defaultPageTitle)
+  expect(next.pages[1].title).toEqual(pageTemplateById['onboarding'].defaultPageTitle)
+})
+
+test('APPLY_TEMPLATE with a multi-page payload and a theme replaces tenantConfiguration.theme wholesale', () => {
+  const state = makeState({
+    tenantConfiguration: {
+      tenantId: null,
+      siteName: { it: 'Test', en: 'Test', fr: 'Test', de: 'Test' },
+      siteUrl: '',
+      widgets: [],
+      theme: { templateId: 'corporate-classic', accentColor: '#ff0000' },
+    },
+  })
+  const bundle = siteTemplateById['hr-site']
+  const pages = bundle.pages.map(({ pageTemplateId, parentIndex }) => ({
+    title: pageTemplateById[pageTemplateId].defaultPageTitle,
+    sections: pageTemplateById[pageTemplateId].sections,
+    parentIndex,
+  }))
+  const next = configuratorReducer(state, {
+    type: ACTIONS.APPLY_TEMPLATE,
+    payload: { pages, theme: { templateId: bundle.themeId, accentColor: null } },
+  })
+  expect(next.tenantConfiguration.theme).toEqual({ templateId: 'modern-light', accentColor: null })
+})
+
+test('APPLY_TEMPLATE with multi-page payloads mints fully disjoint ids across applications', () => {
+  const state = makeState()
+  const toPages = (bundleId) => {
+    const bundle = siteTemplateById[bundleId]
+    return bundle.pages.map(({ pageTemplateId, parentIndex }) => ({
+      title: pageTemplateById[pageTemplateId].defaultPageTitle,
+      sections: pageTemplateById[pageTemplateId].sections,
+      parentIndex,
+    }))
+  }
+  const first = configuratorReducer(state, { type: ACTIONS.APPLY_TEMPLATE, payload: { pages: toPages('hr-site') } })
+  const second = configuratorReducer(first, { type: ACTIONS.APPLY_TEMPLATE, payload: { pages: toPages('onboarding-site') } })
+
+  const firstIds = [...first.pages.map(p => p.pageId), ...collectIds(first.pages.flatMap(p => p.sections))]
+  const secondIds = [...second.pages.map(p => p.pageId), ...collectIds(second.pages.flatMap(p => p.sections))]
+  expect(new Set([...firstIds, ...secondIds]).size).toBe(firstIds.length + secondIds.length)
+})
+
+test('APPLY_TEMPLATE with a single-page payload only replaces the active page when the site has multiple pages', () => {
+  const state = makeState({
+    pages: [
+      { pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null, sections: [] },
+      { pageId: 'page-about', title: { it: 'About', en: 'About', fr: 'About', de: 'About' }, slug: 'about', parentId: null, sections: [] },
+    ],
+    activePageId: 'page-about',
+  })
   const template = pageTemplateById['communication-home']
-  const single = { title: template.defaultPageTitle, sections: template.sections }
-
-  const multiPage = configuratorReducer(state, {
+  const next = configuratorReducer(state, {
     type: ACTIONS.APPLY_TEMPLATE,
-    payload: { pages: [single, single] },
+    payload: { pages: [{ title: template.defaultPageTitle, sections: template.sections }] },
   })
-  expect(multiPage).toBe(state)
+  expect(next.pages).toHaveLength(2)
+  expect(next.pages[0]).toEqual(state.pages[0])
+  expect(next.pages[1].title).toEqual(template.defaultPageTitle)
+})
 
-  const withNavigation = configuratorReducer(state, {
-    type: ACTIONS.APPLY_TEMPLATE,
-    payload: { pages: [single], navigation: [] },
-  })
-  expect(withNavigation).toBe(state)
+test('APPLY_TEMPLATE with a multi-page payload gives each new page a distinct slug', () => {
+  const state = makeState()
+  const bundle = siteTemplateById['hr-site']
+  const pages = bundle.pages.map(({ pageTemplateId, parentIndex }) => ({
+    title: pageTemplateById[pageTemplateId].defaultPageTitle,
+    sections: pageTemplateById[pageTemplateId].sections,
+    parentIndex,
+  }))
+  const next = configuratorReducer(state, { type: ACTIONS.APPLY_TEMPLATE, payload: { pages } })
+  const slugs = next.pages.map(p => p.slug)
+  expect(new Set(slugs).size).toBe(slugs.length)
 })
