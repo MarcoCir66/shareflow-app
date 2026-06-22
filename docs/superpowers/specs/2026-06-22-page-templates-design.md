@@ -18,14 +18,14 @@ Three decisions are locked in from the start specifically so Phase 5b doesn't re
 ## Section 1 — Architecture & files
 
 **New files:**
-- `client/src/data/pageTemplates.js` — mirrors `blockCatalog.js`'s pattern: exports `PAGE_TEMPLATE_CATEGORIES` / `PAGE_TEMPLATE_CATEGORY_LABELS` (flat, non-translated strings — `HR`, `Onboarding`, `Employee Hub`, `Communication`, `Learning` — matching the existing, deliberately non-localized convention of `CATEGORY_LABELS` in `blockCatalog.js`) and `PAGE_TEMPLATES`, an array of 5 entries:
+- `client/src/data/pageTemplates.js` — mirrors `blockCatalog.js`'s pattern: exports `PAGE_TEMPLATE_CATEGORIES` (`COMMUNICATION`, `HR`, `ONBOARDING`, `EMPLOYEE_HUB`, `LEARNING`) and `PAGE_TEMPLATES`, an array of 5 entries. **Correction from the initial design** (found while reading the real source, not assumed — twice): the spec originally assumed catalog `label`s and category names are flat, non-translated strings, modeled on `blockCatalog.js`'s own `CATEGORY_LABELS` export. Both assumptions were wrong. `CATEGORY_LABELS` is dead code, never imported anywhere. The real, live pattern, used by both `CategoryGroup.jsx` and `BlockCard.jsx`, is `t(key, { defaultValue: catalogString })` — the catalog's flat string is only the *fallback* shown until a locale file supplies a real translation, and `en.json`'s `blocks.labels.*` values genuinely differ from `it.json`'s (e.g. `"news-corporate"` is "News - Corporate" in `it.json` but "Corporate News" in `en.json`) — they are not just a copy of the Italian string. Page templates follow that exact real pattern: every card's displayed name and description go through `t('templates.labels.${id}', { defaultValue: template.label })` and `t('templates.descriptions.${id}', { defaultValue: template.description })`, and every category badge through `t('templates.categories.${category}', { defaultValue: template.category })`. The catalog's `label`/`description`/`category` fields still exist as plain strings — they are the `defaultValue` argument, not a substitute for translation.
   ```js
   {
     id: 'communication-home',
-    label: 'Homepage Comunicazione',           // flat string, not {it,en,fr,de} — matches blockCatalog.js's label convention
+    label: 'Homepage Comunicazione',            // defaultValue for t('templates.labels.communication-home')
     category: PAGE_TEMPLATE_CATEGORIES.COMMUNICATION,
-    icon: 'Newspaper',                          // lucide-react icon name, same convention as blockCatalog.js
-    description: 'Una homepage di comunicazione con news, avvisi, eventi e galleria multimedia.',
+    icon: 'Newspaper',                           // lucide-react icon name, same convention as blockCatalog.js
+    description: 'Una homepage di comunicazione con news, avvisi, eventi e galleria multimedia.', // defaultValue for t('templates.descriptions.communication-home')
     defaultPageTitle: { it: 'Comunicazione', en: 'Communication', fr: 'Communication', de: 'Kommunikation' },
     sections: [
       { layout: 'twoColumn', blocks: [['news-corporate'], ['avvisi-homepage']] },
@@ -37,13 +37,13 @@ Three decisions are locked in from the start specifically so Phase 5b doesn't re
   Note: `sections[].blocks` is an array of column-arrays of block ids (no `sectionId`/`columnId`/`instanceId`, no `props` — those are minted fresh at apply time from `blockById[id].defaultProps`, exactly like `ADD_WIDGET` already does). This keeps the static catalog free of any ID that could collide on reuse.
 
 **New components:**
-- `client/src/components/sidebar-left/TemplateGallery.jsx` — the 4th tab's content. Cards grouped by category with a collapsible header (visual pattern matching `BlockLibrary.jsx`'s category groups), each card showing icon + `label` + category badge + `description`.
+- `client/src/components/sidebar-left/TemplateGallery.jsx` — the 4th tab's content. Cards grouped by category with a collapsible header (visual pattern matching `BlockLibrary.jsx`'s category groups), each card showing icon + translated label (`t('templates.labels.${id}', { defaultValue: label })`) + translated category badge + translated description.
 - `client/src/components/sidebar-left/ApplyTemplateDialog.jsx` — confirmation dialog shown only when the active page already has content. `role="dialog"`, `aria-modal="true"`, wired to `useFocusTrap` (reused from Phase 4, no changes to the hook itself) with Escape-to-cancel.
 
 **Modified files:**
 - `client/src/components/sidebar-left/LeftSidebar.jsx` — adds a 4th tab, `{ id: 'templates', label: t('templates.tabLabel') }` (a new `templates` locale namespace, matching the existing per-feature namespace convention like `canvas.*`/`props.*`; the only one of the four tabs routed through `t()` — the other three are pre-existing, non-localized hardcoded strings; that gap is not touched here).
 - `client/src/context/configuratorReducer.js` — adds `ACTIONS.APPLY_TEMPLATE` (see Section 2).
-- `client/src/locales/{it,en,fr,de}.json` — new `templates` namespace with keys for the tab label and the confirm dialog's title/body/buttons (generic UI chrome, unlike the template catalog's own flat-string content): `templates.tabLabel`, `templates.confirmTitle`, `templates.confirmBody`, `templates.confirmApply`, `templates.confirmCancel`.
+- `client/src/locales/{it,en,fr,de}.json` — new `templates` namespace: `templates.tabLabel`, `templates.confirmTitle`, `templates.confirmBody`, `templates.confirmApply`, `templates.confirmCancel` (generic UI chrome); `templates.categories.*` — one key per `PAGE_TEMPLATE_CATEGORIES` value (`COMMUNICATION`, `HR`, `ONBOARDING`, `EMPLOYEE_HUB`, `LEARNING`), mirroring `blocks.categories.*`; `templates.labels.*` and `templates.descriptions.*` — one key per template id, mirroring `blocks.labels.*`. Since Phase 5a's Italian catalog strings are the natural "first" translation, `it.json`'s values are identical to the catalog defaults; `en.json`/`fr.json`/`de.json` get genuinely translated text, matching how `blocks.labels.*` already differs per language.
 
 No backend/server changes. No changes to `blockCatalog.js`, `sectionLayouts.js`, or `themeTemplates.js` — this feature composes them, it doesn't modify them.
 
@@ -105,7 +105,7 @@ The Phase 5b guard (`pages.length !== 1 || navigation || theme`) is a deliberate
 
 **Apply flow:** clicking a template card checks whether the active page is empty (`activePage.sections.every(s => s.columns.every(c => c.widgets.length === 0))` — the same emptiness check `ACTIONS.REMOVE_SECTION` already uses per-section, extended across the whole page):
 - **Empty page** → dispatch `APPLY_TEMPLATE` immediately, no dialog.
-- **Non-empty page** → open `ApplyTemplateDialog` (`"Applicare '[nome]'? Sostituirà il contenuto attuale della pagina."`, Annulla/Conferma). Conferma dispatches `APPLY_TEMPLATE`; Annulla or Escape closes with no state change.
+- **Non-empty page** → open `ApplyTemplateDialog` (body text via `t('templates.confirmBody', { name: translatedTemplateLabel })`, e.g. *"Applicare '[nome]'? Sostituirà il contenuto attuale della pagina."* in Italian; Annulla/Conferma buttons via `templates.confirmCancel`/`templates.confirmApply`). Conferma dispatches `APPLY_TEMPLATE`; Annulla or Escape closes with no state change.
 
 ## Section 4 — Testing
 
