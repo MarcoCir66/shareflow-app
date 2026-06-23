@@ -12,8 +12,12 @@ export default function Tooltip({ text, children }) {
 
   function show() {
     timeoutRef.current = setTimeout(() => {
-      if (!wrapperRef.current) return
-      const rect = wrapperRef.current.getBoundingClientRect()
+      // The wrapper span uses `display: contents` so it never has its own box —
+      // measuring it directly always yields an empty rect. Measure its rendered
+      // child instead (the actual button/card/heading being wrapped).
+      const target = wrapperRef.current?.firstElementChild
+      if (!target) return
+      const rect = target.getBoundingClientRect()
       setCoords(computeTooltipPosition(rect))
     }, SHOW_DELAY_MS)
   }

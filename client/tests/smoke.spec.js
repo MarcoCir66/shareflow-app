@@ -28,8 +28,18 @@ test.describe('ShareFlow configurator smoke test', () => {
   })
 
   test('hovering a sidebar tab shows an explanatory tooltip', async ({ page }) => {
-    await page.getByRole('button', { name: 'Blocchi' }).hover()
-    await expect(page.getByRole('tooltip')).toHaveText('Catalogo dei blocchi di contenuto da trascinare nelle pagine del sito.')
+    const tabButton = page.getByRole('button', { name: 'Blocchi' })
+    const buttonBox = await tabButton.boundingBox()
+    await tabButton.hover()
+    const tooltip = page.getByRole('tooltip')
+    await expect(tooltip).toHaveText('Catalogo dei blocchi di contenuto da trascinare nelle pagine del sito.')
+
+    // Regression guard: the tooltip must anchor near the hovered element, not at
+    // the viewport's top-left corner (a real bug caused by measuring the display:contents
+    // wrapper's own — always empty — bounding rect instead of its rendered child).
+    const tooltipBox = await tooltip.boundingBox()
+    expect(tooltipBox.x).toBeGreaterThan(buttonBox.x + buttonBox.width)
+    expect(Math.abs(tooltipBox.y + tooltipBox.height / 2 - (buttonBox.y + buttonBox.height / 2))).toBeLessThan(5)
   })
 
   test('search filters the block library', async ({ page }) => {
