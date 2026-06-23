@@ -204,5 +204,79 @@
     "tablet": "Tablet",
     "mobile": "Mobile",
     "close": "Close preview"
+  },
+  "tooltips": {
+    "tabs": {
+      "blocks": "The catalog of content blocks you can drag onto site pages.",
+      "pages": "Manage the site's page structure and tree.",
+      "appearance": "Customize the site name, visual theme, background and brand color.",
+      "templates": "Apply ready-made templates to a single page or the whole site."
+    },
+    "blockCategories": {
+      "COMMUNICATION": "Blocks for company news, events and internal communications.",
+      "LEARNING": "Blocks for training, spotlights and employee engagement.",
+      "PRODUCTIVITY": "Everyday utility blocks: procedures, quick links, weather and more.",
+      "KNOWLEDGE_BASE": "Blocks for search, FAQ, org chart and company information."
+    },
+    "blocks": {
+      "news-corporate": "Shows the latest corporate-wide company news.",
+      "news-country": "Shows news specific to the selected country.",
+      "news-sede": "Shows news specific to the selected location.",
+      "news-funzione": "Shows news specific to the selected business function.",
+      "commenti-contenuto": "Enables user comments under a piece of content.",
+      "like-contenuto": "Enables user likes on a piece of content.",
+      "avvisi-homepage": "Shows important alerts featured on the homepage.",
+      "eventi-corporate": "Shows corporate-wide company events.",
+      "eventi-country": "Shows events specific to the selected country.",
+      "eventi-sede": "Shows events specific to the selected location.",
+      "eventi-funzione": "Shows events specific to the selected business function.",
+      "sezione-fiere": "Lists trade shows the company is taking part in.",
+      "sezione-mostre": "Lists company exhibitions and cultural events.",
+      "multimedia-gallery": "A gallery of company photos and videos.",
+      "countdown-lancio": "A countdown to the launch of an initiative or product.",
+      "rassegna-stampa": "A collection of press articles mentioning the company.",
+      "bacheca-sindacale": "A board for union communications.",
+      "bacheca-scambio": "A board for swap/wanted posts between colleagues.",
+      "linkedin-feed": "Shows the latest posts from the company LinkedIn page.",
+      "new-entry": "Introduces employees who recently joined the company.",
+      "oggi-presentiamo": "Spotlights a person, project or initiative.",
+      "polls-survey": "Create polls and surveys to collect employee feedback.",
+      "sezione-welfare": "Lists the welfare initiatives available to employees.",
+      "kudos": "Shows public recognition shared between colleagues.",
+      "anniversari": "Celebrates employees' work anniversaries.",
+      "feedback-utenti": "Collects user feedback on the intranet or its content.",
+      "procedure": "Lists company operating procedures.",
+      "sezione-progetti": "Showcases ongoing company projects.",
+      "meteo": "Shows the weather forecast for the selected country.",
+      "fusi-orari": "Shows the current time across the company's main time zones.",
+      "multilingua": "Lets visitors switch the site's display language.",
+      "collegamenti-rapidi": "A list of quick links to company resources or tools.",
+      "pulsante-cta": "A customizable call-to-action button.",
+      "titolo-libero": "A free-text heading to introduce a section.",
+      "embed-custom": "Embeds external content via a custom embed code.",
+      "motore-ricerca": "A search bar for finding content within the intranet.",
+      "faq": "A list of frequently asked questions and answers.",
+      "come-fare-per": "Step-by-step guides for common tasks.",
+      "organigramma": "Shows the company's organizational structure.",
+      "rubrica-colleghi": "Lets users search for and contact colleagues.",
+      "contatti-chiave": "Lists the key contacts most useful to employees.",
+      "documenti": "Lists important company documents and files.",
+      "chi-siamo": "Introduces the company's history and values.",
+      "desc-country": "Describes the selected country (general information).",
+      "desc-sede": "Describes the selected location (general information).",
+      "desc-funzione": "Describes the selected business function (general information)."
+    },
+    "appearanceSections": {
+      "siteName": "The site name shown in the header and hero banner.",
+      "template": "Choose one of the predefined visual themes for the site.",
+      "backgroundImage": "Set a background image for the hero banner and top navigation, with automatically suggested colors.",
+      "brandColor": "The brand's main color, used for accents and active elements."
+    },
+    "themeTemplates": {
+      "corporate-classic": "A dark, professional theme with a blue accent, suited to traditional corporate contexts.",
+      "modern-light": "A light, minimal theme with a teal accent, for a modern, airy look.",
+      "dark-glass": "A dark theme with a semi-transparent glass effect and a cyan accent, for a tech aesthetic.",
+      "vibrant-color": "A bold purple-and-orange theme for a daring, colorful brand."
+    }
   }
 }

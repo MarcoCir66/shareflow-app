@@ -204,5 +204,79 @@
     "tablet": "Tablet",
     "mobile": "Mobile",
     "close": "Chiudi preview"
+  },
+  "tooltips": {
+    "tabs": {
+      "blocks": "Catalogo dei blocchi di contenuto da trascinare nelle pagine del sito.",
+      "pages": "Gestisci la struttura e l'albero delle pagine del sito.",
+      "appearance": "Personalizza nome sito, tema visivo, sfondo e colore brand.",
+      "templates": "Applica modelli predefiniti a una singola pagina o all'intero sito."
+    },
+    "blockCategories": {
+      "COMMUNICATION": "Blocchi per news, eventi e comunicazioni interne all'azienda.",
+      "LEARNING": "Blocchi per formazione, presentazioni e coinvolgimento dei dipendenti.",
+      "PRODUCTIVITY": "Blocchi di utilità quotidiana: procedure, link rapidi, meteo e altro.",
+      "KNOWLEDGE_BASE": "Blocchi per ricerca, FAQ, organigramma e informazioni aziendali."
+    },
+    "blocks": {
+      "news-corporate": "Mostra le ultime news aziendali a livello corporate.",
+      "news-country": "Mostra le news specifiche del paese selezionato.",
+      "news-sede": "Mostra le news specifiche della sede selezionata.",
+      "news-funzione": "Mostra le news specifiche della funzione aziendale selezionata.",
+      "commenti-contenuto": "Abilita i commenti degli utenti sotto un contenuto.",
+      "like-contenuto": "Abilita i like degli utenti su un contenuto.",
+      "avvisi-homepage": "Mostra avvisi importanti in evidenza nella home page.",
+      "eventi-corporate": "Mostra gli eventi aziendali a livello corporate.",
+      "eventi-country": "Mostra gli eventi specifici del paese selezionato.",
+      "eventi-sede": "Mostra gli eventi specifici della sede selezionata.",
+      "eventi-funzione": "Mostra gli eventi specifici della funzione aziendale selezionata.",
+      "sezione-fiere": "Elenca le fiere ed eventi espositivi a cui l'azienda partecipa.",
+      "sezione-mostre": "Elenca le mostre e gli eventi culturali aziendali.",
+      "multimedia-gallery": "Galleria di foto e video aziendali.",
+      "countdown-lancio": "Conto alla rovescia per il lancio di un'iniziativa o prodotto.",
+      "rassegna-stampa": "Raccolta degli articoli di stampa che parlano dell'azienda.",
+      "bacheca-sindacale": "Bacheca per le comunicazioni sindacali.",
+      "bacheca-scambio": "Bacheca per annunci di scambio/cerco tra colleghi.",
+      "linkedin-feed": "Mostra gli ultimi post dalla pagina LinkedIn aziendale.",
+      "new-entry": "Presenta i nuovi assunti entrati di recente in azienda.",
+      "oggi-presentiamo": "Presenta una persona, progetto o iniziativa in evidenza.",
+      "polls-survey": "Crea sondaggi e survey per raccogliere il feedback dei dipendenti.",
+      "sezione-welfare": "Elenca le iniziative di welfare aziendale a disposizione dei dipendenti.",
+      "kudos": "Mostra i riconoscimenti pubblici tra colleghi.",
+      "anniversari": "Celebra gli anniversari lavorativi dei dipendenti.",
+      "feedback-utenti": "Raccogli il feedback degli utenti sull'intranet o sui contenuti.",
+      "procedure": "Elenca le procedure operative aziendali.",
+      "sezione-progetti": "Presenta i progetti aziendali in corso.",
+      "meteo": "Mostra le previsioni meteo per il paese selezionato.",
+      "fusi-orari": "Mostra l'orario corrente nei principali fusi orari aziendali.",
+      "multilingua": "Permette di cambiare la lingua di visualizzazione del sito.",
+      "collegamenti-rapidi": "Elenco di link rapidi a risorse o strumenti aziendali.",
+      "pulsante-cta": "Bottone di invito all'azione (call-to-action) personalizzabile.",
+      "titolo-libero": "Titolo di testo libero per introdurre una sezione.",
+      "embed-custom": "Incorpora contenuto esterno tramite codice embed personalizzato.",
+      "motore-ricerca": "Barra di ricerca per trovare contenuti all'interno dell'intranet.",
+      "faq": "Elenco di domande frequenti e relative risposte.",
+      "come-fare-per": "Guide passo-passo su come svolgere attività comuni.",
+      "organigramma": "Mostra la struttura organizzativa dell'azienda.",
+      "rubrica-colleghi": "Permette di cercare e contattare i colleghi aziendali.",
+      "contatti-chiave": "Elenca i contatti chiave più utili per i dipendenti.",
+      "documenti": "Elenca documenti e file aziendali importanti.",
+      "chi-siamo": "Presenta la storia e i valori dell'azienda.",
+      "desc-country": "Descrive il paese selezionato (informazioni generali).",
+      "desc-sede": "Descrive la sede selezionata (informazioni generali).",
+      "desc-funzione": "Descrive la funzione aziendale selezionata (informazioni generali)."
+    },
+    "appearanceSections": {
+      "siteName": "Il nome del sito mostrato nell'header e nell'hero banner.",
+      "template": "Scegli uno dei temi visivi predefiniti per il sito.",
+      "backgroundImage": "Imposta un'immagine di sfondo per hero banner e barra di navigazione, con colori suggeriti automaticamente.",
+      "brandColor": "Il colore principale del brand, usato per accenti e elementi attivi."
+    },
+    "themeTemplates": {
+      "corporate-classic": "Tema scuro e professionale con accento blu, adatto a contesti corporate tradizionali.",
+      "modern-light": "Tema chiaro e minimale con accento turchese, per un look moderno e arioso.",
+      "dark-glass": "Tema scuro con effetto vetro semi-trasparente e accento azzurro, per un'estetica tech.",
+      "vibrant-color": "Tema viola e arancio acceso, per un brand audace e colorato."
+    }
   }
 }
