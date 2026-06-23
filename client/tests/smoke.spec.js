@@ -180,6 +180,22 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.locator('[style*="--theme-accent"]')).toHaveAttribute('style', /--theme-accent:\s*#ff0000/)
   })
 
+  test('hovering an Aspetto section header shows an explanatory tooltip', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aspetto' }).click()
+    await page.locator('body').hover() // move mouse away from button
+    await page.getByText('Colore brand', { exact: true }).hover()
+    const tooltip = page.getByRole('tooltip').filter({ hasText: 'Il colore principale del brand' })
+    await expect(tooltip).toHaveText('Il colore principale del brand, usato per accenti e elementi attivi.')
+  })
+
+  test('hovering a theme template card shows an explanatory tooltip', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aspetto' }).click()
+    await page.locator('body').hover() // move mouse away from button
+    await page.getByText('Corporate Classic', { exact: true }).hover()
+    const tooltip = page.getByRole('tooltip').filter({ hasText: 'Tema scuro e professionale' })
+    await expect(tooltip).toHaveText('Tema scuro e professionale con accento blu, adatto a contesti corporate tradizionali.')
+  })
+
   test('setting a background image URL applies it to the Hero Banner and Top Nav', async ({ page }) => {
     const dataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
 

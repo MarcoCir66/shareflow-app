@@ -5,6 +5,7 @@ import { useTheme } from '../../hooks/useTheme.js'
 import { THEME_TEMPLATES } from '../../data/themeTemplates.js'
 import { useLang } from '../../hooks/useLang.js'
 import { t2 } from '../../utils/localizedText.js'
+import Tooltip from '../common/Tooltip.jsx'
 
 export default function AppearancePanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
@@ -44,9 +45,11 @@ export default function AppearancePanel() {
   return (
     <div className="p-3 space-y-4 overflow-y-auto h-full">
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
-          {t('appearance.siteNameLabel', { lang: lang.toUpperCase() })}
-        </h3>
+        <Tooltip text={t('tooltips.appearanceSections.siteName')}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+            {t('appearance.siteNameLabel', { lang: lang.toUpperCase() })}
+          </h3>
+        </Tooltip>
         <input
           type="text"
           value={t2(state.tenantConfiguration.siteName, lang)}
@@ -56,37 +59,42 @@ export default function AppearancePanel() {
       </div>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
-          {t('appearance.template')}
-        </h3>
+        <Tooltip text={t('tooltips.appearanceSections.template')}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+            {t('appearance.template')}
+          </h3>
+        </Tooltip>
         <div className="space-y-2">
           {THEME_TEMPLATES.map(tmpl => (
-            <button
-              key={tmpl.id}
-              type="button"
-              onClick={() => selectTemplate(tmpl.id)}
-              className={`w-full text-left rounded-lg border p-2 transition-colors
-                ${tmpl.id === template.id ? 'border-blue-electric ring-1 ring-blue-electric/30' : 'border-slate-mid hover:border-slate-light'}`}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-semibold text-white">{tmpl.name}</span>
-                {tmpl.id === template.id && <Check size={14} className="text-blue-electric" />}
-              </div>
-              <div className="flex gap-1">
-                <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.nav }} />
-                <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.hero }} />
-                <span className="block w-5 h-5 rounded" style={{ background: tmpl.accentColor }} />
-                <span className="block w-5 h-5 rounded border border-slate-mid" style={{ background: tmpl.swatch.card }} />
-              </div>
-            </button>
+            <Tooltip key={tmpl.id} text={t(`tooltips.themeTemplates.${tmpl.id}`)}>
+              <button
+                type="button"
+                onClick={() => selectTemplate(tmpl.id)}
+                className={`w-full text-left rounded-lg border p-2 transition-colors
+                  ${tmpl.id === template.id ? 'border-blue-electric ring-1 ring-blue-electric/30' : 'border-slate-mid hover:border-slate-light'}`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-semibold text-white">{tmpl.name}</span>
+                  {tmpl.id === template.id && <Check size={14} className="text-blue-electric" />}
+                </div>
+                <div className="flex gap-1">
+                  <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.nav }} />
+                  <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.hero }} />
+                  <span className="block w-5 h-5 rounded" style={{ background: tmpl.accentColor }} />
+                  <span className="block w-5 h-5 rounded border border-slate-mid" style={{ background: tmpl.swatch.card }} />
+                </div>
+              </button>
+            </Tooltip>
           ))}
         </div>
       </div>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
-          {t('appearance.backgroundImageLabel')}
-        </h3>
+        <Tooltip text={t('tooltips.appearanceSections.backgroundImage')}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+            {t('appearance.backgroundImageLabel')}
+          </h3>
+        </Tooltip>
         <input
           type="text"
           value={theme?.backgroundImageUrl || ''}
@@ -102,9 +110,11 @@ export default function AppearancePanel() {
       </div>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
-          {t('appearance.brandColor')}
-        </h3>
+        <Tooltip text={t('tooltips.appearanceSections.brandColor')}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+            {t('appearance.brandColor')}
+          </h3>
+        </Tooltip>
         <div className="flex items-center gap-2">
           <input
             type="color"
