@@ -38,6 +38,16 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByText('Procedure', { exact: true })).not.toBeVisible()
   })
 
+  test('hovering a block category header shows an explanatory tooltip', async ({ page }) => {
+    await page.getByText('Comunicazione', { exact: true }).hover()
+    await expect(page.getByRole('tooltip')).toHaveText("Blocchi per news, eventi e comunicazioni interne all'azienda.")
+  })
+
+  test('hovering a block card shows an explanatory tooltip', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).hover()
+    await expect(page.getByRole('tooltip')).toHaveText('Mostra le ultime news aziendali a livello corporate.')
+  })
+
   test('all 9 Phase 6 sub-project 1 blocks are visible in the block library', async ({ page }) => {
     await expect(page.getByText('Contatti Chiave', { exact: true })).toBeVisible()
     await expect(page.getByText('Kudos', { exact: true })).toBeVisible()
