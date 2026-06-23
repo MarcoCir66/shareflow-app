@@ -199,6 +199,16 @@ test('SET_TENANT_META merges the payload into tenantConfiguration', () => {
   expect(next.tenantConfiguration.theme).toEqual(state.tenantConfiguration.theme)
 })
 
+test('SET_TENANT_META with a backgroundImageUrl payload updates tenantConfiguration.theme', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, {
+    type: ACTIONS.SET_TENANT_META,
+    payload: { theme: { ...state.tenantConfiguration.theme, backgroundImageUrl: 'https://example.com/bg.jpg' } },
+  })
+  expect(next.tenantConfiguration.theme.backgroundImageUrl).toBe('https://example.com/bg.jpg')
+  expect(next.tenantConfiguration.theme.templateId).toBe(state.tenantConfiguration.theme.templateId)
+})
+
 test('EXPORT_CONFIGURATION rebuilds tenantConfiguration via buildTenantExport', () => {
   const state = makeState()
   const next = configuratorReducer(state, { type: ACTIONS.EXPORT_CONFIGURATION })
