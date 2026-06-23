@@ -41,10 +41,7 @@ export function useBackgroundImageAnalysis(url) {
   const [result, setResult] = useState(FALLBACK_RESULT)
 
   useEffect(() => {
-    if (!url) {
-      setResult(FALLBACK_RESULT)
-      return
-    }
+    if (!url) return
     let cancelled = false
     analyzeImage(url).then(r => {
       if (!cancelled) setResult(r)
@@ -52,5 +49,5 @@ export function useBackgroundImageAnalysis(url) {
     return () => { cancelled = true }
   }, [url])
 
-  return result
+  return url ? result : FALLBACK_RESULT
 }
