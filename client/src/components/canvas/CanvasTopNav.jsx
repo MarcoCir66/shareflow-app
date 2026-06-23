@@ -13,7 +13,7 @@ function isInSubtree(node, pageId) {
 
 export default function CanvasTopNav() {
   const { state, dispatch, ACTIONS } = useConfigurator()
-  const { template } = useTheme()
+  const { template, backgroundImageUrl, textScheme, showFallbackScrim } = useTheme()
   const lang = useLang()
   const [closedRootId, setClosedRootId] = useState(null)
   const tree = buildPageTree(state.pages)
@@ -22,6 +22,16 @@ export default function CanvasTopNav() {
   const openRoot = activeRoot && activeRoot.children.length > 0 && activeRoot.pageId !== closedRootId
     ? activeRoot
     : null
+
+  const navStyle = backgroundImageUrl
+    ? {
+        backgroundImage: showFallbackScrim
+          ? `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${backgroundImageUrl})`
+          : `url(${backgroundImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }
+    : undefined
 
   function select(pageId) {
     dispatch({ type: ACTIONS.SELECT_PAGE, payload: { pageId } })
@@ -39,7 +49,7 @@ export default function CanvasTopNav() {
   }
 
   return (
-    <div className={`mb-4 ${template.nav.wrapper}`}>
+    <div className={`mb-4 ${template.nav.wrapper}`} style={navStyle}>
       <nav className="flex gap-1 overflow-x-auto">
         {tree.map(page => (
           <button
@@ -47,6 +57,7 @@ export default function CanvasTopNav() {
             onClick={() => handleRootClick(page)}
             className={`flex items-center gap-1 px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-colors
               ${activeRoot.pageId === page.pageId ? template.nav.tabActive : template.nav.tabInactive}`}
+            style={textScheme ? { color: activeRoot.pageId === page.pageId ? textScheme.strong : textScheme.muted } : undefined}
           >
             {t2(page.title, lang)}
             {page.children.length > 0 && (
