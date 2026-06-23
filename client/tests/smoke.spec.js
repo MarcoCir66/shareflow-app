@@ -27,6 +27,11 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.locator('main').getByRole('button', { name: 'Home', exact: true }).locator('svg')).toHaveCount(0)
   })
 
+  test('hovering a sidebar tab shows an explanatory tooltip', async ({ page }) => {
+    await page.getByRole('button', { name: 'Blocchi' }).hover()
+    await expect(page.getByRole('tooltip')).toHaveText('Catalogo dei blocchi di contenuto da trascinare nelle pagine del sito.')
+  })
+
   test('search filters the block library', async ({ page }) => {
     await page.getByPlaceholder('Cerca blocchi…').fill('news')
     await expect(page.getByText('News - Corporate', { exact: true })).toBeVisible()

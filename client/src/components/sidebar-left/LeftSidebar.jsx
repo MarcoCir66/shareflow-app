@@ -5,6 +5,7 @@ import BlockLibrary from './BlockLibrary.jsx'
 import PagesPanel from './PagesPanel.jsx'
 import AppearancePanel from './AppearancePanel.jsx'
 import TemplateGallery from './TemplateGallery.jsx'
+import Tooltip from '../common/Tooltip.jsx'
 
 export default function LeftSidebar() {
   const { t } = useTranslation()
@@ -23,18 +24,19 @@ export default function LeftSidebar() {
         {TABS.map(tabItem => {
           const Icon = icons[tabItem.icon] ?? icons.Box
           return (
-            <button
-              key={tabItem.id}
-              onClick={() => setTab(tabItem.id)}
-              className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider
-                transition-colors border-l-2
-                ${tab === tabItem.id
-                  ? 'text-blue-electric border-blue-electric bg-blue-electric/10'
-                  : 'text-slate-light border-transparent hover:text-white hover:bg-navy-light'}`}
-            >
-              <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
-              {tabItem.label}
-            </button>
+            <Tooltip key={tabItem.id} text={t(`tooltips.tabs.${tabItem.id}`)}>
+              <button
+                onClick={() => setTab(tabItem.id)}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider
+                  transition-colors border-l-2
+                  ${tab === tabItem.id
+                    ? 'text-blue-electric border-blue-electric bg-blue-electric/10'
+                    : 'text-slate-light border-transparent hover:text-white hover:bg-navy-light'}`}
+              >
+                <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
+                {tabItem.label}
+              </button>
+            </Tooltip>
           )
         })}
       </div>
