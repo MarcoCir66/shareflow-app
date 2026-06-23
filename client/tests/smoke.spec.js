@@ -65,6 +65,21 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByText('Instance ID')).toBeVisible()
   })
 
+  test('toggling Visibile off dims the block and shows a Nascosto badge in the canvas', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    const canvasBlock = page.locator('main').getByText('News - Corporate', { exact: true })
+    await canvasBlock.click()
+
+    const blockCard = page.locator('main div.group.bg-white', { hasText: 'News - Corporate' })
+    await expect(blockCard).not.toContainText('Nascosto')
+
+    const visibleRow = page.locator('div', { hasText: 'Visibile' }).filter({ has: page.locator('button') }).last()
+    await visibleRow.locator('button').click()
+
+    await expect(blockCard).toContainText('Nascosto')
+    await expect(blockCard).toHaveCSS('opacity', '0.4')
+  })
+
   test('removing a block clears the canvas and properties panel', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
     const canvasBlock = page.locator('main').getByText('News - Corporate', { exact: true })

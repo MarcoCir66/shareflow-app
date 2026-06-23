@@ -135,7 +135,8 @@
     "moveToOtherColumn": "In eine andere Spalte verschieben",
     "sectionCol": "Abschnitt {{section}} · Spalte {{col}}",
     "dragHandle": "Ziehgriff",
-    "removeBlock": "Block entfernen"
+    "removeBlock": "Block entfernen",
+    "hidden": "Ausgeblendet"
   },
   "props": {
     "properties": "Eigenschaften",

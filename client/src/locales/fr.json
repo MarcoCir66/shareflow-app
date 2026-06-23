@@ -135,7 +135,8 @@
     "moveToOtherColumn": "Déplacer vers une autre colonne",
     "sectionCol": "Section {{section}} · Colonne {{col}}",
     "dragHandle": "Poignée de déplacement",
-    "removeBlock": "Supprimer le bloc"
+    "removeBlock": "Supprimer le bloc",
+    "hidden": "Masqué"
   },
   "props": {
     "properties": "Propriétés",

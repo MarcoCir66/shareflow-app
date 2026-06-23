@@ -135,7 +135,8 @@
     "moveToOtherColumn": "Move to another column",
     "sectionCol": "Section {{section}} · Column {{col}}",
     "dragHandle": "Drag handle",
-    "removeBlock": "Remove block"
+    "removeBlock": "Remove block",
+    "hidden": "Hidden"
   },
   "props": {
     "properties": "Properties",

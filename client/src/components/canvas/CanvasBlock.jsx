@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { X, GripVertical, ArrowRightLeft } from 'lucide-react'
+import { X, GripVertical, ArrowRightLeft, EyeOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { useTheme } from '../../hooks/useTheme.js'
@@ -27,7 +27,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging || widget.props.visible === false ? 0.4 : 1,
   }
 
   const activePage = findPage(state.pages, state.activePageId)
@@ -111,6 +111,13 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
           </button>
         ))}
       </AccessibleMenu>
+
+      {widget.props.visible === false && (
+        <div className="absolute left-9 top-2 flex items-center gap-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+          <EyeOff size={12} />
+          {t('canvas.hidden')}
+        </div>
+      )}
 
       <div className="pl-4">
         {block && (
