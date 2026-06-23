@@ -165,6 +165,23 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.locator('[style*="--theme-accent"]')).toHaveAttribute('style', /--theme-accent:\s*#ff0000/)
   })
 
+  test('setting a background image URL applies it to the Hero Banner and Top Nav', async ({ page }) => {
+    const dataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+
+    await page.getByRole('button', { name: 'Aspetto' }).click()
+    await page.getByPlaceholder(/sfondo/i).fill(dataUrl)
+
+    const eyebrow = page.locator('main').getByText('My Corporate Intranet', { exact: true })
+    const heroWrapper = eyebrow.locator('..')
+    const heroTitle = heroWrapper.locator('> div').nth(1)
+    const navWrapper = page.locator('main nav').locator('..')
+
+    await expect(heroWrapper).toHaveAttribute('style', /background-image:\s*url\(.*data:image\/png/)
+    await expect(navWrapper).toHaveAttribute('style', /background-image:\s*url\(.*data:image\/png/)
+    await expect(eyebrow).toHaveCSS('color', 'rgba(255, 255, 255, 0.72)')
+    await expect(heroTitle).toHaveCSS('color', 'rgb(255, 255, 255)')
+  })
+
   test('deploy flow completes end-to-end against the provisioning API', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
 
