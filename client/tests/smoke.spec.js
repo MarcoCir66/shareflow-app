@@ -33,6 +33,18 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByText('Procedure', { exact: true })).not.toBeVisible()
   })
 
+  test('all 9 Phase 6 sub-project 1 blocks are visible in the block library', async ({ page }) => {
+    await expect(page.getByText('Contatti Chiave', { exact: true })).toBeVisible()
+    await expect(page.getByText('Kudos', { exact: true })).toBeVisible()
+    await expect(page.getByText('Anniversari', { exact: true })).toBeVisible()
+    await expect(page.getByText('Collegamenti Rapidi', { exact: true })).toBeVisible()
+    await expect(page.getByText('Feedback Utenti', { exact: true })).toBeVisible()
+    await expect(page.getByText('Feed LinkedIn', { exact: true })).toBeVisible()
+    await expect(page.getByText('Pulsante CTA', { exact: true })).toBeVisible()
+    await expect(page.getByText('Titolo Libero', { exact: true })).toBeVisible()
+    await expect(page.getByText('Embed Personalizzato', { exact: true })).toBeVisible()
+  })
+
   test('clicking a block adds it to the canvas and shows its properties', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
 
@@ -315,6 +327,15 @@ test.describe('ShareFlow configurator smoke test', () => {
     await page.getByText('Portale HR', { exact: true }).click()
 
     await expect(page.locator('main').getByText('Documenti', { exact: true })).toBeVisible()
+  })
+
+  test('applying the Employee Hub template includes Kudos, Anniversari and Contatti Chiave', async ({ page }) => {
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Employee Hub', { exact: true }).first().click()
+
+    await expect(page.locator('main').getByText('Kudos', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Anniversari', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Contatti Chiave', { exact: true })).toBeVisible()
   })
 
   test('Template tab and its confirmation dialog have no in-scope accessibility violations', async ({ page }) => {

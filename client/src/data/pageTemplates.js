@@ -60,6 +60,8 @@ export const PAGE_TEMPLATES = [
       { layout: 'twoColumn', blocks: [['motore-ricerca'], ['rubrica-colleghi']] },
       { layout: 'oneColumn', blocks: [['polls-survey']] },
       { layout: 'oneColumn', blocks: [['bacheca-scambio']] },
+      { layout: 'twoColumn', blocks: [['kudos'], ['anniversari']] },
+      { layout: 'oneColumn', blocks: [['contatti-chiave']] },
     ],
   },
   {

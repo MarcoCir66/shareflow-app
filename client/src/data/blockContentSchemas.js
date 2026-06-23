@@ -111,6 +111,17 @@ export const BLOCK_CONTENT_DEFS = {
       { key: 'contact',  label: 'Contatto', type: 'text',     required: false },
     ],
   },
+  'linkedin-feed':     {
+    sourceTypes: ['rss', 'manual'],
+    schema: [
+      { key: 'author',   label: 'Autore',    type: 'text',     required: false },
+      { key: 'title',    label: 'Titolo',    type: 'text',     required: true  },
+      { key: 'excerpt',  label: 'Estratto',  type: 'textarea', required: false },
+      { key: 'url',      label: 'Link',      type: 'url',      required: false },
+      { key: 'imageUrl', label: 'Immagine',  type: 'url',      required: false },
+      { key: 'date',     label: 'Data',      type: 'date',     required: false },
+    ],
+  },
   'sezione-fiere':     {
     sourceTypes: SP_MANUAL,
     schema: [
@@ -162,6 +173,34 @@ export const BLOCK_CONTENT_DEFS = {
     ],
   },
   'sezione-welfare':   { sourceTypes: SP_MANUAL, schema: genericListSchema },
+  'kudos':             {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'from',    label: 'Da',        type: 'text',     required: true  },
+      { key: 'to',      label: 'A',         type: 'text',     required: true  },
+      { key: 'message', label: 'Messaggio', type: 'textarea', required: true  },
+      { key: 'date',    label: 'Data',      type: 'date',     required: false },
+    ],
+  },
+  'anniversari':       {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'name',       label: 'Nome',      type: 'text',   required: true  },
+      { key: 'type',       label: 'Tipo',      type: 'select', required: true,
+        options: ['anniversario', 'compleanno'] },
+      { key: 'date',       label: 'Data',      type: 'date',   required: true  },
+      { key: 'department', label: 'Reparto',   type: 'text',   required: false },
+      { key: 'imageUrl',   label: 'Foto',      type: 'url',    required: false },
+    ],
+  },
+  'feedback-utenti':   {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'question', label: 'Domanda',             type: 'text',     required: true  },
+      { key: 'response', label: 'Risposta di esempio', type: 'textarea', required: false },
+      { key: 'date',     label: 'Data',                type: 'date',     required: false },
+    ],
+  },
   // ── Productivity ─────────────────────────────────────────────────────────────
   'procedure':         { sourceTypes: SP_MANUAL, schema: genericListSchema },
   'sezione-progetti':  {
@@ -182,6 +221,37 @@ export const BLOCK_CONTENT_DEFS = {
       { key: 'temperature', label: 'Temperatura',  type: 'text', required: false },
       { key: 'condition',   label: 'Condizione',   type: 'text', required: false },
       { key: 'icon',        label: 'Icona (emoji)',type: 'text', required: false },
+    ],
+  },
+  'collegamenti-rapidi': {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'title',       label: 'Titolo',      type: 'text', required: true  },
+      { key: 'url',         label: 'Link',        type: 'url',  required: true  },
+      { key: 'description', label: 'Descrizione', type: 'text', required: false },
+    ],
+  },
+  'pulsante-cta':      {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'label', label: 'Testo pulsante', type: 'text',   required: true  },
+      { key: 'url',   label: 'Link',           type: 'url',    required: true  },
+      { key: 'style', label: 'Stile',          type: 'select', required: false,
+        options: ['primary', 'secondary'] },
+    ],
+  },
+  'titolo-libero':     {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'text',     label: 'Testo',       type: 'text', required: true  },
+      { key: 'subtitle', label: 'Sottotitolo', type: 'text', required: false },
+    ],
+  },
+  'embed-custom':      {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'embedUrl', label: 'URL embed',    type: 'url',  required: true  },
+      { key: 'height',   label: 'Altezza (px)', type: 'text', required: false },
     ],
   },
   // ── Knowledge Base ────────────────────────────────────────────────────────────
@@ -215,6 +285,17 @@ export const BLOCK_CONTENT_DEFS = {
   },
   'rubrica-colleghi':  {
     sourceTypes: ['sharepoint-list', 'http-api'],
+    schema: [
+      { key: 'name',       label: 'Nome',     type: 'text', required: true  },
+      { key: 'role',       label: 'Ruolo',    type: 'text', required: false },
+      { key: 'department', label: 'Reparto',  type: 'text', required: false },
+      { key: 'email',      label: 'Email',    type: 'text', required: false },
+      { key: 'phone',      label: 'Telefono', type: 'text', required: false },
+      { key: 'imageUrl',   label: 'Foto',     type: 'url',  required: false },
+    ],
+  },
+  'contatti-chiave':   {
+    sourceTypes: ['sharepoint-list', 'manual'],
     schema: [
       { key: 'name',       label: 'Nome',     type: 'text', required: true  },
       { key: 'role',       label: 'Ruolo',    type: 'text', required: false },
