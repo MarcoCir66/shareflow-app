@@ -18,7 +18,10 @@
     "siteNameLabel": "Websitename ({{lang}})",
     "template": "Vorlage",
     "brandColor": "Markenfarbe",
-    "reset": "Zurücksetzen"
+    "reset": "Zurücksetzen",
+    "backgroundImageLabel": "Hintergrundbild",
+    "backgroundImageHint": "URL eines Bildes, das als Hintergrund für das Hero-Banner und die Navigationsleiste verwendet wird",
+    "backgroundImageRemove": "Bild entfernen"
   },
   "blocks": {
     "search": "Blöcke suchen…",

@@ -18,7 +18,10 @@
     "siteNameLabel": "Nome sito ({{lang}})",
     "template": "Modello",
     "brandColor": "Colore brand",
-    "reset": "Ripristina"
+    "reset": "Ripristina",
+    "backgroundImageLabel": "Immagine di sfondo",
+    "backgroundImageHint": "URL di un'immagine da usare come sfondo dell'hero banner e della barra di navigazione",
+    "backgroundImageRemove": "Rimuovi immagine"
   },
   "blocks": {
     "search": "Cerca blocchi…",

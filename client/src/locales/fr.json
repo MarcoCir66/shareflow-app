@@ -18,7 +18,10 @@
     "siteNameLabel": "Nom du site ({{lang}})",
     "template": "Modèle",
     "brandColor": "Couleur de marque",
-    "reset": "Réinitialiser"
+    "reset": "Réinitialiser",
+    "backgroundImageLabel": "Image de fond",
+    "backgroundImageHint": "URL d'une image à utiliser comme fond de la bannière d'accueil et de la barre de navigation",
+    "backgroundImageRemove": "Supprimer l'image"
   },
   "blocks": {
     "search": "Rechercher des blocs…",

@@ -18,7 +18,10 @@
     "siteNameLabel": "Site name ({{lang}})",
     "template": "Template",
     "brandColor": "Brand color",
-    "reset": "Reset"
+    "reset": "Reset",
+    "backgroundImageLabel": "Background image",
+    "backgroundImageHint": "URL of an image to use as the background of the hero banner and top navigation",
+    "backgroundImageRemove": "Remove image"
   },
   "blocks": {
     "search": "Search blocks…",

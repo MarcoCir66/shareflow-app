@@ -25,6 +25,14 @@ export default function AppearancePanel() {
     dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, accentColor: null } } })
   }
 
+  function handleBackgroundImageUrlChange(value) {
+    dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, backgroundImageUrl: value } } })
+  }
+
+  function removeBackgroundImage() {
+    dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, backgroundImageUrl: '' } } })
+  }
+
   function handleSiteNameChange(value) {
     const current = state.tenantConfiguration.siteName
     const updated = typeof current === 'string'
@@ -73,6 +81,24 @@ export default function AppearancePanel() {
             </button>
           ))}
         </div>
+      </div>
+
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          {t('appearance.backgroundImageLabel')}
+        </h3>
+        <input
+          type="text"
+          value={theme?.backgroundImageUrl || ''}
+          onChange={e => handleBackgroundImageUrlChange(e.target.value)}
+          placeholder={t('appearance.backgroundImageHint')}
+          className="w-full bg-slate-mid text-white text-xs px-2.5 py-1.5 rounded border border-slate-mid focus:border-blue-electric focus:outline-none"
+        />
+        {theme?.backgroundImageUrl && (
+          <button type="button" onClick={removeBackgroundImage} className="mt-1 text-xs text-blue-electric hover:underline">
+            {t('appearance.backgroundImageRemove')}
+          </button>
+        )}
       </div>
 
       <div>
