@@ -12,6 +12,7 @@ export default function Tooltip({ text, children }) {
 
   function show() {
     timeoutRef.current = setTimeout(() => {
+      if (!wrapperRef.current) return
       const rect = wrapperRef.current.getBoundingClientRect()
       setCoords(computeTooltipPosition(rect))
     }, SHOW_DELAY_MS)
