@@ -14,6 +14,7 @@ import CanvasDropZone from './components/canvas/CanvasDropZone.jsx'
 import PropertiesPanel from './components/sidebar-right/PropertiesPanel.jsx'
 import DeployModal from './components/deploy/DeployModal.jsx'
 import CanvasBlockPreview from './components/canvas/CanvasBlockPreview.jsx'
+import AnalyticsView from './components/analytics/AnalyticsView.jsx'
 
 const COLUMN_PREFIX = 'column-'
 const IS_PREVIEW = new URLSearchParams(window.location.search).get('mode') === 'preview'
@@ -38,6 +39,7 @@ function AppInner() {
   const { state, dispatch, ACTIONS } = useConfigurator()
   usePreviewSync(state)
   const [deployOpen, setDeployOpen] = useState(false)
+  const [analyticsOpen, setAnalyticsOpen] = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
 
   const sensors = useSensors(
@@ -86,12 +88,16 @@ function AppInner() {
 
   return (
     <DndContext sensors={sensors} collisionDetection={collisionDetectionStrategy} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <Navbar onDeployClick={() => setDeployOpen(true)} />
-      <WorkspaceShell
-        left={<LeftSidebar />}
-        center={<CanvasDropZone />}
-        right={<PropertiesPanel />}
-      />
+      <Navbar onDeployClick={() => setDeployOpen(true)} onAnalyticsClick={() => setAnalyticsOpen(true)} />
+      {analyticsOpen ? (
+        <AnalyticsView onClose={() => setAnalyticsOpen(false)} />
+      ) : (
+        <WorkspaceShell
+          left={<LeftSidebar />}
+          center={<CanvasDropZone />}
+          right={<PropertiesPanel />}
+        />
+      )}
       <DragOverlay>
         {overlayBlock && (
           <div className="bg-white border-2 border-blue rounded-lg p-4 w-64 shadow-xl">

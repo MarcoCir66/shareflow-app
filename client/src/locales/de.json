@@ -290,5 +290,17 @@
       "dark-glass": "Ein dunkles Thema mit halbtransparentem Glaseffekt und cyanfarbenem Akzent für eine technische Ästhetik.",
       "vibrant-color": "Ein kräftiges violett-orangefarbenes Thema für eine mutige, farbenfrohe Marke."
     }
+  },
+  "analytics": {
+    "backToEditor": "Zurück zum Editor",
+    "tabOverview": "Overview",
+    "tabSites": "Websites",
+    "tabContent": "Inhalte",
+    "periodLabel": "Zeitraum",
+    "compareToggle": "Mit vorherigem Zeitraum vergleichen",
+    "kpiUniqueVisitors": "Eindeutige Besucher",
+    "kpiTotalVisits": "Besuche insgesamt",
+    "kpiAvgVisitsPerVisitor": "Ø Besuche pro Besucher",
+    "kpiAvgTimePerUser": "Ø Zeit pro Benutzer"
   }
 }

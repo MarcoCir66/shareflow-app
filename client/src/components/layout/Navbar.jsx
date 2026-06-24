@@ -1,4 +1,4 @@
-import { Eye } from 'lucide-react'
+import { Eye, LineChart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { isMsalConfigured } from '../../auth/msalInstance.js'
 import AuthSection from './AuthSection.jsx'
@@ -8,7 +8,7 @@ function openPreview() {
   window.open('/?mode=preview', 'shareflow-preview')
 }
 
-export default function Navbar({ onDeployClick }) {
+export default function Navbar({ onDeployClick, onAnalyticsClick }) {
   const { t } = useTranslation()
 
   return (
@@ -29,6 +29,13 @@ export default function Navbar({ onDeployClick }) {
           </span>
         )}
         <LanguageSwitcher />
+        <button
+          onClick={onAnalyticsClick}
+          className="flex items-center gap-2 text-slate-light hover:text-white border border-slate-mid hover:border-slate text-sm px-3 py-1.5 rounded-lg transition-colors"
+        >
+          <LineChart size={14} />
+          {t('navbar.analytics')}
+        </button>
         <button
           onClick={openPreview}
           className="flex items-center gap-2 text-slate-light hover:text-white border border-slate-mid hover:border-slate text-sm px-3 py-1.5 rounded-lg transition-colors"

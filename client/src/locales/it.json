@@ -3,7 +3,8 @@
     "tagline": "La piattaforma no-code per intranet SharePoint",
     "tenant": "Tenant: Nome Azienda",
     "preview": "Anteprima",
-    "deploy": "Pubblica su SharePoint"
+    "deploy": "Pubblica su SharePoint",
+    "analytics": "Analytics"
   },
   "sidebar": {
     "tabBlocks": "Blocchi",
@@ -290,5 +291,17 @@
       "dark-glass": "Tema scuro con effetto vetro semi-trasparente e accento azzurro, per un'estetica tech.",
       "vibrant-color": "Tema viola e arancio acceso, per un brand audace e colorato."
     }
+  },
+  "analytics": {
+    "backToEditor": "Torna all'editor",
+    "tabOverview": "Overview",
+    "tabSites": "Siti",
+    "tabContent": "Contenuti",
+    "periodLabel": "Periodo",
+    "compareToggle": "Confronta con periodo precedente",
+    "kpiUniqueVisitors": "Visitatori unici",
+    "kpiTotalVisits": "Visite totali",
+    "kpiAvgVisitsPerVisitor": "Media visite per visitatore",
+    "kpiAvgTimePerUser": "Tempo medio per utente"
   }
 }

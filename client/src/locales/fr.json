@@ -290,5 +290,17 @@
       "dark-glass": "Un thème sombre à effet verre semi-transparent et accent cyan, pour une esthétique tech.",
       "vibrant-color": "Un thème violet et orange vif, pour une marque audacieuse et colorée."
     }
+  },
+  "analytics": {
+    "backToEditor": "Retour à l'éditeur",
+    "tabOverview": "Overview",
+    "tabSites": "Sites",
+    "tabContent": "Contenus",
+    "periodLabel": "Période",
+    "compareToggle": "Comparer à la période précédente",
+    "kpiUniqueVisitors": "Visiteurs uniques",
+    "kpiTotalVisits": "Visites totales",
+    "kpiAvgVisitsPerVisitor": "Moy. visites par visiteur",
+    "kpiAvgTimePerUser": "Temps moyen par utilisateur"
   }
 }
