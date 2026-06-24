@@ -81,7 +81,8 @@
       "desc-country": "Country Description",
       "desc-sede": "Location Description",
       "desc-funzione": "Function Description",
-      "calendario-eventi": "Calendar"
+      "calendario-eventi": "Calendar",
+      "carosello-contenuti": "Carousel"
     }
   },
   "templates": {
@@ -140,7 +141,10 @@
     "sectionCol": "Section {{section}} · Column {{col}}",
     "dragHandle": "Drag handle",
     "removeBlock": "Remove block",
-    "hidden": "Hidden"
+    "hidden": "Hidden",
+    "carouselPrev": "Previous slide",
+    "carouselNext": "Next slide",
+    "carouselGoToSlide": "Go to slide {{n}}"
   },
   "props": {
     "properties": "Properties",
@@ -266,7 +270,8 @@
       "desc-country": "Describes the selected country (general information).",
       "desc-sede": "Describes the selected location (general information).",
       "desc-funzione": "Describes the selected business function (general information).",
-      "calendario-eventi": "Shows this month's events in a calendar view."
+      "calendario-eventi": "Shows this month's events in a calendar view.",
+      "carosello-contenuti": "A scrollable carousel of featured content, with slide navigation."
     },
     "appearanceSections": {
       "siteName": "The site name shown in the header and hero banner.",

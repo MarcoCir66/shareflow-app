@@ -407,7 +407,7 @@ test('APPLY_TEMPLATE replaces the active page sections and sets its title from t
     payload: { pages: [{ title: template.defaultPageTitle, sections: template.sections }] },
   })
   expect(next.pages[0].title).toEqual(template.defaultPageTitle)
-  expect(next.pages[0].sections).toHaveLength(4)
+  expect(next.pages[0].sections).toHaveLength(5)
   expect(next.pages[0].sections[0].columns).toHaveLength(2)
   expect(next.pages[0].sections[0].columns[0].widgets[0].blockId).toBe('news-corporate')
   expect(next.pages[0].sections[0].columns[0].widgets[0].props).toEqual(blockById['news-corporate'].defaultProps)

@@ -81,7 +81,8 @@
       "desc-country": "Länderbeschreibung",
       "desc-sede": "Standortbeschreibung",
       "desc-funzione": "Abteilungsbeschreibung",
-      "calendario-eventi": "Kalender"
+      "calendario-eventi": "Kalender",
+      "carosello-contenuti": "Karussell"
     }
   },
   "templates": {
@@ -140,7 +141,10 @@
     "sectionCol": "Abschnitt {{section}} · Spalte {{col}}",
     "dragHandle": "Ziehgriff",
     "removeBlock": "Block entfernen",
-    "hidden": "Ausgeblendet"
+    "hidden": "Ausgeblendet",
+    "carouselPrev": "Vorherige Folie",
+    "carouselNext": "Nächste Folie",
+    "carouselGoToSlide": "Zu Folie {{n}} wechseln"
   },
   "props": {
     "properties": "Eigenschaften",
@@ -266,7 +270,8 @@
       "desc-country": "Beschreibt das ausgewählte Land (allgemeine Informationen).",
       "desc-sede": "Beschreibt den ausgewählten Standort (allgemeine Informationen).",
       "desc-funzione": "Beschreibt die ausgewählte Abteilung (allgemeine Informationen).",
-      "calendario-eventi": "Zeigt die Ereignisse des aktuellen Monats in einer Kalenderansicht."
+      "calendario-eventi": "Zeigt die Ereignisse des aktuellen Monats in einer Kalenderansicht.",
+      "carosello-contenuti": "Ein durchblätterbares Karussell mit hervorgehobenen Inhalten und Folien-Navigation."
     },
     "appearanceSections": {
       "siteName": "Der Websitename, der im Header und im Hero-Banner angezeigt wird.",

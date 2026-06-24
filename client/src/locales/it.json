@@ -81,7 +81,8 @@
       "desc-country": "Sezione descrittiva Country",
       "desc-sede": "Sezione descrittiva Sede",
       "desc-funzione": "Sezione descrittiva Funzione",
-      "calendario-eventi": "Calendario"
+      "calendario-eventi": "Calendario",
+      "carosello-contenuti": "Carosello"
     }
   },
   "templates": {
@@ -140,7 +141,10 @@
     "sectionCol": "Sezione {{section}} · Colonna {{col}}",
     "dragHandle": "Maniglia di trascinamento",
     "removeBlock": "Rimuovi blocco",
-    "hidden": "Nascosto"
+    "hidden": "Nascosto",
+    "carouselPrev": "Slide precedente",
+    "carouselNext": "Slide successiva",
+    "carouselGoToSlide": "Vai alla slide {{n}}"
   },
   "props": {
     "properties": "Proprietà",
@@ -266,7 +270,8 @@
       "desc-country": "Descrive il paese selezionato (informazioni generali).",
       "desc-sede": "Descrive la sede selezionata (informazioni generali).",
       "desc-funzione": "Descrive la funzione aziendale selezionata (informazioni generali).",
-      "calendario-eventi": "Mostra gli eventi del mese in corso in una vista calendario."
+      "calendario-eventi": "Mostra gli eventi del mese in corso in una vista calendario.",
+      "carosello-contenuti": "Carosello scorrevole di contenuti in evidenza, con navigazione tra slide."
     },
     "appearanceSections": {
       "siteName": "Il nome del sito mostrato nell'header e nell'hero banner.",

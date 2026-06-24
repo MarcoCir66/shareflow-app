@@ -19,6 +19,7 @@ export const PAGE_TEMPLATES = [
       { layout: 'oneColumn', blocks: [['eventi-corporate']] },
       { layout: 'oneColumn', blocks: [['multimedia-gallery']] },
       { layout: 'oneColumn', blocks: [['calendario-eventi']] },
+      { layout: 'oneColumn', blocks: [['carosello-contenuti']] },
     ],
   },
   {

@@ -152,6 +152,15 @@ export const BLOCK_CONTENT_DEFS = {
       { key: 'location', label: 'Luogo',  type: 'text', required: false },
     ],
   },
+  'carosello-contenuti': {
+    sourceTypes: ['sharepoint-list', 'manual'],
+    schema: [
+      { key: 'title',       label: 'Titolo',      type: 'text',     required: true  },
+      { key: 'description', label: 'Descrizione', type: 'textarea', required: false },
+      { key: 'imageUrl',    label: 'Immagine',    type: 'url',      required: false },
+      { key: 'url',         label: 'Link',        type: 'url',      required: false },
+    ],
+  },
   // ── Learning ─────────────────────────────────────────────────────────────────
   'new-entry':         {
     sourceTypes: SP_MANUAL,

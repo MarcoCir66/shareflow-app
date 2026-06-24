@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../hooks/useTheme.js'
 import Header from './BlockPreviewHeader.jsx'
 import CalendarBlockPreview from './CalendarBlockPreview.jsx'
+import CarouselBlockPreview from './CarouselBlockPreview.jsx'
 
 const EVENT_IDS = new Set([
   'eventi-corporate', 'eventi-country', 'eventi-sede', 'eventi-funzione',
@@ -195,6 +196,7 @@ export default function CanvasBlockPreview({ block, width = 'full', contentItems
   }
 
   if (block.id === 'calendario-eventi') return <CalendarBlockPreview block={block} contentItems={contentItems} />
+  if (block.id === 'carosello-contenuti') return <CarouselBlockPreview block={block} contentItems={contentItems} />
 
   // ── countdown-lancio ───────────────────────────────────────────────────────────
   if (block.id === 'countdown-lancio') {

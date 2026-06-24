@@ -628,6 +628,22 @@ test.describe('ShareFlow configurator smoke test', () => {
     await page.getByText('Homepage Comunicazione', { exact: true }).click()
     await expect(page.locator('main').getByText('Calendario', { exact: true })).toBeVisible()
   })
+
+  test('Carosello block is visible in the library and supports slide navigation in the Homepage Comunicazione template', async ({ page }) => {
+    await expect(page.getByText('Carosello', { exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Homepage Comunicazione', { exact: true }).click()
+    await expect(page.locator('main').getByText('Carosello', { exact: true })).toBeVisible()
+
+    const dots = page.getByRole('button', { name: /Vai alla slide \d/ })
+    await expect(dots).toHaveCount(3)
+    await expect(dots.nth(0)).toHaveClass(/theme-accent/)
+
+    await page.getByRole('button', { name: 'Slide successiva' }).click()
+    await expect(dots.nth(1)).toHaveClass(/theme-accent/)
+    await expect(dots.nth(0)).not.toHaveClass(/theme-accent/)
+  })
 })
 
 test.describe('i18n language switching', () => {
