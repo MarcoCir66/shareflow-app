@@ -652,6 +652,70 @@ test.describe('ShareFlow configurator smoke test', () => {
     await page.getByText('Onboarding', { exact: true }).first().click()
     await expect(page.locator('main').getByText('Timeline Aziendale', { exact: true })).toBeVisible()
   })
+
+  test('creating an Accordion section adds 2 default panels, collapsed', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.getByTitle('Accordion').click()
+
+    const main = page.locator('main')
+    await expect(main.getByText('Pannello 1', { exact: true })).toBeVisible()
+    await expect(main.getByText('Pannello 2', { exact: true })).toBeVisible()
+    await expect(main.getByRole('button', { name: 'Apri/chiudi pannello' }).first()).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  test('toggling an accordion panel expands and collapses it', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.getByTitle('Accordion').click()
+
+    const toggle = page.locator('main').getByRole('button', { name: 'Apri/chiudi pannello' }).first()
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await toggle.click()
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    await toggle.click()
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  test('renaming an accordion panel updates its visible label', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.getByTitle('Accordion').click()
+
+    await page.locator('main').getByText('Pannello 1', { exact: true }).dblclick()
+    const input = page.locator('main').getByRole('textbox')
+    await input.fill('Domande Frequenti')
+    await input.press('Enter')
+
+    await expect(page.locator('main').getByText('Domande Frequenti', { exact: true })).toBeVisible()
+    await expect(page.locator('main').getByText('Pannello 1', { exact: true })).not.toBeVisible()
+  })
+
+  test('adding and removing an accordion panel', async ({ page }) => {
+    await page.getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.getByTitle('Accordion').click()
+
+    await page.locator('main').getByRole('button', { name: '+ Aggiungi pannello' }).click()
+    await expect(page.locator('main').getByText('Pannello 3', { exact: true })).toBeVisible()
+
+    const removeButtons = page.locator('main').getByRole('button', { name: 'Rimuovi pannello' })
+    await expect(removeButtons).toHaveCount(3)
+    await removeButtons.last().click()
+    await expect(page.locator('main').getByText('Pannello 3', { exact: true })).not.toBeVisible()
+  })
+
+  test('a widget moved into a collapsed accordion panel appears there once reopened', async ({ page }) => {
+    await page.getByText('News - Corporate', { exact: true }).click()
+    await page.getByRole('button', { name: 'Aggiungi sezione' }).click()
+    await page.getByTitle('Accordion').click()
+
+    const newsBlock = page.locator('main div.group.bg-white', { hasText: 'News - Corporate' })
+    await newsBlock.hover()
+    await newsBlock.getByRole('button', { name: 'Sposta in un\'altra colonna' }).click()
+    await page.getByRole('menuitem', { name: 'Pannello 1' }).click()
+
+    const panel1Toggle = page.locator('main').getByRole('button', { name: 'Apri/chiudi pannello' }).first()
+    await expect(panel1Toggle).toHaveAttribute('aria-expanded', 'false')
+    await panel1Toggle.click()
+    await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
+  })
 })
 
 test.describe('i18n language switching', () => {

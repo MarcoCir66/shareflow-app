@@ -5,8 +5,10 @@ import { X, GripVertical, ArrowRightLeft, EyeOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { useTheme } from '../../hooks/useTheme.js'
+import { useLang } from '../../hooks/useLang.js'
 import { blockById } from '../../data/blockCatalog.js'
 import { findPage } from '../../context/pageHelpers.js'
+import { t2 } from '../../utils/localizedText.js'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
 import AccessibleMenu from '../common/AccessibleMenu.jsx'
 
@@ -17,6 +19,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
   const moveTriggerRef = useRef(null)
   const block = blockById[widget.blockId]
   const { t } = useTranslation()
+  const lang = useLang()
   const isSelected = state.selectedWidgetInstanceId === widget.instanceId
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -35,7 +38,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
     section.columns.map((column, ci) => ({
       sectionId: section.sectionId,
       columnId: column.columnId,
-      label: t('canvas.sectionCol', { section: si + 1, col: ci + 1 }),
+      label: column.label ? t2(column.label, lang) : t('canvas.sectionCol', { section: si + 1, col: ci + 1 }),
     }))
   ).filter(c => !(c.sectionId === sectionId && c.columnId === columnId))
 
