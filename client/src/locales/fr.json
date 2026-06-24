@@ -3,7 +3,8 @@
     "tagline": "The No-Code SharePoint Intranet Factory",
     "tenant": "Locataire : Nom de l'entreprise",
     "preview": "Aperçu",
-    "deploy": "Déployer sur SharePoint"
+    "deploy": "Déployer sur SharePoint",
+    "analytics": "Analytics"
   },
   "sidebar": {
     "tabBlocks": "Blocs",

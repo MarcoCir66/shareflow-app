@@ -3,7 +3,8 @@
     "tagline": "The No-Code SharePoint Intranet Factory",
     "tenant": "Tenant: Company Name",
     "preview": "Preview",
-    "deploy": "Deploy to SharePoint"
+    "deploy": "Deploy to SharePoint",
+    "analytics": "Analytics"
   },
   "sidebar": {
     "tabBlocks": "Blocks",
