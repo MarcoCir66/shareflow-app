@@ -29,7 +29,21 @@ export const ACTIONS = {
   APPLY_TEMPLATE:       'APPLY_TEMPLATE',
 }
 
+const DEFAULT_PANEL_LABELS = { it: 'Pannello', en: 'Panel', fr: 'Panneau', de: 'Panel' }
+
+function defaultPanelLabel(n) {
+  return Object.fromEntries(Object.entries(DEFAULT_PANEL_LABELS).map(([lang, word]) => [lang, `${word} ${n}`]))
+}
+
 function emptyColumns(layoutKey) {
+  if (SECTION_LAYOUTS[layoutKey].kind === 'accordion') {
+    return Array.from({ length: 2 }, (_, i) => ({
+      columnId: generateId(),
+      label: defaultPanelLabel(i + 1),
+      expanded: false,
+      widgets: [],
+    }))
+  }
   return Array.from({ length: SECTION_LAYOUTS[layoutKey].columns }, () => ({
     columnId: generateId(),
     widgets: [],

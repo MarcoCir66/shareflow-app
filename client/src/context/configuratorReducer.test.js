@@ -547,3 +547,15 @@ test('documenti block is wired into both the hr-portal and onboarding page templ
   expect(hrBlocks).toContain('documenti')
   expect(onboardingBlocks).toContain('documenti')
 })
+
+test('ADD_SECTION with layout "accordion" creates 2 default panels with multilingual labels', () => {
+  const state = makeState()
+  const next = configuratorReducer(state, { type: ACTIONS.ADD_SECTION, payload: { layout: 'accordion' } })
+  const section = next.pages[0].sections[1]
+  expect(section.layout).toBe('accordion')
+  expect(section.columns).toHaveLength(2)
+  expect(section.columns[0].label).toEqual({ it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' })
+  expect(section.columns[1].label).toEqual({ it: 'Pannello 2', en: 'Panel 2', fr: 'Panneau 2', de: 'Panel 2' })
+  expect(section.columns[0].expanded).toBe(false)
+  expect(section.columns[0].widgets).toEqual([])
+})
