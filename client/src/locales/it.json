@@ -143,6 +143,9 @@
     "dragHandle": "Maniglia di trascinamento",
     "removeBlock": "Rimuovi blocco",
     "hidden": "Nascosto",
+    "addPanel": "+ Aggiungi pannello",
+    "removePanel": "Rimuovi pannello",
+    "togglePanel": "Apri/chiudi pannello",
     "carouselPrev": "Slide precedente",
     "carouselNext": "Slide successiva",
     "carouselGoToSlide": "Vai alla slide {{n}}"

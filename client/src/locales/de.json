@@ -143,6 +143,9 @@
     "dragHandle": "Ziehgriff",
     "removeBlock": "Block entfernen",
     "hidden": "Ausgeblendet",
+    "addPanel": "+ Panel hinzufügen",
+    "removePanel": "Panel entfernen",
+    "togglePanel": "Panel auf-/zuklappen",
     "carouselPrev": "Vorherige Folie",
     "carouselNext": "Nächste Folie",
     "carouselGoToSlide": "Zu Folie {{n}} wechseln"

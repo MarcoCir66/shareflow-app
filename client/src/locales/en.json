@@ -143,6 +143,9 @@
     "dragHandle": "Drag handle",
     "removeBlock": "Remove block",
     "hidden": "Hidden",
+    "addPanel": "+ Add panel",
+    "removePanel": "Remove panel",
+    "togglePanel": "Toggle panel",
     "carouselPrev": "Previous slide",
     "carouselNext": "Next slide",
     "carouselGoToSlide": "Go to slide {{n}}"

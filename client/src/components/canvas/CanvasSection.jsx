@@ -6,6 +6,7 @@ import { SECTION_LAYOUTS } from '../../data/sectionLayouts.js'
 import CanvasColumn from './CanvasColumn.jsx'
 import SectionLayoutPicker from './SectionLayoutPicker.jsx'
 import AccessibleMenu from '../common/AccessibleMenu.jsx'
+import AccordionPanels from './AccordionPanels.jsx'
 
 export default function CanvasSection({ section, readOnly = false }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
@@ -16,6 +17,9 @@ export default function CanvasSection({ section, readOnly = false }) {
   const layout = SECTION_LAYOUTS[section.layout]
 
   if (readOnly) {
+    if (section.layout === 'accordion') {
+      return <AccordionPanels section={section} readOnly />
+    }
     return (
       <div className={`mb-4 grid ${layout.gridCols} gap-3`}>
         {section.columns.map((column, i) => (
@@ -84,16 +88,20 @@ export default function CanvasSection({ section, readOnly = false }) {
         />
       </AccessibleMenu>
 
-      <div className={`grid ${layout.gridCols} gap-3`}>
-        {section.columns.map((column, i) => (
-          <CanvasColumn
-            key={column.columnId}
-            sectionId={section.sectionId}
-            column={column}
-            widthHint={layout.widths[i]}
-          />
-        ))}
-      </div>
+      {section.layout === 'accordion' ? (
+        <AccordionPanels section={section} />
+      ) : (
+        <div className={`grid ${layout.gridCols} gap-3`}>
+          {section.columns.map((column, i) => (
+            <CanvasColumn
+              key={column.columnId}
+              sectionId={section.sectionId}
+              column={column}
+              widthHint={layout.widths[i]}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
