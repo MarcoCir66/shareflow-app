@@ -65,6 +65,8 @@ Each panel is a clickable header (label + chevron) above a body containing an **
 
 This component works identically in the editor canvas and in the read-only preview/published-site rendering path (`CanvasSection.jsx`'s existing `readOnly` branch) — same precedent as the Carosello block (Phase 6 sub-project 2), which was the first interactive canvas preview; this accordion is the first interactive *section layout*.
 
+**Small, directly-related improvement to an existing feature:** `CanvasBlock.jsx`'s "move to another column" menu currently labels every target generically as `"Sezione N · Colonna M"`, for every column on the page, grid or accordion alike. Once accordion panels carry a real, author-chosen label, that generic text becomes a needless step backward for exactly the columns this feature introduces. When the target column has a `label` (i.e. it's an accordion panel), the menu shows that label (in the current UI language) instead of the generic text; grid columns are untouched and keep the generic format exactly as today.
+
 ## Section 5 — Panel management UI
 
 Entirely inside `AccordionSection.jsx`, in the canvas — no new UI in the right-hand properties panel:
@@ -76,10 +78,11 @@ Entirely inside `AccordionSection.jsx`, in the canvas — no new UI in the right
 
 ## Section 6 — Layout picker and i18n
 
-The existing layout picker (`SectionLayoutPicker.jsx`, reused both for "add a new section" and "change an existing section's layout") gains one more button: "Accordion", rendered with a distinct icon (stacked horizontal bars, not the grid-of-squares icon used for column layouts) — driven by the new `kind` field on `SECTION_LAYOUTS` so the registry stays a single source of truth.
+The existing layout picker (`SectionLayoutPicker.jsx`, reused both for "add a new section" and "change an existing section's layout") gains one more button: "Accordion", rendered with a distinct icon (`Rows3` from `lucide-react` — three stacked horizontal bars, confirmed to exist in the installed package — not the grid-of-squares icon used for column layouts) — driven by the new `kind` field on `SECTION_LAYOUTS` so the registry stays a single source of truth.
 
-New UI-chrome i18n keys (interface labels only — panel labels are page content, not translated UI strings, exactly like the site name):
-- `sectionLayouts.accordion` — the picker button's label
+**Correction found while preparing the plan:** the 5 existing layout entries' `.label` field (e.g. `'Due colonne'`) is a hardcoded Italian string, not routed through i18n at all — `SectionLayoutPicker.jsx` uses it directly as a tooltip `title`, untranslated, today. This is a pre-existing gap, out of scope to fix here. The new `accordion` entry's label follows the same existing (non-i18n) pattern for consistency: hardcoded as `'Accordion'`, not a new translated key.
+
+New UI-chrome i18n keys (interface labels only — panel labels are page content, not translated UI strings, exactly like the site name; these ARE real i18n keys because they extend `canvas.*`, an already-translated namespace, unlike the untranslated `SECTION_LAYOUTS` registry):
 - `canvas.addPanel` — the "+ Aggiungi pannello" button text
 - `canvas.removePanel` — the trash icon's aria-label
 - `canvas.togglePanel` — the header toggle button's aria-label
