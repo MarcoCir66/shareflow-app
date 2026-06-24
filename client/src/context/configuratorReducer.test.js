@@ -559,3 +559,125 @@ test('ADD_SECTION with layout "accordion" creates 2 default panels with multilin
   expect(section.columns[0].expanded).toBe(false)
   expect(section.columns[0].widgets).toEqual([])
 })
+
+function makeAccordionState(columns) {
+  return makeState({
+    pages: [{
+      pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null,
+      sections: [{ sectionId: 'section-1', layout: 'accordion', columns }],
+    }],
+  })
+}
+
+test('ADD_PANEL appends a panel with the next default label, collapsed and empty', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: true, widgets: [] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.ADD_PANEL, payload: { sectionId: 'section-1' } })
+  const columns = next.pages[0].sections[0].columns
+  expect(columns).toHaveLength(2)
+  expect(columns[1].label).toEqual({ it: 'Pannello 2', en: 'Panel 2', fr: 'Panneau 2', de: 'Panel 2' })
+  expect(columns[1].expanded).toBe(false)
+  expect(columns[1].widgets).toEqual([])
+})
+
+test('REMOVE_PANEL removes an empty panel when more than one panel remains', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [] },
+    { columnId: 'col-2', label: { it: 'Pannello 2', en: 'Panel 2', fr: 'Panneau 2', de: 'Panel 2' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_PANEL, payload: { sectionId: 'section-1', columnId: 'col-2' } })
+  expect(next.pages[0].sections[0].columns.map(c => c.columnId)).toEqual(['col-1'])
+})
+
+test('REMOVE_PANEL is a no-op when the target panel has widgets', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [{ instanceId: 'w1', blockId: 'a', props: {} }] },
+    { columnId: 'col-2', label: { it: 'Pannello 2', en: 'Panel 2', fr: 'Panneau 2', de: 'Panel 2' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_PANEL, payload: { sectionId: 'section-1', columnId: 'col-1' } })
+  expect(next).toBe(state)
+})
+
+test('REMOVE_PANEL is a no-op when it is the only panel left, even if empty', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.REMOVE_PANEL, payload: { sectionId: 'section-1', columnId: 'col-1' } })
+  expect(next).toBe(state)
+})
+
+test('RENAME_PANEL updates only the current language\'s label', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, {
+    type: ACTIONS.RENAME_PANEL,
+    payload: { sectionId: 'section-1', columnId: 'col-1', lang: 'it', label: 'Domande Frequenti' },
+  })
+  expect(next.pages[0].sections[0].columns[0].label).toEqual({ it: 'Domande Frequenti', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' })
+})
+
+test('RENAME_PANEL ignores an empty/whitespace-only label', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, {
+    type: ACTIONS.RENAME_PANEL,
+    payload: { sectionId: 'section-1', columnId: 'col-1', lang: 'it', label: '   ' },
+  })
+  expect(next).toBe(state)
+})
+
+test('TOGGLE_PANEL_EXPANDED flips a single panel\'s expanded flag', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [] },
+    { columnId: 'col-2', label: { it: 'Pannello 2', en: 'Panel 2', fr: 'Panneau 2', de: 'Panel 2' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.TOGGLE_PANEL_EXPANDED, payload: { sectionId: 'section-1', columnId: 'col-1' } })
+  expect(next.pages[0].sections[0].columns[0].expanded).toBe(true)
+  expect(next.pages[0].sections[0].columns[1].expanded).toBe(false)
+})
+
+test('CHANGE_SECTION_LAYOUT from a grid layout to accordion turns each column into a labeled panel', () => {
+  const state = makeState({
+    pages: [{
+      pageId: 'page-home', title: { it: 'Home', en: 'Home', fr: 'Home', de: 'Home' }, slug: 'home', parentId: null,
+      sections: [{
+        sectionId: 'section-1', layout: 'twoColumn',
+        columns: [
+          { columnId: 'col-1', widgets: [{ instanceId: 'w1', blockId: 'a', props: {} }] },
+          { columnId: 'col-2', widgets: [] },
+        ],
+      }],
+    }],
+  })
+  const next = configuratorReducer(state, { type: ACTIONS.CHANGE_SECTION_LAYOUT, payload: { sectionId: 'section-1', layout: 'accordion' } })
+  const columns = next.pages[0].sections[0].columns
+  expect(next.pages[0].sections[0].layout).toBe('accordion')
+  expect(columns).toHaveLength(2)
+  expect(columns[0]).toEqual({ columnId: 'col-1', label: { it: 'Pannello 1', en: 'Panel 1', fr: 'Panneau 1', de: 'Panel 1' }, expanded: false, widgets: [{ instanceId: 'w1', blockId: 'a', props: {} }] })
+  expect(columns[1].label).toEqual({ it: 'Pannello 2', en: 'Panel 2', fr: 'Panneau 2', de: 'Panel 2' })
+})
+
+test('CHANGE_SECTION_LAYOUT from accordion to a grid layout drops labels/expanded and keeps the existing overflow behavior', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'A', en: 'A', fr: 'A', de: 'A' }, expanded: true, widgets: [{ instanceId: 'w1', blockId: 'a', props: {} }] },
+    { columnId: 'col-2', label: { it: 'B', en: 'B', fr: 'B', de: 'B' }, expanded: false, widgets: [{ instanceId: 'w2', blockId: 'b', props: {} }] },
+    { columnId: 'col-3', label: { it: 'C', en: 'C', fr: 'C', de: 'C' }, expanded: false, widgets: [{ instanceId: 'w3', blockId: 'c', props: {} }] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.CHANGE_SECTION_LAYOUT, payload: { sectionId: 'section-1', layout: 'oneColumn' } })
+  const columns = next.pages[0].sections[0].columns
+  expect(columns).toHaveLength(1)
+  expect(columns[0].label).toBeUndefined()
+  expect(columns[0].expanded).toBeUndefined()
+  expect(columns[0].widgets.map(w => w.instanceId)).toEqual(['w1', 'w2', 'w3'])
+})
+
+test('CHANGE_SECTION_LAYOUT to the same layout the section already has is a no-op (preserves custom labels)', () => {
+  const state = makeAccordionState([
+    { columnId: 'col-1', label: { it: 'Domande Frequenti', en: 'FAQ', fr: 'FAQ', de: 'FAQ' }, expanded: false, widgets: [] },
+  ])
+  const next = configuratorReducer(state, { type: ACTIONS.CHANGE_SECTION_LAYOUT, payload: { sectionId: 'section-1', layout: 'accordion' } })
+  expect(next).toBe(state)
+})

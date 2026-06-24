@@ -18,6 +18,10 @@ export const ACTIONS = {
   ADD_SECTION:          'ADD_SECTION',
   REMOVE_SECTION:       'REMOVE_SECTION',
   CHANGE_SECTION_LAYOUT:'CHANGE_SECTION_LAYOUT',
+  ADD_PANEL:            'ADD_PANEL',
+  REMOVE_PANEL:          'REMOVE_PANEL',
+  RENAME_PANEL:          'RENAME_PANEL',
+  TOGGLE_PANEL_EXPANDED: 'TOGGLE_PANEL_EXPANDED',
   SELECT_SECTION:       'SELECT_SECTION',
   ADD_PAGE:             'ADD_PAGE',
   RENAME_PAGE:          'RENAME_PAGE',
@@ -48,6 +52,19 @@ function emptyColumns(layoutKey) {
     columnId: generateId(),
     widgets: [],
   }))
+}
+
+function toAccordionPanels(columns) {
+  return columns.map((c, i) => ({
+    columnId: c.columnId,
+    label: defaultPanelLabel(i + 1),
+    expanded: false,
+    widgets: c.widgets,
+  }))
+}
+
+function toGridColumns(columns) {
+  return columns.map(c => ({ columnId: c.columnId, widgets: c.widgets }))
 }
 
 /** Returns a new state where the active page's `sections` is replaced by `updaterFn(activePage.sections)`. */
@@ -212,27 +229,95 @@ export function configuratorReducer(state, action) {
     }
     case ACTIONS.CHANGE_SECTION_LAYOUT: {
       const { sectionId, layout: newLayoutKey } = action.payload
+      const activePage = state.pages.find(p => p.pageId === state.activePageId)
+      const targetSection = activePage.sections.find(s => s.sectionId === sectionId)
+      if (!targetSection || targetSection.layout === newLayoutKey) return state
       const newLayout = SECTION_LAYOUTS[newLayoutKey]
       return updateActivePageSections(state, sections =>
         sections.map(section => {
           if (section.sectionId !== sectionId) return section
 
-          const oldColumns = section.columns
+          const oldLayout = SECTION_LAYOUTS[section.layout]
+
+          if (newLayout.kind === 'accordion') {
+            return { ...section, layout: newLayoutKey, columns: toAccordionPanels(section.columns) }
+          }
+
+          const fromColumns = oldLayout.kind === 'accordion' ? toGridColumns(section.columns) : section.columns
+
           let newColumns
-          if (newLayout.columns >= oldColumns.length) {
-            newColumns = [...oldColumns]
+          if (newLayout.columns >= fromColumns.length) {
+            newColumns = [...fromColumns]
             while (newColumns.length < newLayout.columns) {
               newColumns.push({ columnId: generateId(), widgets: [] })
             }
           } else {
-            const kept = oldColumns.slice(0, newLayout.columns)
-            const overflowWidgets = oldColumns.slice(newLayout.columns).flatMap(c => c.widgets)
+            const kept = fromColumns.slice(0, newLayout.columns)
+            const overflowWidgets = fromColumns.slice(newLayout.columns).flatMap(c => c.widgets)
             newColumns = kept.map((c, i) =>
               i === kept.length - 1 ? { ...c, widgets: [...c.widgets, ...overflowWidgets] } : c
             )
           }
 
           return { ...section, layout: newLayoutKey, columns: newColumns }
+        })
+      )
+    }
+    case ACTIONS.ADD_PANEL: {
+      const { sectionId } = action.payload
+      return updateActivePageSections(state, sections =>
+        sections.map(section => {
+          if (section.sectionId !== sectionId) return section
+          const newPanel = {
+            columnId: generateId(),
+            label: defaultPanelLabel(section.columns.length + 1),
+            expanded: false,
+            widgets: [],
+          }
+          return { ...section, columns: [...section.columns, newPanel] }
+        })
+      )
+    }
+    case ACTIONS.REMOVE_PANEL: {
+      const { sectionId, columnId } = action.payload
+      const activePage = state.pages.find(p => p.pageId === state.activePageId)
+      const section = activePage.sections.find(s => s.sectionId === sectionId)
+      if (!section) return state
+      const panel = section.columns.find(c => c.columnId === columnId)
+      if (!panel || panel.widgets.length > 0 || section.columns.length <= 1) return state
+      return updateActivePageSections(state, sections =>
+        sections.map(s =>
+          s.sectionId === sectionId ? { ...s, columns: s.columns.filter(c => c.columnId !== columnId) } : s
+        )
+      )
+    }
+    case ACTIONS.RENAME_PANEL: {
+      const { sectionId, columnId, lang, label } = action.payload
+      const trimmed = label.trim()
+      if (!trimmed) return state
+      return updateActivePageSections(state, sections =>
+        sections.map(section => {
+          if (section.sectionId !== sectionId) return section
+          return {
+            ...section,
+            columns: section.columns.map(c =>
+              c.columnId === columnId ? { ...c, label: { ...c.label, [lang]: trimmed } } : c
+            ),
+          }
+        })
+      )
+    }
+    case ACTIONS.TOGGLE_PANEL_EXPANDED: {
+      const { sectionId, columnId } = action.payload
+      return updateActivePageSections(state, sections =>
+        sections.map(section => {
+          if (section.sectionId !== sectionId) return section
+          return {
+            ...section,
+            columns: section.columns.map(c =>
+              c.columnId === columnId ? { ...c, expanded: !c.expanded } : c
+            ),
+          }
         })
       )
     }
