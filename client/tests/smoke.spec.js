@@ -620,6 +620,14 @@ test.describe('ShareFlow configurator smoke test', () => {
     await previewPage.getByRole('button', { name: 'Tablet', exact: true }).click()
     await expect(previewPage.locator('[data-device="tablet"]')).toBeVisible()
   })
+
+  test('Calendario block is visible in the library and in the Homepage Comunicazione template', async ({ page }) => {
+    await expect(page.getByText('Calendario', { exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Homepage Comunicazione', { exact: true }).click()
+    await expect(page.locator('main').getByText('Calendario', { exact: true })).toBeVisible()
+  })
 })
 
 test.describe('i18n language switching', () => {

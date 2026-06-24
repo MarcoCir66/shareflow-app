@@ -2,6 +2,7 @@ import * as icons from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../hooks/useTheme.js'
 import Header from './BlockPreviewHeader.jsx'
+import CalendarBlockPreview from './CalendarBlockPreview.jsx'
 
 const EVENT_IDS = new Set([
   'eventi-corporate', 'eventi-country', 'eventi-sede', 'eventi-funzione',
@@ -192,6 +193,8 @@ export default function CanvasBlockPreview({ block, width = 'full', contentItems
       </div>
     )
   }
+
+  if (block.id === 'calendario-eventi') return <CalendarBlockPreview block={block} contentItems={contentItems} />
 
   // ── countdown-lancio ───────────────────────────────────────────────────────────
   if (block.id === 'countdown-lancio') {

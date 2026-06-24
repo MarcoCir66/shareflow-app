@@ -80,7 +80,8 @@
       "chi-siamo": "Über uns",
       "desc-country": "Länderbeschreibung",
       "desc-sede": "Standortbeschreibung",
-      "desc-funzione": "Abteilungsbeschreibung"
+      "desc-funzione": "Abteilungsbeschreibung",
+      "calendario-eventi": "Kalender"
     }
   },
   "templates": {
@@ -264,7 +265,8 @@
       "chi-siamo": "Stellt die Geschichte und Werte des Unternehmens vor.",
       "desc-country": "Beschreibt das ausgewählte Land (allgemeine Informationen).",
       "desc-sede": "Beschreibt den ausgewählten Standort (allgemeine Informationen).",
-      "desc-funzione": "Beschreibt die ausgewählte Abteilung (allgemeine Informationen)."
+      "desc-funzione": "Beschreibt die ausgewählte Abteilung (allgemeine Informationen).",
+      "calendario-eventi": "Zeigt die Ereignisse des aktuellen Monats in einer Kalenderansicht."
     },
     "appearanceSections": {
       "siteName": "Der Websitename, der im Header und im Hero-Banner angezeigt wird.",

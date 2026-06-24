@@ -80,7 +80,8 @@
       "chi-siamo": "Qui sommes-nous",
       "desc-country": "Description pays",
       "desc-sede": "Description site",
-      "desc-funzione": "Description fonction"
+      "desc-funzione": "Description fonction",
+      "calendario-eventi": "Calendrier"
     }
   },
   "templates": {
@@ -264,7 +265,8 @@
       "chi-siamo": "Présente l'histoire et les valeurs de l'entreprise.",
       "desc-country": "Décrit le pays sélectionné (informations générales).",
       "desc-sede": "Décrit le site sélectionné (informations générales).",
-      "desc-funzione": "Décrit la fonction sélectionnée (informations générales)."
+      "desc-funzione": "Décrit la fonction sélectionnée (informations générales).",
+      "calendario-eventi": "Affiche les événements du mois en cours dans une vue calendrier."
     },
     "appearanceSections": {
       "siteName": "Le nom du site affiché dans l'en-tête et la bannière d'accueil.",

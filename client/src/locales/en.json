@@ -80,7 +80,8 @@
       "chi-siamo": "About Us",
       "desc-country": "Country Description",
       "desc-sede": "Location Description",
-      "desc-funzione": "Function Description"
+      "desc-funzione": "Function Description",
+      "calendario-eventi": "Calendar"
     }
   },
   "templates": {
@@ -264,7 +265,8 @@
       "chi-siamo": "Introduces the company's history and values.",
       "desc-country": "Describes the selected country (general information).",
       "desc-sede": "Describes the selected location (general information).",
-      "desc-funzione": "Describes the selected business function (general information)."
+      "desc-funzione": "Describes the selected business function (general information).",
+      "calendario-eventi": "Shows this month's events in a calendar view."
     },
     "appearanceSections": {
       "siteName": "The site name shown in the header and hero banner.",

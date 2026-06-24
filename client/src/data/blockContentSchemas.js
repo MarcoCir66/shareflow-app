@@ -144,6 +144,14 @@ export const BLOCK_CONTENT_DEFS = {
       { key: 'imageUrl',    label: 'Immagine',     type: 'url',      required: false },
     ],
   },
+  'calendario-eventi': {
+    sourceTypes: ['sharepoint-list', 'manual'],
+    schema: [
+      { key: 'title',    label: 'Titolo', type: 'text', required: true  },
+      { key: 'date',     label: 'Data',   type: 'date', required: true  },
+      { key: 'location', label: 'Luogo',  type: 'text', required: false },
+    ],
+  },
   // ── Learning ─────────────────────────────────────────────────────────────────
   'new-entry':         {
     sourceTypes: SP_MANUAL,
