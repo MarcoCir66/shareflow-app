@@ -1,6 +1,7 @@
 import * as icons from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../hooks/useTheme.js'
+import Header from './BlockPreviewHeader.jsx'
 
 const EVENT_IDS = new Set([
   'eventi-corporate', 'eventi-country', 'eventi-sede', 'eventi-funzione',
@@ -21,25 +22,6 @@ const ITEM_COUNT_BY_WIDTH  = { full: 3, twoThirds: 2, half: 2, third: 1 }
 
 function SkeletonLine({ template, w = 'w-full', h = 'h-2', light = false }) {
   return <div className={`${w} ${h} rounded ${light ? template.card.skeletonLight : template.card.skeleton}`} />
-}
-
-function Header({ template, block, Icon, showSeeAll = true }) {
-  const { t } = useTranslation()
-  return (
-    <div className="flex items-center justify-between gap-3 mb-3">
-      <div className="flex items-center gap-2 min-w-0">
-        <Icon size={16} className={`${template.card.accentText} flex-shrink-0`} />
-        <span className={`text-sm font-semibold truncate ${template.card.text}`}>
-          {t(`blocks.labels.${block.id}`, { defaultValue: block.label })}
-        </span>
-      </div>
-      {showSeeAll && (
-        <span className={`text-xs font-medium flex-shrink-0 ${template.card.accentText}`}>
-          {t('blocks.seeAll')}
-        </span>
-      )}
-    </div>
-  )
 }
 
 export default function CanvasBlockPreview({ block, width = 'full', contentItems = [] }) {
