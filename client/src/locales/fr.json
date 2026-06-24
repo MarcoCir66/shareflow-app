@@ -82,7 +82,8 @@
       "desc-sede": "Description site",
       "desc-funzione": "Description fonction",
       "calendario-eventi": "Calendrier",
-      "carosello-contenuti": "Carrousel"
+      "carosello-contenuti": "Carrousel",
+      "timeline-aziendale": "Chronologie de l'entreprise"
     }
   },
   "templates": {
@@ -271,7 +272,8 @@
       "desc-sede": "Décrit le site sélectionné (informations générales).",
       "desc-funzione": "Décrit la fonction sélectionnée (informations générales).",
       "calendario-eventi": "Affiche les événements du mois en cours dans une vue calendrier.",
-      "carosello-contenuti": "Un carrousel déroulant de contenus en vedette, avec navigation entre les diapositives."
+      "carosello-contenuti": "Un carrousel déroulant de contenus en vedette, avec navigation entre les diapositives.",
+      "timeline-aziendale": "Raconte l'histoire et les étapes clés de l'entreprise dans l'ordre chronologique."
     },
     "appearanceSections": {
       "siteName": "Le nom du site affiché dans l'en-tête et la bannière d'accueil.",

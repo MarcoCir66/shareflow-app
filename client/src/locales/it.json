@@ -82,7 +82,8 @@
       "desc-sede": "Sezione descrittiva Sede",
       "desc-funzione": "Sezione descrittiva Funzione",
       "calendario-eventi": "Calendario",
-      "carosello-contenuti": "Carosello"
+      "carosello-contenuti": "Carosello",
+      "timeline-aziendale": "Timeline Aziendale"
     }
   },
   "templates": {
@@ -271,7 +272,8 @@
       "desc-sede": "Descrive la sede selezionata (informazioni generali).",
       "desc-funzione": "Descrive la funzione aziendale selezionata (informazioni generali).",
       "calendario-eventi": "Mostra gli eventi del mese in corso in una vista calendario.",
-      "carosello-contenuti": "Carosello scorrevole di contenuti in evidenza, con navigazione tra slide."
+      "carosello-contenuti": "Carosello scorrevole di contenuti in evidenza, con navigazione tra slide.",
+      "timeline-aziendale": "Racconta la storia e le tappe principali dell'azienda in ordine cronologico."
     },
     "appearanceSections": {
       "siteName": "Il nome del sito mostrato nell'header e nell'hero banner.",

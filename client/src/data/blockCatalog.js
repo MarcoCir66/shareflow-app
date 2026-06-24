@@ -82,6 +82,7 @@ const _rawCatalog = [
   { id: 'desc-country',        label: 'Sezione descrittiva Country',category: CATEGORIES.KNOWLEDGE_BASE, icon: 'MapPin',       defaultProps: { scope: 'country',  visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible'] },
   { id: 'desc-sede',           label: 'Sezione descrittiva Sede',   category: CATEGORIES.KNOWLEDGE_BASE, icon: 'Building',     defaultProps: { scope: 'sede',     visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible'] },
   { id: 'desc-funzione',       label: 'Sezione descrittiva Funzione', category: CATEGORIES.KNOWLEDGE_BASE, icon: 'FolderOpen', defaultProps: { scope: 'funzione', visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['scope', 'visible'] },
+  { id: 'timeline-aziendale',  label: 'Timeline Aziendale',         category: CATEGORIES.KNOWLEDGE_BASE, icon: 'Milestone',     defaultProps: { scope: null, visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['visible'] },
 ]
 
 export const blockCatalog = _rawCatalog.map(withContent)

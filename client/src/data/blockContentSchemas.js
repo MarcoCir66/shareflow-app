@@ -346,5 +346,13 @@ export const BLOCK_CONTENT_DEFS = {
   'desc-country':      { sourceTypes: ['manual'], schema: descSchema },
   'desc-sede':         { sourceTypes: ['manual'], schema: descSchema },
   'desc-funzione':     { sourceTypes: ['manual'], schema: descSchema },
+  'timeline-aziendale': {
+    sourceTypes: ['manual'],
+    schema: [
+      { key: 'date',        label: 'Data/Anno',  type: 'text',     required: true  },
+      { key: 'title',       label: 'Titolo',      type: 'text',     required: true  },
+      { key: 'description', label: 'Descrizione', type: 'textarea', required: false },
+    ],
+  },
   // Absent: commenti-contenuto, like-contenuto, fusi-orari, multilingua, motore-ricerca
 }

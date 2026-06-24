@@ -82,7 +82,8 @@
       "desc-sede": "Location Description",
       "desc-funzione": "Function Description",
       "calendario-eventi": "Calendar",
-      "carosello-contenuti": "Carousel"
+      "carosello-contenuti": "Carousel",
+      "timeline-aziendale": "Company Timeline"
     }
   },
   "templates": {
@@ -271,7 +272,8 @@
       "desc-sede": "Describes the selected location (general information).",
       "desc-funzione": "Describes the selected business function (general information).",
       "calendario-eventi": "Shows this month's events in a calendar view.",
-      "carosello-contenuti": "A scrollable carousel of featured content, with slide navigation."
+      "carosello-contenuti": "A scrollable carousel of featured content, with slide navigation.",
+      "timeline-aziendale": "Tells the company's story and key milestones in chronological order."
     },
     "appearanceSections": {
       "siteName": "The site name shown in the header and hero banner.",

@@ -644,6 +644,14 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(dots.nth(1)).toHaveClass(/theme-accent/)
     await expect(dots.nth(0)).not.toHaveClass(/theme-accent/)
   })
+
+  test('Timeline Aziendale block is visible in the library and in the Onboarding template', async ({ page }) => {
+    await expect(page.getByText('Timeline Aziendale', { exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Template', exact: true }).click()
+    await page.getByText('Onboarding', { exact: true }).first().click()
+    await expect(page.locator('main').getByText('Timeline Aziendale', { exact: true })).toBeVisible()
+  })
 })
 
 test.describe('i18n language switching', () => {

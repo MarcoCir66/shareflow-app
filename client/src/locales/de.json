@@ -82,7 +82,8 @@
       "desc-sede": "Standortbeschreibung",
       "desc-funzione": "Abteilungsbeschreibung",
       "calendario-eventi": "Kalender",
-      "carosello-contenuti": "Karussell"
+      "carosello-contenuti": "Karussell",
+      "timeline-aziendale": "Unternehmens-Timeline"
     }
   },
   "templates": {
@@ -271,7 +272,8 @@
       "desc-sede": "Beschreibt den ausgewählten Standort (allgemeine Informationen).",
       "desc-funzione": "Beschreibt die ausgewählte Abteilung (allgemeine Informationen).",
       "calendario-eventi": "Zeigt die Ereignisse des aktuellen Monats in einer Kalenderansicht.",
-      "carosello-contenuti": "Ein durchblätterbares Karussell mit hervorgehobenen Inhalten und Folien-Navigation."
+      "carosello-contenuti": "Ein durchblätterbares Karussell mit hervorgehobenen Inhalten und Folien-Navigation.",
+      "timeline-aziendale": "Erzählt die Geschichte und die wichtigsten Meilensteine des Unternehmens in chronologischer Reihenfolge."
     },
     "appearanceSections": {
       "siteName": "Der Websitename, der im Header und im Hero-Banner angezeigt wird.",

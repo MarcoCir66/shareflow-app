@@ -48,6 +48,7 @@ export const PAGE_TEMPLATES = [
       { layout: 'twoColumn', blocks: [['procedure'], ['come-fare-per']] },
       { layout: 'oneColumn', blocks: [['faq']] },
       { layout: 'oneColumn', blocks: [['organigramma']] },
+      { layout: 'oneColumn', blocks: [['timeline-aziendale']] },
       { layout: 'oneColumn', blocks: [['documenti']] },
     ],
   },
