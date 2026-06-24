@@ -716,6 +716,89 @@ test.describe('ShareFlow configurator smoke test', () => {
     await panel1Toggle.click()
     await expect(page.locator('main').getByText('News - Corporate', { exact: true })).toBeVisible()
   })
+
+  test('opening Analytics shows the Overview dashboard with KPIs and a way back to the editor', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+
+    await expect(page.getByText('Visitatori unici', { exact: true })).toBeVisible()
+    await expect(page.getByText('Visite totali', { exact: true })).toBeVisible()
+    await expect(page.getByText('Andamento visite nel periodo', { exact: true })).toBeVisible()
+    await expect(page.getByText('Siti popolari', { exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: "Torna all'editor" }).click()
+    await expect(page.getByRole('button', { name: 'Aggiungi sezione' })).toBeVisible()
+  })
+
+  test('changing the Analytics period changes the displayed numbers', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+
+    const kpiCard = page.locator('div.bg-surface-card', { hasText: 'Visitatori unici' }).first()
+    const initialText = await kpiCard.textContent()
+
+    await page.getByLabel('Periodo').and(page.getByRole('combobox')).selectOption('lastyear')
+
+    await expect(async () => {
+      const updatedText = await kpiCard.textContent()
+      expect(updatedText).not.toBe(initialText)
+    }).toPass()
+  })
+
+  test('toggling the comparison checkbox shows a delta badge on KPI cards', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+
+    await page.getByLabel('Confronta con periodo precedente').check()
+    await expect(page.getByText(/^[+-]\d+(\.\d+)?%$/).first()).toBeVisible()
+  })
+
+  test('switching Analytics tabs shows the Sites and Content dashboards', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+
+    await page.getByRole('button', { name: 'Siti', exact: true }).click()
+    await expect(page.getByText('Classifica siti', { exact: true })).toBeVisible()
+    await expect(page.getByText('Siti da visualizzare', { exact: true })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Contenuti', exact: true }).click()
+    await expect(page.getByText('Top 10 pagine', { exact: true })).toBeVisible()
+    await expect(page.getByText('Contenuti in calo', { exact: true })).toBeVisible()
+  })
+
+  test('unchecking a site in the Sites dashboard removes it from the ranking chart', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Siti', exact: true }).click()
+
+    const chart = page.locator('div.bg-surface-card', { hasText: 'Classifica siti' }).first()
+    await expect(chart.getByText('Employee Hub', { exact: true })).toBeVisible()
+
+    await page.getByRole('checkbox', { name: 'Employee Hub' }).uncheck()
+    await expect(chart.getByText('Employee Hub', { exact: true })).not.toBeVisible()
+  })
+
+  test('filtering Content dashboard by type shows only the matching tables', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Contenuti', exact: true }).click()
+
+    await page.getByLabel('Tipo contenuto').selectOption('news')
+    await expect(page.getByText('Top 10 news', { exact: true })).toBeVisible()
+    await expect(page.getByText('Top 10 pagine', { exact: true })).not.toBeVisible()
+  })
+
+  test('filtering Content dashboard by site narrows the tables to that site only', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Contenuti', exact: true }).click()
+    await page.getByLabel('Tipo contenuto').selectOption('news')
+
+    await page.getByLabel('Sito').selectOption('Welfare & Benefit')
+    const newsTable = page.locator('div', { hasText: 'Top 10 news' }).last()
+    await expect(newsTable.getByText('Lancio Piattaforma Welfare', { exact: true })).toBeVisible()
+    await expect(newsTable.getByText('Risultati Q1 2026', { exact: true })).not.toBeVisible()
+  })
+
+  test('Analytics view has no in-scope accessibility violations', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+
+    const results = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(results.violations).toEqual([])
+  })
 })
 
 test.describe('i18n language switching', () => {

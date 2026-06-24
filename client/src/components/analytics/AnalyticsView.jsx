@@ -18,7 +18,7 @@ export default function AnalyticsView({ onClose }) {
   const data = getAnalyticsData(period)
 
   return (
-    <div className="overflow-y-auto bg-surface" style={{ height: 'calc(100vh - 3.5rem)', marginTop: '3.5rem' }}>
+    <main className="overflow-y-auto bg-surface" style={{ height: 'calc(100vh - 3.5rem)', marginTop: '3.5rem' }}>
       <div className="max-w-6xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between mb-4">
           <button
@@ -57,6 +57,6 @@ export default function AnalyticsView({ onClose }) {
         {activeTab === 'sites' && <AnalyticsSites data={data} />}
         {activeTab === 'content' && <AnalyticsContent data={data} />}
       </div>
-    </div>
+    </main>
   )
 }

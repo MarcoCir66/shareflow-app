@@ -14,6 +14,7 @@ export default function RankedList({ title, items }) {
         <select
           value={sortBy}
           onChange={e => setSortBy(e.target.value)}
+          aria-label={t('analytics.rankingMetricLabel')}
           className="text-xs border border-slate-mid rounded-lg px-2 py-1"
         >
           <option value="visits">{t('analytics.byVisits')}</option>

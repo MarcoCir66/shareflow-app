@@ -305,6 +305,7 @@
     "kpiAvgTimePerUser": "Tempo medio per utente",
     "byVisits": "Per visite",
     "byUniqueVisitors": "Per visitatori univoci",
+    "rankingMetricLabel": "Ordina classifica per",
     "trendTitle": "Andamento visite nel periodo",
     "trendPoint": "Periodo {{n}}",
     "popularSites": "Siti popolari",
