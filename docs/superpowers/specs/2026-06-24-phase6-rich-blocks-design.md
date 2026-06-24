@@ -13,7 +13,7 @@ This is sub-project 2 of 5 in the broader Phase 6 (Origami Connect parity) initi
 
 | Block | `id` | `category` | `icon` | Page template wiring |
 |---|---|---|---|---|
-| Calendario | `calendario-eventi` | `COMMUNICATION` | `CalendarRange` | New section in **Homepage Comunicazione** (`communication-home`), alongside `eventi-corporate` |
+| Calendario | `calendario-eventi` | `COMMUNICATION` | `CalendarClock` | New section in **Homepage Comunicazione** (`communication-home`), alongside `eventi-corporate` |
 | Carosello | `carosello-contenuti` | `COMMUNICATION` | `GalleryHorizontalEnd` | New section in **Homepage Comunicazione**, alongside `multimedia-gallery` |
 | Timeline | `timeline-aziendale` | `KNOWLEDGE_BASE` | `Milestone` | New section in **Onboarding** (`onboarding`) — company history/milestones for new hires |
 
@@ -47,7 +47,7 @@ defaultProps: { scope: null, visible: true, commentsEnabled: false, likesEnabled
 `client/src/data/blockCatalog.js` — three new entries in `_rawCatalog`, inserted alongside their category peers:
 
 ```js
-{ id: 'calendario-eventi',    label: 'Calendario',         category: CATEGORIES.COMMUNICATION,  icon: 'CalendarRange',        defaultProps: { scope: null, visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['visible'] },
+{ id: 'calendario-eventi',    label: 'Calendario',         category: CATEGORIES.COMMUNICATION,  icon: 'CalendarClock',        defaultProps: { scope: null, visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['visible'] },
 { id: 'carosello-contenuti',  label: 'Carosello',          category: CATEGORIES.COMMUNICATION,  icon: 'GalleryHorizontalEnd', defaultProps: { scope: null, visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['visible'] },
 { id: 'timeline-aziendale',   label: 'Timeline Aziendale', category: CATEGORIES.KNOWLEDGE_BASE, icon: 'Milestone',            defaultProps: { scope: null, visible: true, commentsEnabled: false, likesEnabled: false }, configurableProps: ['visible'] },
 ```
