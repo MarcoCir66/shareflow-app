@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { getAnalyticsData, PERIODS } from '../../data/analyticsMockData.js'
 import AnalyticsFilterBar from './AnalyticsFilterBar.jsx'
 import AnalyticsOverview from './AnalyticsOverview.jsx'
+import AnalyticsSites from './AnalyticsSites.jsx'
 
 const TABS = ['overview', 'sites', 'content']
 
@@ -52,7 +53,7 @@ export default function AnalyticsView({ onClose }) {
         </div>
 
         {activeTab === 'overview' && <AnalyticsOverview data={data} showComparison={showComparison} />}
-        {activeTab === 'sites' && <div data-testid="analytics-sites-placeholder">{t('analytics.tabSites')}</div>}
+        {activeTab === 'sites' && <AnalyticsSites data={data} />}
         {activeTab === 'content' && <div data-testid="analytics-content-placeholder">{t('analytics.tabContent')}</div>}
       </div>
     </div>

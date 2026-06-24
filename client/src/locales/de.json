@@ -316,6 +316,14 @@
     "hourMorning": "Morgen",
     "hourLunch": "Mittag",
     "hourAfternoon": "Nachmittag",
-    "hourEvening": "Abend"
+    "hourEvening": "Abend",
+    "sitesRankingTitle": "Website-Ranking",
+    "siteSelectorTitle": "Anzuzeigende Websites",
+    "metricUniqueVisitors": "Eindeutige Besucher",
+    "metricVisits": "Besuche insgesamt",
+    "metricAvgVisitsPerVisitor": "Ø Besuche pro Besucher",
+    "metricAvgTime": "Ø Zeit pro Benutzer",
+    "metricMobile": "% Mobilzugriffe",
+    "metricAfternoon": "% Zugriffe Nachmittag"
   }
 }

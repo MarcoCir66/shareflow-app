@@ -316,6 +316,14 @@
     "hourMorning": "Morning",
     "hourLunch": "Lunch",
     "hourAfternoon": "Afternoon",
-    "hourEvening": "Evening"
+    "hourEvening": "Evening",
+    "sitesRankingTitle": "Sites ranking",
+    "siteSelectorTitle": "Sites to display",
+    "metricUniqueVisitors": "Unique visitors",
+    "metricVisits": "Total visits",
+    "metricAvgVisitsPerVisitor": "Avg. visits per visitor",
+    "metricAvgTime": "Avg. time per user",
+    "metricMobile": "% Mobile access",
+    "metricAfternoon": "% Afternoon access"
   }
 }
