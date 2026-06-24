@@ -61,7 +61,9 @@ A new component `client/src/components/canvas/AccordionSection.jsx`, dispatched 
 
 Each panel is a clickable header (label + chevron) above a body containing an **unmodified** `CanvasColumn` — the same component already used inside grid columns today, reused as-is: it has no awareness of, and needs no awareness of, whether its container is a grid column or an accordion panel.
 
-**Collapsed panels stay valid drop targets for direct drag-and-drop.** A collapsed panel's `CanvasColumn` is never unmounted from the DOM (so its `dnd-kit` `useDroppable` registration is never lost) — it is only visually compressed (`max-height: 0; overflow: hidden`) while `expanded` is `false`. To give visual feedback while dragging, a collapsed panel's header auto-expands when a drag is in progress and the pointer is over it (the same "hover-to-expand-a-collapsed-target" pattern used by file-manager folder trees), collapsing again if the drag moves away without a drop, and staying open if the drop lands there.
+**Collapsed panels are not direct drag-and-drop targets** (revised during planning — see below). A collapsed panel's `CanvasColumn` is unmounted while `expanded` is `false`, mounted when `expanded` is `true`. Moving a widget into a currently-collapsed panel goes through the existing "move to another column" menu (Section 4 below extends its label for accordion panels), which works regardless of visibility since it operates on `columnId`s directly, not on-screen drop geometry.
+
+*Rejected alternative, recorded so it isn't re-proposed without re-deriving the same problem:* keeping a collapsed panel's `CanvasColumn` always mounted (so `dnd-kit`'s `useDroppable` registration on it survives) and auto-expanding it on drag-hover was the first design considered. It was dropped because making a CSS-collapsed (`max-height: 0`) element a reliable `dnd-kit` collision target is fragile: `dnd-kit` measures the registered node's real `getBoundingClientRect()`, and a node whose ancestor clips it to zero visible height does not shrink to a zero/safe rect for hit-testing — it keeps its full natural geometry, which then overlaps whatever content follows it in the layout, since the collapsed ancestor doesn't reserve space for it. Avoiding this only by experimentation in a real browser was judged not worth it for this sub-project; reachability via the existing menu is enough.
 
 This component works identically in the editor canvas and in the read-only preview/published-site rendering path (`CanvasSection.jsx`'s existing `readOnly` branch) — same precedent as the Carosello block (Phase 6 sub-project 2), which was the first interactive canvas preview; this accordion is the first interactive *section layout*.
 
@@ -93,7 +95,7 @@ Default panel labels (`Pannello 1`/`Panel 1`/`Panneau 1`/`Panel 1`, etc.) are wr
 
 **Vitest** (pure reducer logic, no DOM — same convention as every existing `configuratorReducer.test.js` case): `ADD_PANEL`, `REMOVE_PANEL` (including the empty-only constraint), `RENAME_PANEL`, `TOGGLE_PANEL_EXPANDED`, and the extended `CHANGE_SECTION_LAYOUT` grid↔accordion conversion (default labels assigned going in, dropped going out, overflow-widget merging preserved).
 
-**Playwright e2e**: creating an accordion section from the layout picker; adding/renaming/removing a panel; toggling a panel open/closed and confirming the state persists (e.g. survives switching to another page and back); dragging a block over a collapsed panel auto-expands it — included if it can be verified reliably with Playwright's drag simulation against this codebase's existing `dnd-kit` test patterns, otherwise deferred to manual verification and noted as such in the implementation plan.
+**Playwright e2e**: creating an accordion section from the layout picker; adding/renaming/removing a panel; toggling a panel open/closed and confirming the state persists (e.g. survives switching to another page and back); a widget moved into a collapsed accordion panel via the "move to another column" menu shows up there once the panel is reopened.
 
 ## Out of scope
 
@@ -102,4 +104,5 @@ Default panel labels (`Pannello 1`/`Panel 1`/`Panneau 1`/`Panel 1`, etc.) are wr
 - Fixed-panel-count presets (explicitly rejected in favor of free add/remove/rename).
 - Per-visitor persistence of open/closed state on the published site (impossible — this product has no per-visitor identity).
 - Nested accordions (an accordion panel containing another accordion section).
+- Direct drag-and-drop of a widget onto a collapsed panel (rejected as a `dnd-kit` collision-geometry risk not worth taking on for this sub-project — see Section 4's rejected-alternative note). Moving content into a collapsed panel works today via the existing "move to another column" menu.
 - Any change to the existing grid-layout rendering, column actions, or `SectionLayoutPicker`'s grid-icon rendering path.
