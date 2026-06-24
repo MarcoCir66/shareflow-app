@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { computeDelta } from '../../utils/analyticsMath.js'
 import RankedTable from './RankedTable.jsx'
 
-const CONTENT_TYPES = { all: null, pages: 'pages', news: 'news', documents: 'documents' }
-
 function topAndWorst(items) {
   const sorted = [...items].sort((a, b) => b.visits - a.visits)
   return { top: sorted.slice(0, 10), worst: sorted.slice(-10).reverse() }
