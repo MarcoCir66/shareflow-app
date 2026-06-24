@@ -302,6 +302,20 @@
     "kpiUniqueVisitors": "Unique visitors",
     "kpiTotalVisits": "Total visits",
     "kpiAvgVisitsPerVisitor": "Avg. visits per visitor",
-    "kpiAvgTimePerUser": "Avg. time per user"
+    "kpiAvgTimePerUser": "Avg. time per user",
+    "byVisits": "By visits",
+    "byUniqueVisitors": "By unique visitors",
+    "trendTitle": "Visits trend over the period",
+    "trendPoint": "Period {{n}}",
+    "popularSites": "Popular sites",
+    "popularPages": "Popular pages",
+    "popularNews": "Popular news posts",
+    "popularDocuments": "Popular documents",
+    "deviceChartTitle": "Access by device",
+    "hourlyChartTitle": "Access by time of day",
+    "hourMorning": "Morning",
+    "hourLunch": "Lunch",
+    "hourAfternoon": "Afternoon",
+    "hourEvening": "Evening"
   }
 }

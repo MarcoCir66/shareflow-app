@@ -302,6 +302,20 @@
     "kpiUniqueVisitors": "Visiteurs uniques",
     "kpiTotalVisits": "Visites totales",
     "kpiAvgVisitsPerVisitor": "Moy. visites par visiteur",
-    "kpiAvgTimePerUser": "Temps moyen par utilisateur"
+    "kpiAvgTimePerUser": "Temps moyen par utilisateur",
+    "byVisits": "Par visites",
+    "byUniqueVisitors": "Par visiteurs uniques",
+    "trendTitle": "Évolution des visites sur la période",
+    "trendPoint": "Période {{n}}",
+    "popularSites": "Sites populaires",
+    "popularPages": "Pages populaires",
+    "popularNews": "Actualités populaires",
+    "popularDocuments": "Documents populaires",
+    "deviceChartTitle": "Accès par appareil",
+    "hourlyChartTitle": "Accès par tranche horaire",
+    "hourMorning": "Matin",
+    "hourLunch": "Midi",
+    "hourAfternoon": "Après-midi",
+    "hourEvening": "Soir"
   }
 }
