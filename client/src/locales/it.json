@@ -324,6 +324,27 @@
     "metricAvgVisitsPerVisitor": "Media visite per visitatore",
     "metricAvgTime": "Tempo medio per utente",
     "metricMobile": "% Accessi da mobile",
-    "metricAfternoon": "% Accessi pomeriggio"
+    "metricAfternoon": "% Accessi pomeriggio",
+    "colName": "Nome",
+    "colUniqueVisitors": "Visitatori univoci",
+    "colVisits": "Visite",
+    "colAvgVisitsPerVisitor": "Media visite/visitatore",
+    "colPreviousVisits": "Periodo precedente",
+    "colDelta": "Variazione",
+    "siteFilterLabel": "Sito",
+    "allSites": "Tutti i siti",
+    "typeFilterLabel": "Tipo contenuto",
+    "allTypes": "Tutti i tipi",
+    "typePages": "Solo pagine",
+    "typeNews": "Solo news",
+    "typeDocuments": "Solo documenti",
+    "topPages": "Top 10 pagine",
+    "worstPages": "Worst 10 pagine",
+    "topNews": "Top 10 news",
+    "worstNews": "Worst 10 news",
+    "topDocuments": "Top 10 documenti",
+    "worstDocuments": "Worst 10 documenti",
+    "declining": "Contenuti in calo",
+    "growing": "Contenuti in crescita"
   }
 }

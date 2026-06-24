@@ -324,6 +324,27 @@
     "metricAvgVisitsPerVisitor": "Ø Besuche pro Besucher",
     "metricAvgTime": "Ø Zeit pro Benutzer",
     "metricMobile": "% Mobilzugriffe",
-    "metricAfternoon": "% Zugriffe Nachmittag"
+    "metricAfternoon": "% Zugriffe Nachmittag",
+    "colName": "Name",
+    "colUniqueVisitors": "Eindeutige Besucher",
+    "colVisits": "Besuche",
+    "colAvgVisitsPerVisitor": "Ø Besuche/Besucher",
+    "colPreviousVisits": "Vorheriger Zeitraum",
+    "colDelta": "Änderung",
+    "siteFilterLabel": "Website",
+    "allSites": "Alle Websites",
+    "typeFilterLabel": "Inhaltstyp",
+    "allTypes": "Alle Typen",
+    "typePages": "Nur Seiten",
+    "typeNews": "Nur News",
+    "typeDocuments": "Nur Dokumente",
+    "topPages": "Top 10 Seiten",
+    "worstPages": "Letzte 10 Seiten",
+    "topNews": "Top 10 News",
+    "worstNews": "Letzte 10 News",
+    "topDocuments": "Top 10 Dokumente",
+    "worstDocuments": "Letzte 10 Dokumente",
+    "declining": "Rückgängige Inhalte",
+    "growing": "Wachsende Inhalte"
   }
 }

@@ -5,6 +5,7 @@ import { getAnalyticsData, PERIODS } from '../../data/analyticsMockData.js'
 import AnalyticsFilterBar from './AnalyticsFilterBar.jsx'
 import AnalyticsOverview from './AnalyticsOverview.jsx'
 import AnalyticsSites from './AnalyticsSites.jsx'
+import AnalyticsContent from './AnalyticsContent.jsx'
 
 const TABS = ['overview', 'sites', 'content']
 
@@ -54,7 +55,7 @@ export default function AnalyticsView({ onClose }) {
 
         {activeTab === 'overview' && <AnalyticsOverview data={data} showComparison={showComparison} />}
         {activeTab === 'sites' && <AnalyticsSites data={data} />}
-        {activeTab === 'content' && <div data-testid="analytics-content-placeholder">{t('analytics.tabContent')}</div>}
+        {activeTab === 'content' && <AnalyticsContent data={data} />}
       </div>
     </div>
   )
