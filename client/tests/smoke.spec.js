@@ -858,6 +858,43 @@ test.describe('ShareFlow configurator smoke test', () => {
     const results = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
     expect(results.violations).toEqual([])
   })
+
+  test('end-to-end: marking a block mandatory shows the banner in Anteprima and the item in Compliance', async ({ page, context }) => {
+    // Mark "Procedure" as mandatory read
+    await page.getByText('Procedure', { exact: true }).first().click()
+    await page.locator('main').getByText('Procedure', { exact: true }).click()
+    const mandatoryRow = page.locator('div', { hasText: 'Lettura obbligatoria' }).filter({ has: page.locator('button') }).last()
+    await mandatoryRow.locator('button').click()
+
+    // Anteprima shows the banner
+    await page.waitForFunction(() => {
+      try {
+        const s = JSON.parse(localStorage.getItem('shareflow-preview') || 'null')
+        return s?.pages?.some(p => p.sections?.some(sec => sec.columns?.some(col => col.widgets?.some(w => w.props?.mandatoryRead === true))))
+      } catch { return false }
+    })
+    const [previewPage] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: 'Anteprima', exact: true }).click(),
+    ])
+    await previewPage.waitForLoadState('domcontentloaded')
+    await expect(previewPage.getByText('Lettura obbligatoria', { exact: true })).toBeVisible()
+    await previewPage.close()
+
+    // Compliance tab shows the same block
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Compliance', exact: true }).click()
+    const table = page.locator('div', { hasText: 'Stato di completamento' }).last()
+    await expect(table.getByText('Procedure', { exact: true })).toBeVisible()
+  })
+
+  test('Compliance tab has no in-scope accessibility violations', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Compliance', exact: true }).click()
+
+    const results = await new AxeBuilder({ page }).disableRules(OUT_OF_SCOPE_AXE_RULES).analyze()
+    expect(results.violations).toEqual([])
+  })
 })
 
 test.describe('i18n language switching', () => {
