@@ -349,6 +349,16 @@
     "topDocuments": "Top 10 documenti",
     "worstDocuments": "Worst 10 documenti",
     "declining": "Contenuti in calo",
-    "growing": "Contenuti in crescita"
+    "growing": "Contenuti in crescita",
+    "tabCompliance": "Compliance",
+    "complianceKpiCount": "Contenuti obbligatori",
+    "complianceKpiAvg": "Completamento medio",
+    "complianceKpiLate": "In ritardo",
+    "complianceChartTitle": "Completamento medio per pagina",
+    "complianceTableTitle": "Stato di completamento",
+    "colPage": "Pagina",
+    "colBlock": "Blocco",
+    "colCompletion": "Completamento",
+    "complianceEmpty": "Nessun contenuto marcato come lettura obbligatoria"
   }
 }

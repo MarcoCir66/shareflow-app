@@ -1,16 +1,19 @@
 import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { getAnalyticsData, PERIODS } from '../../data/analyticsMockData.js'
 import AnalyticsFilterBar from './AnalyticsFilterBar.jsx'
 import AnalyticsOverview from './AnalyticsOverview.jsx'
 import AnalyticsSites from './AnalyticsSites.jsx'
 import AnalyticsContent from './AnalyticsContent.jsx'
+import AnalyticsCompliance from './AnalyticsCompliance.jsx'
 
-const TABS = ['overview', 'sites', 'content']
+const TABS = ['overview', 'sites', 'content', 'compliance']
 
 export default function AnalyticsView({ onClose }) {
   const { t } = useTranslation()
+  const { state } = useConfigurator()
   const [activeTab, setActiveTab] = useState('overview')
   const [period, setPeriod] = useState(PERIODS[0])
   const [showComparison, setShowComparison] = useState(false)
@@ -44,18 +47,21 @@ export default function AnalyticsView({ onClose }) {
           ))}
         </div>
 
-        <div className="mb-4">
-          <AnalyticsFilterBar
-            period={period}
-            onPeriodChange={setPeriod}
-            showComparison={showComparison}
-            onToggleComparison={setShowComparison}
-          />
-        </div>
+        {activeTab !== 'compliance' && (
+          <div className="mb-4">
+            <AnalyticsFilterBar
+              period={period}
+              onPeriodChange={setPeriod}
+              showComparison={showComparison}
+              onToggleComparison={setShowComparison}
+            />
+          </div>
+        )}
 
         {activeTab === 'overview' && <AnalyticsOverview data={data} showComparison={showComparison} />}
         {activeTab === 'sites' && <AnalyticsSites data={data} />}
         {activeTab === 'content' && <AnalyticsContent data={data} />}
+        {activeTab === 'compliance' && <AnalyticsCompliance pages={state.pages} />}
       </div>
     </main>
   )

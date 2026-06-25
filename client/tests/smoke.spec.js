@@ -801,6 +801,26 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(page.getByText('Contenuti in calo', { exact: true })).toBeVisible()
   })
 
+  test('Compliance tab shows an empty state when no block is marked mandatory', async ({ page }) => {
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Compliance', exact: true }).click()
+    await expect(page.getByText('Nessun contenuto marcato come lettura obbligatoria', { exact: true })).toBeVisible()
+  })
+
+  test('marking a block mandatory makes it appear in the Compliance tab with a plausible percentage', async ({ page }) => {
+    await page.getByText('FAQ', { exact: true }).first().click()
+    await page.locator('main').getByText('FAQ', { exact: true }).click()
+    const mandatoryRow = page.locator('div', { hasText: 'Lettura obbligatoria' }).filter({ has: page.locator('button') }).last()
+    await mandatoryRow.locator('button').click()
+
+    await page.getByRole('button', { name: 'Analytics' }).click()
+    await page.getByRole('button', { name: 'Compliance', exact: true }).click()
+
+    const table = page.locator('div', { hasText: 'Stato di completamento' }).last()
+    await expect(table.getByText('FAQ', { exact: true })).toBeVisible()
+    await expect(table.getByText(/^\d{1,3}%$/)).toBeVisible()
+  })
+
   test('unchecking a site in the Sites dashboard removes it from the ranking chart', async ({ page }) => {
     await page.getByRole('button', { name: 'Analytics' }).click()
     await page.getByRole('button', { name: 'Siti', exact: true }).click()

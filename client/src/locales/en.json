@@ -349,6 +349,16 @@
     "topDocuments": "Top 10 documents",
     "worstDocuments": "Worst 10 documents",
     "declining": "Declining content",
-    "growing": "Growing content"
+    "growing": "Growing content",
+    "tabCompliance": "Compliance",
+    "complianceKpiCount": "Mandatory content",
+    "complianceKpiAvg": "Average completion",
+    "complianceKpiLate": "Behind schedule",
+    "complianceChartTitle": "Average completion by page",
+    "complianceTableTitle": "Completion status",
+    "colPage": "Page",
+    "colBlock": "Block",
+    "colCompletion": "Completion",
+    "complianceEmpty": "No content marked as mandatory read"
   }
 }
