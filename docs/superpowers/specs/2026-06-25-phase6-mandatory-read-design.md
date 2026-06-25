@@ -11,7 +11,7 @@ This sub-project instead follows the same convention as every other ShareFlow fe
 
 ## Section 1 — Data model
 
-`mandatoryRead: false` is added to `defaultProps`, and `'mandatoryRead'` to `configurableProps`, for all 48 blocks in `blockCatalog.js` — the same generic treatment as the existing `visible` toggle, available on every block regardless of category. No new reducer action is needed: `UPDATE_WIDGET_PROP` already handles arbitrary `{key, value}` pairs against `widget.props`, so the properties-panel toggle and reducer wiring are 100% reused.
+`mandatoryRead: false` is added to `defaultProps`, and `'mandatoryRead'` to `configurableProps`, for all 49 blocks in `blockCatalog.js` — the same generic treatment as the existing `visible` toggle, available on every block regardless of category. No new reducer action is needed: `UPDATE_WIDGET_PROP` already handles arbitrary `{key, value}` pairs against `widget.props`, so the properties-panel toggle and reducer wiring are 100% reused.
 
 A new pure helper, `collectMandatoryBlocks(pages)`, walks `pages → sections → columns → widgets` (accordion panels are stored under the same `section.columns` field as grid columns, so no special-casing is needed) and returns every widget with `props.mandatoryRead === true` as `{instanceId, blockId, pageId, pageTitle}`. This is the only place that needs to know the real page/section/column shape; both the properties panel (for consistency) and the Compliance dashboard (Section 3) consume its output.
 
@@ -28,7 +28,7 @@ It mounts in `CanvasColumn.jsx`'s `readOnly` branch (used only by `PreviewApp.js
 </div>
 ```
 
-This touches neither `CanvasBlockPreview.jsx` (none of its 48 block-type branches change) nor `CanvasBlock.jsx` (the editor canvas only exposes the toggle via the properties panel — the banner is preview-only, since showing it while editing would be redundant with the toggle itself).
+This touches neither `CanvasBlockPreview.jsx` (none of its block-type branches change) nor `CanvasBlock.jsx` (the editor canvas only exposes the toggle via the properties panel — the banner is preview-only, since showing it while editing would be redundant with the toggle itself).
 
 ## Section 3 — Compliance dashboard (4th Analytics tab)
 
