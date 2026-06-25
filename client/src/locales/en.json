@@ -159,6 +159,7 @@
     "visible": "Visible",
     "commentsEnabled": "Comments enabled",
     "likesEnabled": "Likes enabled",
+    "mandatoryRead": "Mandatory read",
     "sectionHeading": "Section {{n}}",
     "columnLayout": "Column layout",
     "scope": "Scope"

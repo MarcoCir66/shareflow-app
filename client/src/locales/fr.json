@@ -159,6 +159,7 @@
     "visible": "Visible",
     "commentsEnabled": "Commentaires activés",
     "likesEnabled": "J'aime activés",
+    "mandatoryRead": "Lecture obligatoire",
     "sectionHeading": "Section {{n}}",
     "columnLayout": "Disposition des colonnes",
     "scope": "Portée"

@@ -105,6 +105,16 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(blockCard).toHaveCSS('opacity', '0.4')
   })
 
+  test('a "Lettura obbligatoria" toggle is available on any block and can be turned on', async ({ page }) => {
+    await page.getByText('FAQ', { exact: true }).first().click()
+    await page.locator('main').getByText('FAQ', { exact: true }).click()
+
+    const mandatoryRow = page.locator('div', { hasText: 'Lettura obbligatoria' }).filter({ has: page.locator('button') }).last()
+    await expect(mandatoryRow).toBeVisible()
+    await mandatoryRow.locator('button').click()
+    await expect(page.getByText('Instance ID')).toBeVisible()
+  })
+
   test('removing a block clears the canvas and properties panel', async ({ page }) => {
     await page.getByText('News - Corporate', { exact: true }).click()
     const canvasBlock = page.locator('main').getByText('News - Corporate', { exact: true })

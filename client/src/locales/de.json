@@ -159,6 +159,7 @@
     "visible": "Sichtbar",
     "commentsEnabled": "Kommentare aktiviert",
     "likesEnabled": "Likes aktiviert",
+    "mandatoryRead": "Pflichtlektüre",
     "sectionHeading": "Abschnitt {{n}}",
     "columnLayout": "Spaltenlayout",
     "scope": "Bereich"
