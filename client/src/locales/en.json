@@ -149,7 +149,9 @@
     "togglePanel": "Toggle panel",
     "carouselPrev": "Previous slide",
     "carouselNext": "Next slide",
-    "carouselGoToSlide": "Go to slide {{n}}"
+    "carouselGoToSlide": "Go to slide {{n}}",
+    "mandatoryReadBanner": "Mandatory read",
+    "mandatoryReadConfirm": "I have read and understood"
   },
   "props": {
     "properties": "Properties",

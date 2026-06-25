@@ -609,6 +609,35 @@ test.describe('ShareFlow configurator smoke test', () => {
     await expect(previewPage.getByText('News - Corporate', { exact: false })).toBeVisible()
   })
 
+  test('a block marked Lettura obbligatoria shows a banner and checkbox in Anteprima, with no persistence after reload', async ({ page, context }) => {
+    await page.getByText('FAQ', { exact: true }).first().click()
+    await page.locator('main').getByText('FAQ', { exact: true }).click()
+    const mandatoryRow = page.locator('div', { hasText: 'Lettura obbligatoria' }).filter({ has: page.locator('button') }).last()
+    await mandatoryRow.locator('button').click()
+
+    await page.waitForFunction(() => {
+      try {
+        const s = JSON.parse(localStorage.getItem('shareflow-preview') || 'null')
+        return s?.pages?.some(p => p.sections?.some(sec => sec.columns?.some(col => col.widgets?.some(w => w.props?.mandatoryRead === true))))
+      } catch { return false }
+    })
+
+    const [previewPage] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: 'Anteprima', exact: true }).click(),
+    ])
+    await previewPage.waitForLoadState('domcontentloaded')
+
+    await expect(previewPage.getByText('Lettura obbligatoria', { exact: true })).toBeVisible()
+    const checkbox = previewPage.getByRole('checkbox')
+    await expect(checkbox).not.toBeChecked()
+    await checkbox.check()
+    await expect(checkbox).toBeChecked()
+
+    await previewPage.reload()
+    await expect(previewPage.getByRole('checkbox')).not.toBeChecked()
+  })
+
   test('device switcher in preview toolbar updates the data-device attribute', async ({ page, context }) => {
     await page.waitForFunction(() => !!localStorage.getItem('shareflow-preview'))
 

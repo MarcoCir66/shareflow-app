@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { blockById } from '../../data/blockCatalog.js'
 import CanvasBlock from './CanvasBlock.jsx'
 import CanvasBlockPreview from './CanvasBlockPreview.jsx'
+import MandatoryReadBanner from './MandatoryReadBanner.jsx'
 
 export default function CanvasColumn({ sectionId, column, widthHint, readOnly = false }) {
   const { t } = useTranslation()
@@ -16,6 +17,7 @@ export default function CanvasColumn({ sectionId, column, widthHint, readOnly = 
           if (!block) return null
           return (
             <div key={widget.instanceId} className="mb-3">
+              <MandatoryReadBanner widget={widget} />
               <CanvasBlockPreview
                 block={block}
                 width={widthHint}

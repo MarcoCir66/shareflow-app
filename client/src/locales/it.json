@@ -149,7 +149,9 @@
     "togglePanel": "Apri/chiudi pannello",
     "carouselPrev": "Slide precedente",
     "carouselNext": "Slide successiva",
-    "carouselGoToSlide": "Vai alla slide {{n}}"
+    "carouselGoToSlide": "Vai alla slide {{n}}",
+    "mandatoryReadBanner": "Lettura obbligatoria",
+    "mandatoryReadConfirm": "Ho letto e compreso"
   },
   "props": {
     "properties": "Proprietà",

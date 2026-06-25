@@ -149,7 +149,9 @@
     "togglePanel": "Panel auf-/zuklappen",
     "carouselPrev": "Vorherige Folie",
     "carouselNext": "Nächste Folie",
-    "carouselGoToSlide": "Zu Folie {{n}} wechseln"
+    "carouselGoToSlide": "Zu Folie {{n}} wechseln",
+    "mandatoryReadBanner": "Pflichtlektüre",
+    "mandatoryReadConfirm": "Ich habe gelesen und verstanden"
   },
   "props": {
     "properties": "Eigenschaften",
