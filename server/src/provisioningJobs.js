@@ -108,8 +108,11 @@ async function waitForGroupSite(graphClient, groupId, { maxAttempts = 12, interv
 }
 
 async function createSharePointSite(job) {
+  const owner = requireEnv('SHAREPOINT_SITE_OWNER')
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   const mailNickname = `shareflow-${slugify(siteNameStr)}-${Date.now().toString(36)}`
+
+  const ownerUser = await job.graphClient.api(`/users/${owner}`).get()
 
   const group = await job.graphClient.api('/groups').post({
     displayName: siteNameStr,
@@ -118,6 +121,8 @@ async function createSharePointSite(job) {
     securityEnabled: false,
     groupTypes: ['Unified'],
     visibility: 'Private',
+    'owners@odata.bind': [`https://graph.microsoft.com/v1.0/users/${ownerUser.id}`],
+    'members@odata.bind': [`https://graph.microsoft.com/v1.0/users/${ownerUser.id}`],
   })
 
   job.groupId = group.id
