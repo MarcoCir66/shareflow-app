@@ -40,14 +40,32 @@ export async function createCommunicationSite({
   let resultUrl = data?.d?.Create?.SiteUrl ?? data?.SiteUrl ?? siteUrl
 
   // Poll until provisioning complete (SiteStatus 2 = Ready)
+  const statusUrl = `https://${hostname}/_api/SPSiteManager/GetSiteStatus?url='${encodeURIComponent(siteUrl)}'`
+  const statusHeaders = {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json;odata=verbose',
+  }
+
   let attempts = 0
   while (siteStatus !== 2 && attempts < 24) {
     await new Promise(r => setTimeout(r, pollIntervalMs))
     attempts++
     logger.info({ siteUrl, attempts }, 'waiting for Communication Site provisioning...')
-    const pollRes = await fetch(apiUrl, { method: 'POST', headers, body })
-    if (!pollRes.ok) break
-    const pollData = await pollRes.json()
+
+    // Use GET status endpoint; fall back to POST create if endpoint unavailable
+    let pollData
+    const getRes = await fetch(statusUrl, { method: 'GET', headers: statusHeaders })
+    if (getRes.ok) {
+      pollData = await getRes.json()
+    } else {
+      const pollRes = await fetch(apiUrl, { method: 'POST', headers, body })
+      if (!pollRes.ok) {
+        const errText = await pollRes.text().catch(() => '')
+        throw new Error(`SPSiteManager poll failed (${pollRes.status}): ${errText}`)
+      }
+      pollData = await pollRes.json()
+    }
+
     siteStatus = pollData?.d?.Create?.SiteStatus ?? pollData?.SiteStatus
     resultUrl = pollData?.d?.Create?.SiteUrl ?? pollData?.SiteUrl ?? resultUrl
   }
