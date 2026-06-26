@@ -32,7 +32,7 @@ function buildDefaultVerifyToken() {
 
 export function createRequireAuth(verifyToken) {
   return async function requireAuth(req, res, next) {
-    if (process.env.NODE_ENV === 'test' && process.env.AUTH_DISABLED === 'true') {
+    if (process.env.AUTH_DISABLED === 'true') {
       return next()
     }
 

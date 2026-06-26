@@ -84,7 +84,7 @@ async function runStep(jobId, step) {
 
 async function createSharePointSite(job) {
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
-  const mailNickname = slugify(siteNameStr)
+  const mailNickname = `${slugify(siteNameStr)}-${Date.now().toString(36)}`
   const group = await job.graphClient.api('/groups').post({
     displayName: siteNameStr,
     mailNickname,
@@ -92,7 +92,18 @@ async function createSharePointSite(job) {
     mailEnabled: true,
     securityEnabled: false,
   })
-  const site = await job.graphClient.api(`/groups/${group.id}/sites/root`).get()
+  // SharePoint site provisioning is async — poll until available (up to 60s)
+  let site = null
+  for (let attempt = 0; attempt < 12; attempt++) {
+    await new Promise(r => setTimeout(r, 5000))
+    try {
+      site = await job.graphClient.api(`/groups/${group.id}/sites/root`).get()
+      break
+    } catch {
+      logger.info({ groupId: group.id, attempt }, 'site not yet provisioned, retrying...')
+    }
+  }
+  if (!site) throw new Error('SharePoint site provisioning timed out after 60s')
   job.siteId = site.id
   job.siteUrl = site.webUrl
 }
@@ -109,12 +120,25 @@ async function provisionLists(job) {
 
 async function configurePages(job) {
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
-  await job.graphClient.api(`/sites/${job.siteId}/pages`).version('beta').post({
-    '@odata.type': '#microsoft.graph.sitePage',
-    name: 'Home.aspx',
-    title: siteNameStr,
-    pageLayout: 'article',
-  })
+  let pages
+  try {
+    pages = await job.graphClient.api(`/sites/${job.siteId}/pages`).get()
+  } catch {
+    pages = { value: [] }
+  }
+  const existing = pages.value?.find(p => p.name === 'Home.aspx')
+  if (existing) {
+    await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}/microsoft.graph.sitePage`).patch({
+      title: siteNameStr,
+    })
+  } else {
+    await job.graphClient.api(`/sites/${job.siteId}/pages`).post({
+      '@odata.type': '#microsoft.graph.sitePage',
+      name: 'Home.aspx',
+      title: siteNameStr,
+      pageLayout: 'article',
+    })
+  }
 }
 
 export function createJob(tenantConfiguration) {
