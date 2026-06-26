@@ -112,8 +112,6 @@ async function createSharePointSite(job) {
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   const mailNickname = `shareflow-${slugify(siteNameStr)}-${Date.now().toString(36)}`
 
-  const ownerUser = await job.graphClient.api(`/users/${owner}`).get()
-
   const group = await job.graphClient.api('/groups').post({
     displayName: siteNameStr,
     mailNickname,
@@ -121,8 +119,8 @@ async function createSharePointSite(job) {
     securityEnabled: false,
     groupTypes: ['Unified'],
     visibility: 'Private',
-    'owners@odata.bind': [`https://graph.microsoft.com/v1.0/users/${ownerUser.id}`],
-    'members@odata.bind': [`https://graph.microsoft.com/v1.0/users/${ownerUser.id}`],
+    'owners@odata.bind': [`https://graph.microsoft.com/v1.0/users/${owner}`],
+    'members@odata.bind': [`https://graph.microsoft.com/v1.0/users/${owner}`],
   })
 
   job.groupId = group.id
