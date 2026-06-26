@@ -292,6 +292,7 @@
       "corporate-classic": "Tema scuro e professionale con accento blu, adatto a contesti corporate tradizionali.",
       "modern-light": "Tema chiaro e minimale con accento turchese, per un look moderno e arioso.",
       "dark-glass": "Tema scuro con effetto vetro semi-trasparente e accento azzurro, per un'estetica tech.",
+            "gradient-brand": "Tema scuro con blob gradient che si adattano al colore del brand, per un look dinamico e moderno.",
       "vibrant-color": "Tema viola e arancio acceso, per un brand audace e colorato."
     }
   },

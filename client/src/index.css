@@ -4,3 +4,12 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; font-family: 'Hanken Grotesk', system-ui, sans-serif; background-color: #FBF9F4; }
+
+/* Blob gradient hero — blob colors derived from --theme-accent so it adapts to any brand */
+.hero-blob {
+  background:
+    radial-gradient(ellipse at 18% 60%, color-mix(in srgb, var(--theme-accent) 55%, #2D1B69) 0%, transparent 55%),
+    radial-gradient(ellipse at 78% 22%, color-mix(in srgb, var(--theme-accent) 70%, #1e3a5f) 0%, transparent 50%),
+    radial-gradient(ellipse at 52% 92%, color-mix(in srgb, var(--theme-accent) 45%, transparent) 0%, transparent 45%),
+    #0d0d1f;
+}
