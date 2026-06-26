@@ -9,7 +9,8 @@ export async function createCommunicationSite({
   lcid = 1033,
   pollIntervalMs = 5000,
 }) {
-  const apiUrl = `https://${hostname}/_api/SPSiteManager/create`
+  const adminHostname = hostname.replace('.sharepoint.com', '-admin.sharepoint.com')
+  const apiUrl = `https://${adminHostname}/_api/SPSiteManager/create`
   const siteUrl = `https://${hostname}/sites/${slug}`
 
   const headers = {
@@ -40,7 +41,7 @@ export async function createCommunicationSite({
   let resultUrl = data?.d?.Create?.SiteUrl ?? data?.SiteUrl ?? siteUrl
 
   // Poll until provisioning complete (SiteStatus 2 = Ready)
-  const statusUrl = `https://${hostname}/_api/SPSiteManager/GetSiteStatus?url='${encodeURIComponent(siteUrl)}'`
+  const statusUrl = `https://${adminHostname}/_api/SPSiteManager/GetSiteStatus?url='${encodeURIComponent(siteUrl)}'`
   const statusHeaders = {
     Authorization: `Bearer ${token}`,
     Accept: 'application/json;odata=verbose',

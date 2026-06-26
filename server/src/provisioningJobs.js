@@ -114,7 +114,8 @@ async function createSharePointSite(job) {
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   const slug = `${slugify(siteNameStr)}-${Date.now().toString(36)}`
 
-  const token = await getSharePointAccessToken(hostname)
+  const adminHostname = hostname.replace('.sharepoint.com', '-admin.sharepoint.com')
+  const token = await getSharePointAccessToken(adminHostname)
   const { siteUrl } = await createCommunicationSite({
     hostname,
     token,
