@@ -30,3 +30,13 @@ export async function getGraphAccessToken() {
   }
   return result.accessToken
 }
+
+export async function getSharePointAccessToken(hostname) {
+  const result = await getConfidentialClient().acquireTokenByClientCredential({
+    scopes: [`https://${hostname}/.default`],
+  })
+  if (!result) {
+    throw new Error('Failed to acquire SharePoint access token')
+  }
+  return result.accessToken
+}
