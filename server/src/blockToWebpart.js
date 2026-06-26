@@ -18,10 +18,15 @@ const WP = {
 
 function node(webPartType, title, properties) {
   return {
+    '@odata.type': '#microsoft.graph.standardWebPart',
     id: crypto.randomUUID(),
-    innerHtml: '',
     webPartType,
-    data: { dataVersion: '1.0', title, properties },
+    data: {
+      dataVersion: '1.0',
+      title,
+      properties,
+      serverProcessedContent: { htmlStrings: {}, searchablePlainTexts: {}, imageSources: {}, links: {} },
+    },
   }
 }
 
