@@ -13,18 +13,18 @@ import { t2 } from '../../utils/localizedText.js'
 
 export default function CanvasDropZone() {
   const { state, dispatch, ACTIONS } = useConfigurator()
-  const { accentColor, template } = useTheme()
+  const { accentColor, template, pageColor, isPageDark } = useTheme()
   const { t } = useTranslation()
   const lang = useLang()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
   const activePage = findPage(state.pages, state.activePageId)
   if (!activePage) return null
 
-  const labelText = template.dark ? 'text-white/50' : 'text-ink-950'
-  const labelSubText = template.dark ? 'text-white/30' : 'text-ink-800'
+  const labelText = isPageDark ? 'text-white/50' : 'text-ink-950'
+  const labelSubText = isPageDark ? 'text-white/30' : 'text-ink-800'
 
   return (
-    <div className={`min-h-full p-6 ${template.pageBg}`}>
+    <div className="min-h-full p-6" style={{ backgroundColor: pageColor }}>
       <div className="max-w-2xl mx-auto" style={{ '--theme-accent': accentColor }}>
         <CanvasTopNav />
         <HeroBanner />

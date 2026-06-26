@@ -22,7 +22,8 @@
     "reset": "Zurücksetzen",
     "backgroundImageLabel": "Hintergrundbild",
     "backgroundImageHint": "URL eines Bildes, das als Hintergrund für das Hero-Banner und die Navigationsleiste verwendet wird",
-    "backgroundImageRemove": "Bild entfernen"
+    "backgroundImageRemove": "Bild entfernen",
+    "pageColor": "Seitenhintergrund"
   },
   "blocks": {
     "search": "Blöcke suchen…",
@@ -286,13 +287,14 @@
       "siteName": "Der Websitename, der im Header und im Hero-Banner angezeigt wird.",
       "template": "Wählen Sie eines der vordefinierten visuellen Themen für die Website.",
       "backgroundImage": "Legen Sie ein Hintergrundbild für Hero-Banner und Navigationsleiste fest, mit automatisch vorgeschlagenen Farben.",
-      "brandColor": "Die Hauptfarbe der Marke, verwendet für Akzente und aktive Elemente."
+      "brandColor": "Die Hauptfarbe der Marke, verwendet für Akzente und aktive Elemente.",
+      "pageColor": "Hintergrundfarbe der gesamten Seite, hinter allen Inhaltsblöcken."
     },
     "themeTemplates": {
       "corporate-classic": "Ein dunkles, professionelles Thema mit blauem Akzent, geeignet für traditionelle Unternehmenskontexte.",
       "modern-light": "Ein helles, minimalistisches Thema mit türkisem Akzent für einen modernen, luftigen Look.",
       "dark-glass": "Ein dunkles Thema mit halbtransparentem Glaseffekt und cyanfarbenem Akzent für eine technische Ästhetik.",
-            "gradient-brand": "Dunkles Thema mit Blob-Verläufen, die sich der Markenfarbe anpassen, für einen dynamischen modernen Look.",
+      "gradient-brand": "Dunkles Thema mit Blob-Verläufen, die sich der Markenfarbe anpassen, für einen dynamischen modernen Look.",
       "vibrant-color": "Ein kräftiges violett-orangefarbenes Thema für eine mutige, farbenfrohe Marke."
     }
   },

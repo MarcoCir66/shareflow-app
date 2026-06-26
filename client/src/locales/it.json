@@ -22,7 +22,8 @@
     "reset": "Ripristina",
     "backgroundImageLabel": "Immagine di sfondo",
     "backgroundImageHint": "URL di un'immagine da usare come sfondo dell'hero banner e della barra di navigazione",
-    "backgroundImageRemove": "Rimuovi immagine"
+    "backgroundImageRemove": "Rimuovi immagine",
+    "pageColor": "Sfondo pagina"
   },
   "blocks": {
     "search": "Cerca blocchi…",
@@ -286,13 +287,14 @@
       "siteName": "Il nome del sito mostrato nell'header e nell'hero banner.",
       "template": "Scegli uno dei temi visivi predefiniti per il sito.",
       "backgroundImage": "Imposta un'immagine di sfondo per hero banner e barra di navigazione, con colori suggeriti automaticamente.",
-      "brandColor": "Il colore principale del brand, usato per accenti e elementi attivi."
+      "brandColor": "Il colore principale del brand, usato per accenti e elementi attivi.",
+      "pageColor": "Colore di sfondo dell'intera pagina, dietro tutti i blocchi di contenuto."
     },
     "themeTemplates": {
       "corporate-classic": "Tema scuro e professionale con accento blu, adatto a contesti corporate tradizionali.",
       "modern-light": "Tema chiaro e minimale con accento turchese, per un look moderno e arioso.",
       "dark-glass": "Tema scuro con effetto vetro semi-trasparente e accento azzurro, per un'estetica tech.",
-            "gradient-brand": "Tema scuro con blob gradient che si adattano al colore del brand, per un look dinamico e moderno.",
+      "gradient-brand": "Tema scuro con blob gradient che si adattano al colore del brand, per un look dinamico e moderno.",
       "vibrant-color": "Tema viola e arancio acceso, per un brand audace e colorato."
     }
   },

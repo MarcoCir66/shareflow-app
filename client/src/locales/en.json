@@ -22,7 +22,8 @@
     "reset": "Reset",
     "backgroundImageLabel": "Background image",
     "backgroundImageHint": "URL of an image to use as the background of the hero banner and top navigation",
-    "backgroundImageRemove": "Remove image"
+    "backgroundImageRemove": "Remove image",
+    "pageColor": "Page background"
   },
   "blocks": {
     "search": "Search blocks…",
@@ -286,7 +287,8 @@
       "siteName": "The site name shown in the header and hero banner.",
       "template": "Choose one of the predefined visual themes for the site.",
       "backgroundImage": "Set a background image for the hero banner and top navigation, with automatically suggested colors.",
-      "brandColor": "The brand's main color, used for accents and active elements."
+      "brandColor": "The brand's main color, used for accents and active elements.",
+      "pageColor": "Background color of the entire page, behind all content blocks."
     },
     "themeTemplates": {
       "corporate-classic": "A dark, professional theme with a blue accent, suited to traditional corporate contexts.",

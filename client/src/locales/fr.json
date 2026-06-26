@@ -22,7 +22,8 @@
     "reset": "Réinitialiser",
     "backgroundImageLabel": "Image de fond",
     "backgroundImageHint": "URL d'une image à utiliser comme fond de la bannière d'accueil et de la barre de navigation",
-    "backgroundImageRemove": "Supprimer l'image"
+    "backgroundImageRemove": "Supprimer l'image",
+    "pageColor": "Fond de page"
   },
   "blocks": {
     "search": "Rechercher des blocs…",
@@ -286,13 +287,14 @@
       "siteName": "Le nom du site affiché dans l'en-tête et la bannière d'accueil.",
       "template": "Choisissez l'un des thèmes visuels prédéfinis pour le site.",
       "backgroundImage": "Définissez une image de fond pour la bannière d'accueil et la navigation, avec des couleurs suggérées automatiquement.",
-      "brandColor": "La couleur principale de la marque, utilisée pour les accents et les éléments actifs."
+      "brandColor": "La couleur principale de la marque, utilisée pour les accents et les éléments actifs.",
+      "pageColor": "Couleur d'arrière-plan de toute la page, derrière tous les blocs de contenu."
     },
     "themeTemplates": {
       "corporate-classic": "Un thème sombre et professionnel avec un accent bleu, adapté aux contextes corporate traditionnels.",
       "modern-light": "Un thème clair et minimaliste avec un accent turquoise, pour un look moderne et aéré.",
       "dark-glass": "Un thème sombre à effet verre semi-transparent et accent cyan, pour une esthétique tech.",
-            "gradient-brand": "Thème sombre avec des dégradés blob adaptés à la couleur de marque, pour un look dynamique et moderne.",
+      "gradient-brand": "Thème sombre avec des dégradés blob adaptés à la couleur de marque, pour un look dynamique et moderne.",
       "vibrant-color": "Un thème violet et orange vif, pour une marque audacieuse et colorée."
     }
   },

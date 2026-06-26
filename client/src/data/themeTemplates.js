@@ -1,17 +1,16 @@
 /**
  * Catalog of visual templates for the "Aspetto" appearance gallery.
  * Each template controls nav, hero banner, and widget-card styling via
- * Tailwind class strings. `accentColor` is the default value of the
- * `--theme-accent` CSS variable, overridable per tenant.
+ * Tailwind class strings. `accentColor` and `pageColor` are the default
+ * values overridable per tenant.
  */
 export const THEME_TEMPLATES = [
   {
     id: 'corporate-classic',
     name: 'Corporate Classic',
     accentColor: '#0078D4',
+    pageColor: '#15140F',
     swatch: { nav: '#0F1C2E', hero: '#1A2F4A', card: '#FFFFFF' },
-    pageBg: 'bg-ink-950',
-    dark: true,
     nav: {
       wrapper: 'bg-ink-950 rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -41,9 +40,8 @@ export const THEME_TEMPLATES = [
     id: 'modern-light',
     name: 'Modern Light',
     accentColor: '#14B8A6',
+    pageColor: '#FBF9F4',
     swatch: { nav: '#FFFFFF', hero: '#EAF4FF', card: '#FFFFFF' },
-    pageBg: 'bg-paper',
-    dark: false,
     nav: {
       wrapper: 'bg-white shadow-sm rounded-xl px-2',
       tabActive: 'text-ink-950 border-[var(--theme-accent)]',
@@ -73,9 +71,8 @@ export const THEME_TEMPLATES = [
     id: 'dark-glass',
     name: 'Dark Glass',
     accentColor: '#00B4FF',
+    pageColor: '#15140F',
     swatch: { nav: '#0F1C2E', hero: '#241B4E', card: '#2D3E50' },
-    pageBg: 'bg-ink-950',
-    dark: true,
     nav: {
       wrapper: 'bg-ink-950/90 backdrop-blur border-b border-white/10 rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -105,9 +102,8 @@ export const THEME_TEMPLATES = [
     id: 'gradient-brand',
     name: 'Gradient Brand',
     accentColor: '#0F8B7E',
+    pageColor: '#0d0d1f',
     swatch: { nav: '#0d0d1f', hero: '#0F8B7E', card: '#FFFFFF' },
-    pageBg: 'bg-[#0d0d1f]',
-    dark: true,
     nav: {
       wrapper: 'bg-ink-950 rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -137,9 +133,8 @@ export const THEME_TEMPLATES = [
     id: 'vibrant-color',
     name: 'Vibrant Color',
     accentColor: '#E94F37',
+    pageColor: '#FBF9F4',
     swatch: { nav: '#5B2A86', hero: '#E94F37', card: '#FFFFFF' },
-    pageBg: 'bg-paper',
-    dark: false,
     nav: {
       wrapper: 'bg-[#5B2A86] rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -167,12 +162,22 @@ export const THEME_TEMPLATES = [
   },
 ]
 
+/** Returns true if the hex color is perceptually dark (luminance < 140/255). */
+export function isDarkColor(hex) {
+  if (!hex || !hex.startsWith('#') || hex.length < 7) return false
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return (0.299 * r + 0.587 * g + 0.114 * b) < 140
+}
+
 /**
- * Resolves the effective template + accent color for the given
+ * Resolves the effective template, accent color and page color for the given
  * `tenantConfiguration.theme` state (which may be partial or undefined).
  */
 export function resolveTheme(themeState) {
   const template = THEME_TEMPLATES.find(t => t.id === themeState?.templateId) ?? THEME_TEMPLATES[0]
   const accentColor = themeState?.accentColor ?? template.accentColor
-  return { template, accentColor }
+  const pageColor = themeState?.pageColor ?? template.pageColor
+  return { template, accentColor, pageColor }
 }

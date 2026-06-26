@@ -9,7 +9,7 @@ import Tooltip from '../common/Tooltip.jsx'
 
 export default function AppearancePanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
-  const { template, accentColor } = useTheme()
+  const { template, accentColor, pageColor } = useTheme()
   const { t } = useTranslation()
   const lang = useLang()
   const theme = state.tenantConfiguration.theme
@@ -24,6 +24,14 @@ export default function AppearancePanel() {
 
   function resetAccentColor() {
     dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, accentColor: null } } })
+  }
+
+  function setPageColor(value) {
+    dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, pageColor: value } } })
+  }
+
+  function resetPageColor() {
+    dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, pageColor: null } } })
   }
 
   function handleBackgroundImageUrlChange(value) {
@@ -125,6 +133,28 @@ export default function AppearancePanel() {
           <span className="text-xs text-ink-400 flex-1">{accentColor}</span>
           {theme?.accentColor && (
             <button type="button" onClick={resetAccentColor} className="text-xs text-flow-400 hover:underline">
+              {t('appearance.reset')}
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <Tooltip text={t('tooltips.appearanceSections.pageColor')}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">
+            {t('appearance.pageColor')}
+          </h3>
+        </Tooltip>
+        <div className="flex items-center gap-2">
+          <input
+            type="color"
+            value={pageColor}
+            onChange={e => setPageColor(e.target.value)}
+            className="w-8 h-8 rounded border border-ink-700 bg-transparent cursor-pointer"
+          />
+          <span className="text-xs text-ink-400 flex-1">{pageColor}</span>
+          {theme?.pageColor && (
+            <button type="button" onClick={resetPageColor} className="text-xs text-flow-400 hover:underline">
               {t('appearance.reset')}
             </button>
           )}

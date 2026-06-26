@@ -24,7 +24,7 @@ export default function PreviewApp() {
     )
   }
 
-  const { accentColor, template } = resolveTheme(state.tenantConfiguration.theme)
+  const { accentColor, pageColor } = resolveTheme(state.tenantConfiguration.theme)
   const activePage = findPage(state.pages, state.activePageId)
 
   if (!activePage) {
@@ -42,7 +42,7 @@ export default function PreviewApp() {
 
   return (
     <PreviewProvider state={state}>
-      <div className={`min-h-screen ${template.pageBg} flex flex-col`}>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: pageColor }}>
         <PreviewToolbar device={device} onDevice={setDevice} />
         <div className="flex-1 overflow-y-auto p-6">
           <div
