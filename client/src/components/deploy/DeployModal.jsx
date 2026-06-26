@@ -3,7 +3,7 @@ import { CheckCircle2, Loader2, Circle, X, ExternalLink } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { buildTenantExport } from '../../context/pageHelpers.js'
-import { startProvisioning, getProvisioningStatus } from '../../lib/provisioningApi.js'
+import { startProvisioning, getProvisioningStatus, validateDeploy } from '../../lib/provisioningApi.js'
 import { useLang } from '../../hooks/useLang.js'
 import { t2 } from '../../utils/localizedText.js'
 import { useFocusTrap } from '../../hooks/useFocusTrap.js'
@@ -17,7 +17,9 @@ export default function DeployModal({ onClose }) {
   const [status, setStatus] = useState('running')
   const [result, setResult] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [unmappedBlocks, setUnmappedBlocks] = useState(null) // null = not checked yet
   const startedRef = useRef(false)
+  const tenantConfigRef = useRef(null)
 
   const done = status === 'done'
   const failed = status === 'error'
@@ -42,8 +44,19 @@ export default function DeployModal({ onClose }) {
     dispatch({ type: ACTIONS.EXPORT_CONFIGURATION })
 
     const tenantConfiguration = buildTenantExport(state.pages, state.tenantConfiguration)
-    startProvisioning(tenantConfiguration)
-      .then(({ jobId: newJobId }) => setJobId(newJobId))
+    tenantConfigRef.current = tenantConfiguration
+
+    validateDeploy(tenantConfiguration)
+      .then(({ unmappedBlocks: ub }) => {
+        if (ub.length > 0) {
+          setUnmappedBlocks(ub)
+          setStatus('warning')
+        } else {
+          setUnmappedBlocks([])
+          return startProvisioning(tenantConfiguration)
+            .then(({ jobId: newJobId }) => setJobId(newJobId))
+        }
+      })
       .catch(() => setStatus('error'))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -79,12 +92,50 @@ export default function DeployModal({ onClose }) {
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="deploy-modal-title" className="bg-ink-800 rounded-2xl border border-ink-700 w-full max-w-md shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-ink-700">
           <h2 id="deploy-modal-title" className="text-white font-semibold">{t('deploy.title')}</h2>
-          {(done || failed) && (
+          {(done || failed || status === 'warning') && (
             <button onClick={onClose} className="text-ink-400 hover:text-white transition-colors">
               <X size={18} />
             </button>
           )}
         </div>
+
+        {status === 'warning' && unmappedBlocks && (
+          <div className="p-5 space-y-3">
+            <p className="text-sm text-amber-400 font-semibold">
+              {unmappedBlocks.length} {unmappedBlocks.length === 1 ? 'blocco non' : 'blocchi non'} supportati
+            </p>
+            <p className="text-xs text-ink-400">
+              I seguenti blocchi non verranno pubblicati su SharePoint:
+            </p>
+            <ul className="text-xs text-ink-300 space-y-1 max-h-32 overflow-y-auto">
+              {unmappedBlocks.map(b => (
+                <li key={b.blockId} className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                  {b.blockId}
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => {
+                  setStatus('running')
+                  startProvisioning(tenantConfigRef.current)
+                    .then(({ jobId: newJobId }) => setJobId(newJobId))
+                    .catch(() => setStatus('error'))
+                }}
+                className="flex-1 py-2 rounded-lg bg-flow-400 text-ink-950 font-semibold text-sm hover:bg-flow-600 transition-colors"
+              >
+                Procedi comunque
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 py-2 rounded-lg bg-ink-700 text-white text-sm hover:bg-ink-600 transition-colors"
+              >
+                Annulla
+              </button>
+            </div>
+          </div>
+        )}
 
         {failed ? (
           <div className="p-5 space-y-3">
@@ -98,7 +149,7 @@ export default function DeployModal({ onClose }) {
               {t('deploy.close')}
             </button>
           </div>
-        ) : (
+        ) : status !== 'warning' && (
           <>
             <div className="p-5 space-y-3">
               {STEPS.map((step, i) => {

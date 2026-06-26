@@ -164,6 +164,7 @@ export function buildTenantExport(pages, tenantConfiguration) {
     title: page.title,
     slug: page.slug,
     parentId: page.parentId,
+    sections: page.sections,
     widgets: flattenWidgets(page.sections),
   }))
   return {

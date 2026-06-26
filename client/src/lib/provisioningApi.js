@@ -28,3 +28,14 @@ export async function getProvisioningStatus(jobId) {
   if (!res.ok) throw new Error(`Failed to fetch provisioning status (${res.status})`)
   return res.json()
 }
+
+export async function validateDeploy(tenantConfiguration) {
+  const authHeaders = await getAuthHeaders()
+  const res = await fetch(`${API_BASE}/api/provisioning/validate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders },
+    body: JSON.stringify({ tenantConfiguration }),
+  })
+  if (!res.ok) return { unmappedBlocks: [] }
+  return res.json()
+}
