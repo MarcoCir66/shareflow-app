@@ -114,8 +114,7 @@ async function createSharePointSite(job) {
   job.siteUrl = siteUrl
 
   // Resolve siteId via Graph for subsequent steps
-  const encodedPath = encodeURIComponent(`/sites/${slug}`)
-  const site = await job.graphClient.api(`/sites/${hostname}:${encodedPath}`).get()
+  const site = await job.graphClient.api(`/sites/${hostname}:/sites/${slug}`).get()
   job.siteId = site.id
 }
 
