@@ -46,8 +46,8 @@ export default function AnalyticsOverview({ data, showComparison }) {
         />
       </div>
 
-      <div className="bg-surface-card rounded-xl border border-slate-mid p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3">{t('analytics.trendTitle')}</h3>
+      <div className="bg-white rounded-xl border border-ink-700 p-4">
+        <h3 className="text-sm font-semibold text-ink-950 mb-3">{t('analytics.trendTitle')}</h3>
         <ResponsiveContainer width="100%" height={220}>
           <AreaChart data={hub.trend}>
             <CartesianGrid stroke="#8899AA" strokeOpacity={0.2} />
@@ -67,8 +67,8 @@ export default function AnalyticsOverview({ data, showComparison }) {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-surface-card rounded-xl border border-slate-mid p-4">
-          <h3 className="text-sm font-semibold text-navy mb-3">{t('analytics.deviceChartTitle')}</h3>
+        <div className="bg-white rounded-xl border border-ink-700 p-4">
+          <h3 className="text-sm font-semibold text-ink-950 mb-3">{t('analytics.deviceChartTitle')}</h3>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={deviceData}>
               <XAxis dataKey="name" stroke="#8899AA" fontSize={12} />
@@ -78,8 +78,8 @@ export default function AnalyticsOverview({ data, showComparison }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="bg-surface-card rounded-xl border border-slate-mid p-4">
-          <h3 className="text-sm font-semibold text-navy mb-3">{t('analytics.hourlyChartTitle')}</h3>
+        <div className="bg-white rounded-xl border border-ink-700 p-4">
+          <h3 className="text-sm font-semibold text-ink-950 mb-3">{t('analytics.hourlyChartTitle')}</h3>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={hourlyData}>
               <XAxis dataKey="name" stroke="#8899AA" fontSize={12} />

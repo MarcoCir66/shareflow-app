@@ -65,13 +65,13 @@ export default function TemplateGallery() {
       <div className="flex gap-2 mb-3">
         <button
           onClick={() => setMode('page')}
-          className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${mode === 'page' ? 'bg-blue-electric text-navy' : 'bg-slate-mid text-slate-light hover:text-white'}`}
+          className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${mode === 'page' ? 'bg-flow-400 text-ink-950' : 'bg-ink-700 text-ink-400 hover:text-white'}`}
         >
           {t('templates.modePage')}
         </button>
         <button
           onClick={() => setMode('site')}
-          className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${mode === 'site' ? 'bg-blue-electric text-navy' : 'bg-slate-mid text-slate-light hover:text-white'}`}
+          className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${mode === 'site' ? 'bg-flow-400 text-ink-950' : 'bg-ink-700 text-ink-400 hover:text-white'}`}
         >
           {t('templates.modeSite')}
         </button>
@@ -83,16 +83,16 @@ export default function TemplateGallery() {
             <button
               key={template.id}
               onClick={() => handleSelect(template)}
-              className="flex flex-col items-start gap-1.5 p-3 rounded-lg border text-left bg-slate-mid border-slate-mid hover:border-blue-electric hover:bg-navy-light transition-all"
+              className="flex flex-col items-start gap-1.5 p-3 rounded-lg border text-left bg-ink-700 border-ink-700 hover:border-flow-400 hover:bg-ink-800 transition-all"
             >
-              <Icon size={20} className="text-blue-electric flex-shrink-0" />
+              <Icon size={20} className="text-flow-400 flex-shrink-0" />
               <span className="text-xs font-semibold text-white">
                 {t(`templates.${labelNamespace}.${template.id}`, { defaultValue: template.label })}
               </span>
-              <span className="text-[10px] uppercase tracking-wider text-slate-light">
+              <span className="text-[10px] uppercase tracking-wider text-ink-400">
                 {t(`templates.categories.${template.category}`, { defaultValue: template.category })}
               </span>
-              <span className="text-xs text-slate-light leading-tight">
+              <span className="text-xs text-ink-400 leading-tight">
                 {t(`templates.${descriptionNamespace}.${template.id}`, { defaultValue: template.description })}
               </span>
             </button>

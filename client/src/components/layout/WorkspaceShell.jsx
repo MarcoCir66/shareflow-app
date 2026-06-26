@@ -8,13 +8,13 @@ export default function WorkspaceShell({ left, center, right }) {
         marginTop: '3.5rem',
       }}
     >
-      <aside className="overflow-y-auto bg-slate border-r border-slate-mid">
+      <aside className="overflow-y-auto bg-ink-800 border-r border-ink-700">
         {left}
       </aside>
-      <main className="overflow-y-auto bg-surface">
+      <main className="overflow-y-auto bg-paper">
         {center}
       </main>
-      <aside className="overflow-y-auto bg-slate border-l border-slate-mid">
+      <aside className="overflow-y-auto bg-ink-800 border-l border-ink-700">
         {right}
       </aside>
     </div>

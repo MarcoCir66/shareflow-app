@@ -34,7 +34,7 @@ export default function Tooltip({ text, children }) {
         <div
           role="tooltip"
           style={{ position: 'fixed', top: coords.top, left: coords.left, transform: 'translateY(-50%)' }}
-          className="z-50 max-w-[220px] rounded-md bg-navy text-white text-xs px-2.5 py-1.5 shadow-lg pointer-events-none"
+          className="z-50 max-w-[220px] rounded-md bg-ink-950 text-white text-xs px-2.5 py-1.5 shadow-lg pointer-events-none"
         >
           {text}
         </div>,

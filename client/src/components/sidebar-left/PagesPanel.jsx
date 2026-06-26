@@ -50,11 +50,11 @@ export default function PagesPanel() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-3 border-b border-slate-mid flex items-center justify-between gap-2">
-        <span className="text-xs font-semibold text-slate-light uppercase tracking-wider">{t('pages.title')}</span>
+      <div className="p-3 border-b border-ink-700 flex items-center justify-between gap-2">
+        <span className="text-xs font-semibold text-ink-400 uppercase tracking-wider">{t('pages.title')}</span>
         <button
           onClick={() => dispatch({ type: ACTIONS.ADD_PAGE, payload: { parentId: null } })}
-          className="flex items-center gap-1 text-xs font-medium text-blue-electric hover:text-white transition-colors"
+          className="flex items-center gap-1 text-xs font-medium text-flow-400 hover:text-white transition-colors"
         >
           <Plus size={14} /> {t('pages.add')}
         </button>

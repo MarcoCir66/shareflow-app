@@ -37,7 +37,7 @@ function PanelLabel({ panel, lang, onRename }) {
           if (e.key === 'Escape') { setDraft(t2(panel.label, lang)); setEditing(false) }
         }}
         onClick={e => e.stopPropagation()}
-        className="flex-1 bg-white text-navy text-sm px-1.5 py-0.5 rounded border border-blue focus:outline-none min-w-0"
+        className="flex-1 bg-white text-ink-950 text-sm px-1.5 py-0.5 rounded border border-flow-600 focus:outline-none min-w-0"
       />
     )
   }
@@ -45,7 +45,7 @@ function PanelLabel({ panel, lang, onRename }) {
   return (
     <span
       onDoubleClick={e => { e.stopPropagation(); setEditing(true) }}
-      className="flex-1 text-sm font-medium text-navy truncate"
+      className="flex-1 text-sm font-medium text-ink-950 truncate"
     >
       {t2(panel.label, lang)}
     </span>
@@ -64,7 +64,7 @@ export default function AccordionPanels({ section, readOnly = false }) {
         const isEmpty = panel.widgets.length === 0
 
         return (
-          <div key={panel.columnId} className="rounded-xl border border-slate-mid overflow-hidden">
+          <div key={panel.columnId} className="rounded-xl border border-ink-700 overflow-hidden">
             <div
               role="button"
               tabIndex={0}
@@ -81,11 +81,11 @@ export default function AccordionPanels({ section, readOnly = false }) {
                   dispatch({ type: ACTIONS.TOGGLE_PANEL_EXPANDED, payload: { sectionId: section.sectionId, columnId: panel.columnId } })
                 }
               }}
-              className="flex items-center gap-2 px-3 py-2 bg-surface cursor-pointer"
+              className="flex items-center gap-2 px-3 py-2 bg-paper cursor-pointer"
             >
-              {panel.expanded ? <ChevronDown size={14} className="flex-shrink-0 text-slate" /> : <ChevronRight size={14} className="flex-shrink-0 text-slate" />}
+              {panel.expanded ? <ChevronDown size={14} className="flex-shrink-0 text-ink-800" /> : <ChevronRight size={14} className="flex-shrink-0 text-ink-800" />}
               {readOnly ? (
-                <span className="flex-1 text-sm font-medium text-navy truncate">{t2(panel.label, lang)}</span>
+                <span className="flex-1 text-sm font-medium text-ink-950 truncate">{t2(panel.label, lang)}</span>
               ) : (
                 <PanelLabel
                   panel={panel}
@@ -104,7 +104,7 @@ export default function AccordionPanels({ section, readOnly = false }) {
                     dispatch({ type: ACTIONS.REMOVE_PANEL, payload: { sectionId: section.sectionId, columnId: panel.columnId } })
                   }}
                   aria-label={t('canvas.removePanel')}
-                  className="text-slate-light hover:text-red-500 flex-shrink-0"
+                  className="text-ink-400 hover:text-red-500 flex-shrink-0"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -123,7 +123,7 @@ export default function AccordionPanels({ section, readOnly = false }) {
         <button
           type="button"
           onClick={() => dispatch({ type: ACTIONS.ADD_PANEL, payload: { sectionId: section.sectionId } })}
-          className="flex items-center gap-1.5 text-xs font-medium text-slate-light hover:text-blue border border-dashed border-slate-mid hover:border-blue rounded-lg px-3 py-1.5 transition-colors"
+          className="flex items-center gap-1.5 text-xs font-medium text-ink-400 hover:text-flow-600 border border-dashed border-ink-700 hover:border-flow-600 rounded-lg px-3 py-1.5 transition-colors"
         >
           <Plus size={14} /> {t('canvas.addPanel')}
         </button>

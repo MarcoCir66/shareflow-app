@@ -22,7 +22,7 @@ export default function AnalyticsCompliance({ pages }) {
 
   if (items.length === 0) {
     return (
-      <div className="bg-surface-card rounded-xl border border-slate-mid p-8 text-center text-slate-light text-sm">
+      <div className="bg-white rounded-xl border border-ink-700 p-8 text-center text-ink-400 text-sm">
         {t('analytics.complianceEmpty')}
       </div>
     )
@@ -59,8 +59,8 @@ export default function AnalyticsCompliance({ pages }) {
         <KpiCard label={t('analytics.complianceKpiLate')} value={lateCount} showComparison={false} />
       </div>
 
-      <div className="bg-surface-card rounded-xl border border-slate-mid p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3">{t('analytics.complianceChartTitle')}</h3>
+      <div className="bg-white rounded-xl border border-ink-700 p-4">
+        <h3 className="text-sm font-semibold text-ink-950 mb-3">{t('analytics.complianceChartTitle')}</h3>
         <ResponsiveContainer width="100%" height={Math.max(200, chartData.length * 32)}>
           <BarChart data={chartData} layout="vertical">
             <XAxis type="number" stroke="#8899AA" fontSize={12} domain={[0, 100]} />

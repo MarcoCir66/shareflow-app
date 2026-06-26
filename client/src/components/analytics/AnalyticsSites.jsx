@@ -35,13 +35,13 @@ export default function AnalyticsSites({ data }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-surface-card rounded-xl border border-slate-mid p-4">
+      <div className="bg-white rounded-xl border border-ink-700 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-navy">{t('analytics.sitesRankingTitle')}</h3>
+          <h3 className="text-sm font-semibold text-ink-950">{t('analytics.sitesRankingTitle')}</h3>
           <select
             value={metric}
             onChange={e => setMetric(e.target.value)}
-            className="text-xs border border-slate-mid rounded-lg px-2 py-1"
+            className="text-xs border border-ink-700 rounded-lg px-2 py-1"
           >
             <option value="uniqueVisitors">{t('analytics.metricUniqueVisitors')}</option>
             <option value="visits">{t('analytics.metricVisits')}</option>
@@ -61,11 +61,11 @@ export default function AnalyticsSites({ data }) {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-surface-card rounded-xl border border-slate-mid p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3">{t('analytics.siteSelectorTitle')}</h3>
+      <div className="bg-white rounded-xl border border-ink-700 p-4">
+        <h3 className="text-sm font-semibold text-ink-950 mb-3">{t('analytics.siteSelectorTitle')}</h3>
         <div className="grid grid-cols-3 gap-2">
           {rankedSites.map(site => (
-            <label key={site.name} className="flex items-center gap-2 text-sm text-navy">
+            <label key={site.name} className="flex items-center gap-2 text-sm text-ink-950">
               <input
                 type="checkbox"
                 checked={selectedNames.includes(site.name)}

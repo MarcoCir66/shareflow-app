@@ -17,8 +17,8 @@ export default function LanguageSwitcher() {
           aria-label={`Switch language to ${lang.toUpperCase()}`}
           className={`px-2 py-1 rounded text-[10px] font-bold transition-colors ${
             current === lang
-              ? 'bg-blue-electric text-navy'
-              : 'text-slate-light hover:text-white'
+              ? 'bg-flow-400 text-ink-950'
+              : 'text-ink-400 hover:text-white'
           }`}
         >
           {lang.toUpperCase()}

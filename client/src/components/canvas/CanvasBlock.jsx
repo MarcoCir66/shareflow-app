@@ -53,7 +53,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
       className={`
         group relative p-4 mb-3 cursor-pointer transition-all
         ${template.card.wrapper}
-        ${isSelected ? 'ring-2 ring-blue' : 'hover:ring-1 hover:ring-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)]'}
+        ${isSelected ? 'ring-2 ring-flow-600' : 'hover:ring-1 hover:ring-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)]'}
       `}
     >
       <button
@@ -61,7 +61,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
         {...attributes}
         onClick={e => e.stopPropagation()}
         aria-label={t('canvas.dragHandle')}
-        className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300 opacity-0 group-hover:opacity-100 hover:text-navy cursor-grab active:cursor-grabbing transition-opacity"
+        className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300 opacity-0 group-hover:opacity-100 hover:text-ink-950 cursor-grab active:cursor-grabbing transition-opacity"
       >
         <GripVertical size={16} />
       </button>
@@ -71,7 +71,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
           <button
             ref={moveTriggerRef}
             onClick={e => { e.stopPropagation(); setMoveMenuOpen(o => !o) }}
-            className="text-gray-300 hover:text-blue transition-colors"
+            className="text-gray-300 hover:text-flow-600 transition-colors"
             title={t('canvas.moveToOtherColumn')}
           >
             <ArrowRightLeft size={14} />
@@ -108,7 +108,7 @@ export default function CanvasBlock({ widget, sectionId, columnId, widthHint }) 
               })
               setMoveMenuOpen(false)
             }}
-            className="w-full text-left px-3 py-1.5 text-xs text-navy hover:bg-surface transition-colors"
+            className="w-full text-left px-3 py-1.5 text-xs text-ink-950 hover:bg-paper transition-colors"
           >
             {target.label}
           </button>

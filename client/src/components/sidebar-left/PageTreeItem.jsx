@@ -46,14 +46,14 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
       ref={setNodeRef}
       style={style}
       className={`group flex items-center gap-1 pr-2 py-1.5 rounded-lg cursor-pointer transition-colors
-        ${isActive ? 'bg-blue/10 border border-blue/30' : 'border border-transparent hover:bg-slate-mid'}`}
+        ${isActive ? 'bg-flow-600/10 border border-flow-600/30' : 'border border-transparent hover:bg-ink-700'}`}
       onClick={() => dispatch({ type: ACTIONS.SELECT_PAGE, payload: { pageId: page.pageId } })}
     >
       <button
         {...listeners}
         {...attributes}
         onClick={e => e.stopPropagation()}
-        className="text-slate-light opacity-0 group-hover:opacity-100 hover:text-white cursor-grab active:cursor-grabbing transition-opacity"
+        className="text-ink-400 opacity-0 group-hover:opacity-100 hover:text-white cursor-grab active:cursor-grabbing transition-opacity"
       >
         <GripVertical size={14} />
       </button>
@@ -61,7 +61,7 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
       {hasChildren ? (
         <button
           onClick={e => { e.stopPropagation(); onToggleExpand() }}
-          className="text-slate-light hover:text-white"
+          className="text-ink-400 hover:text-white"
         >
           {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </button>
@@ -80,12 +80,12 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
             if (e.key === 'Escape') { setTitleDraft(t2(page.title, lang)); setEditing(false) }
           }}
           onClick={e => e.stopPropagation()}
-          className="flex-1 bg-slate-mid text-white text-xs px-1.5 py-0.5 rounded border border-blue-electric focus:outline-none min-w-0"
+          className="flex-1 bg-ink-700 text-white text-xs px-1.5 py-0.5 rounded border border-flow-400 focus:outline-none min-w-0"
         />
       ) : (
         <span
           onDoubleClick={e => { e.stopPropagation(); setEditing(true) }}
-          className={`flex-1 text-xs truncate ${isActive ? 'text-white font-medium' : 'text-slate-light'}`}
+          className={`flex-1 text-xs truncate ${isActive ? 'text-white font-medium' : 'text-ink-400'}`}
         >
           {t2(page.title, lang)}
         </span>
@@ -93,7 +93,7 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
 
       <button
         onClick={e => { e.stopPropagation(); dispatch({ type: ACTIONS.ADD_PAGE, payload: { parentId: page.pageId } }) }}
-        className="text-slate-light opacity-0 group-hover:opacity-100 hover:text-blue-electric transition-opacity"
+        className="text-ink-400 opacity-0 group-hover:opacity-100 hover:text-flow-400 transition-opacity"
         title="Aggiungi sottopagina"
       >
         <Plus size={12} />
@@ -102,7 +102,7 @@ export default function PageTreeItem({ page, depth, isActive, hasChildren, expan
       <button
         disabled={hasChildren}
         onClick={e => { e.stopPropagation(); dispatch({ type: ACTIONS.REMOVE_PAGE, payload: { pageId: page.pageId } }) }}
-        className={`opacity-0 group-hover:opacity-100 transition-opacity ${hasChildren ? 'text-slate-mid cursor-not-allowed' : 'text-slate-light hover:text-red-400'}`}
+        className={`opacity-0 group-hover:opacity-100 transition-opacity ${hasChildren ? 'text-ink-700 cursor-not-allowed' : 'text-ink-400 hover:text-red-400'}`}
         title={hasChildren ? 'Elimina prima le sottopagine' : 'Elimina pagina'}
       >
         <Trash2 size={12} />

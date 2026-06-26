@@ -14,16 +14,16 @@ import ContentPanel from './ContentPanel.jsx'
 function InstanceIdSection({ instanceId }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="mt-6 pt-4 border-t border-slate-mid">
+    <div className="mt-6 pt-4 border-t border-ink-700">
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center gap-1.5 text-xs text-slate-light font-medium uppercase tracking-wider hover:text-white transition-colors w-full"
+        className="flex items-center gap-1.5 text-xs text-ink-400 font-medium uppercase tracking-wider hover:text-white transition-colors w-full"
       >
         <icons.ChevronRight size={12} className={`transition-transform ${open ? 'rotate-90' : ''}`} />
         Instance ID
       </button>
       {open && (
-        <code className="mt-2 block text-xs text-slate-light font-mono break-all">{instanceId}</code>
+        <code className="mt-2 block text-xs text-ink-400 font-mono break-all">{instanceId}</code>
       )}
     </div>
   )
@@ -56,28 +56,28 @@ export default function PropertiesPanel() {
 
   return (
     <div key={widget.instanceId} className="p-4">
-      <div className="flex items-center gap-3 mb-1 pb-4 border-b border-slate-mid">
-        <div className="w-9 h-9 rounded-lg bg-blue/20 flex items-center justify-center flex-shrink-0">
-          <Icon size={18} className="text-blue-electric" />
+      <div className="flex items-center gap-3 mb-1 pb-4 border-b border-ink-700">
+        <div className="w-9 h-9 rounded-lg bg-flow-600/20 flex items-center justify-center flex-shrink-0">
+          <Icon size={18} className="text-flow-400" />
         </div>
         <div>
           <h3 className="text-sm font-semibold text-white leading-tight">
             {t(`blocks.labels.${block.id}`, { defaultValue: block.label })}
           </h3>
-          <span className="text-xs text-slate-light">
+          <span className="text-xs text-ink-400">
             {t(`blocks.categories.${block.category}`)}
           </span>
         </div>
       </div>
 
       {hasContentTab && (
-        <div className="flex border-b border-slate-mid mb-4 mt-3">
+        <div className="flex border-b border-ink-700 mb-4 mt-3">
           <button
             onClick={() => setActiveTab('props')}
             className={`px-3 py-2 text-xs font-medium transition-colors ${
               activeTab === 'props'
-                ? 'text-white border-b-2 border-blue-electric -mb-px'
-                : 'text-slate-light hover:text-white'
+                ? 'text-white border-b-2 border-flow-400 -mb-px'
+                : 'text-ink-400 hover:text-white'
             }`}
           >
             {t('props.properties')}
@@ -86,8 +86,8 @@ export default function PropertiesPanel() {
             onClick={() => setActiveTab('content')}
             className={`px-3 py-2 text-xs font-medium transition-colors ${
               activeTab === 'content'
-                ? 'text-white border-b-2 border-blue-electric -mb-px'
-                : 'text-slate-light hover:text-white'
+                ? 'text-white border-b-2 border-flow-400 -mb-px'
+                : 'text-ink-400 hover:text-white'
             }`}
           >
             {t('props.content')}

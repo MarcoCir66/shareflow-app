@@ -22,14 +22,14 @@ export default function BlockLibrary() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-3 border-b border-slate-mid">
+      <div className="p-3 border-b border-ink-700">
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-light" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder={t('blocks.search')}
-            className="w-full bg-slate-mid text-white text-xs pl-8 pr-3 py-2 rounded-lg border border-slate-mid focus:border-blue-electric focus:outline-none placeholder-slate-light"
+            className="w-full bg-ink-700 text-white text-xs pl-8 pr-3 py-2 rounded-lg border border-ink-700 focus:border-flow-400 focus:outline-none placeholder-ink-400"
           />
         </div>
       </div>
@@ -38,7 +38,7 @@ export default function BlockLibrary() {
           <CategoryGroup key={category} category={category} blocks={blocks} />
         ))}
         {grouped.length === 0 && (
-          <p className="text-slate-light text-xs text-center py-8">
+          <p className="text-ink-400 text-xs text-center py-8">
             {t('blocks.noResults', { query })}
           </p>
         )}

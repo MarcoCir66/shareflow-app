@@ -53,9 +53,9 @@ export default function ContentPanel({ widget, block }) {
         onChange={updateSource}
       />
 
-      <div className="border-t border-slate-mid pt-4">
+      <div className="border-t border-ink-700 pt-4">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-light flex items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-ink-400 flex items-center gap-2">
             {sectionLabel}
             {isManual && (
               <span className="bg-green-600 text-white text-[9px] rounded px-1.5 py-0.5 font-bold normal-case tracking-normal">
@@ -66,7 +66,7 @@ export default function ContentPanel({ widget, block }) {
           {editingIndex === null && (
             <button
               onClick={() => setEditingIndex(-1)}
-              className="text-[10px] bg-blue text-white rounded px-2 py-0.5 hover:bg-blue/80 transition-colors"
+              className="text-[10px] bg-flow-600 text-white rounded px-2 py-0.5 hover:bg-flow-600/80 transition-colors"
             >
               {t('content.add')}
             </button>
@@ -74,7 +74,7 @@ export default function ContentPanel({ widget, block }) {
         </div>
 
         {!isManual && contentSource.url === '' && contentItems.length === 0 && editingIndex === null && (
-          <p className="text-[10px] text-slate-light italic mb-3">
+          <p className="text-[10px] text-ink-400 italic mb-3">
             {t('content.urlHint')}
           </p>
         )}
@@ -91,17 +91,17 @@ export default function ContentPanel({ widget, block }) {
           ) : (
             <div
               key={i}
-              className="border border-slate-mid rounded px-3 py-2 mb-1.5 flex items-center gap-2"
+              className="border border-ink-700 rounded px-3 py-2 mb-1.5 flex items-center gap-2"
             >
               <span className="text-xs text-white truncate flex-1">{itemLabel(item)}</span>
               <button
                 onClick={() => setEditingIndex(i)}
-                className="text-slate-light hover:text-white text-xs flex-shrink-0 transition-colors"
+                className="text-ink-400 hover:text-white text-xs flex-shrink-0 transition-colors"
                 title={t('content.edit')}
               >✎</button>
               <button
                 onClick={() => removeItem(i)}
-                className="text-slate-light hover:text-red-400 text-xs flex-shrink-0 transition-colors"
+                className="text-ink-400 hover:text-red-400 text-xs flex-shrink-0 transition-colors"
                 title={t('content.remove')}
               >✕</button>
             </div>
@@ -120,7 +120,7 @@ export default function ContentPanel({ widget, block }) {
         {contentItems.length === 0 && editingIndex === null && (
           <button
             onClick={() => setEditingIndex(-1)}
-            className="w-full border border-dashed border-slate-mid rounded p-2 text-xs text-slate-light hover:text-white hover:border-slate-light transition-colors"
+            className="w-full border border-dashed border-ink-700 rounded p-2 text-xs text-ink-400 hover:text-white hover:border-ink-400 transition-colors"
           >
             {t('content.addItem')}
           </button>

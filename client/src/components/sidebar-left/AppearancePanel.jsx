@@ -46,7 +46,7 @@ export default function AppearancePanel() {
     <div className="p-3 space-y-4 overflow-y-auto h-full">
       <div>
         <Tooltip text={t('tooltips.appearanceSections.siteName')}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">
             {t('appearance.siteNameLabel', { lang: lang.toUpperCase() })}
           </h3>
         </Tooltip>
@@ -54,13 +54,13 @@ export default function AppearancePanel() {
           type="text"
           value={t2(state.tenantConfiguration.siteName, lang)}
           onChange={e => handleSiteNameChange(e.target.value)}
-          className="w-full bg-slate-mid text-white text-xs px-2.5 py-1.5 rounded border border-slate-mid focus:border-blue-electric focus:outline-none"
+          className="w-full bg-ink-700 text-white text-xs px-2.5 py-1.5 rounded border border-ink-700 focus:border-flow-400 focus:outline-none"
         />
       </div>
 
       <div>
         <Tooltip text={t('tooltips.appearanceSections.template')}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">
             {t('appearance.template')}
           </h3>
         </Tooltip>
@@ -71,17 +71,17 @@ export default function AppearancePanel() {
                 type="button"
                 onClick={() => selectTemplate(tmpl.id)}
                 className={`w-full text-left rounded-lg border p-2 transition-colors
-                  ${tmpl.id === template.id ? 'border-blue-electric ring-1 ring-blue-electric/30' : 'border-slate-mid hover:border-slate-light'}`}
+                  ${tmpl.id === template.id ? 'border-flow-400 ring-1 ring-flow-400/30' : 'border-ink-700 hover:border-ink-400'}`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-semibold text-white">{tmpl.name}</span>
-                  {tmpl.id === template.id && <Check size={14} className="text-blue-electric" />}
+                  {tmpl.id === template.id && <Check size={14} className="text-flow-400" />}
                 </div>
                 <div className="flex gap-1">
                   <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.nav }} />
                   <span className="block w-5 h-5 rounded" style={{ background: tmpl.swatch.hero }} />
                   <span className="block w-5 h-5 rounded" style={{ background: tmpl.accentColor }} />
-                  <span className="block w-5 h-5 rounded border border-slate-mid" style={{ background: tmpl.swatch.card }} />
+                  <span className="block w-5 h-5 rounded border border-ink-700" style={{ background: tmpl.swatch.card }} />
                 </div>
               </button>
             </Tooltip>
@@ -91,7 +91,7 @@ export default function AppearancePanel() {
 
       <div>
         <Tooltip text={t('tooltips.appearanceSections.backgroundImage')}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">
             {t('appearance.backgroundImageLabel')}
           </h3>
         </Tooltip>
@@ -100,10 +100,10 @@ export default function AppearancePanel() {
           value={theme?.backgroundImageUrl || ''}
           onChange={e => handleBackgroundImageUrlChange(e.target.value)}
           placeholder={t('appearance.backgroundImageHint')}
-          className="w-full bg-slate-mid text-white text-xs px-2.5 py-1.5 rounded border border-slate-mid focus:border-blue-electric focus:outline-none"
+          className="w-full bg-ink-700 text-white text-xs px-2.5 py-1.5 rounded border border-ink-700 focus:border-flow-400 focus:outline-none"
         />
         {theme?.backgroundImageUrl && (
-          <button type="button" onClick={removeBackgroundImage} className="mt-1 text-xs text-blue-electric hover:underline">
+          <button type="button" onClick={removeBackgroundImage} className="mt-1 text-xs text-flow-400 hover:underline">
             {t('appearance.backgroundImageRemove')}
           </button>
         )}
@@ -111,7 +111,7 @@ export default function AppearancePanel() {
 
       <div>
         <Tooltip text={t('tooltips.appearanceSections.brandColor')}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-light mb-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">
             {t('appearance.brandColor')}
           </h3>
         </Tooltip>
@@ -120,11 +120,11 @@ export default function AppearancePanel() {
             type="color"
             value={accentColor}
             onChange={e => setAccentColor(e.target.value)}
-            className="w-8 h-8 rounded border border-slate-mid bg-transparent cursor-pointer"
+            className="w-8 h-8 rounded border border-ink-700 bg-transparent cursor-pointer"
           />
-          <span className="text-xs text-slate-light flex-1">{accentColor}</span>
+          <span className="text-xs text-ink-400 flex-1">{accentColor}</span>
           {theme?.accentColor && (
-            <button type="button" onClick={resetAccentColor} className="text-xs text-blue-electric hover:underline">
+            <button type="button" onClick={resetAccentColor} className="text-xs text-flow-400 hover:underline">
               {t('appearance.reset')}
             </button>
           )}

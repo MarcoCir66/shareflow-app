@@ -13,14 +13,14 @@ export default function ApplyTemplateDialog({ template, kind = 'page', onCancel,
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="apply-template-title" className="bg-slate rounded-2xl border border-slate-mid w-full max-w-sm shadow-2xl p-5">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="apply-template-title" className="bg-ink-800 rounded-2xl border border-ink-700 w-full max-w-sm shadow-2xl p-5">
         <h2 id="apply-template-title" className="text-white font-semibold mb-2">{t('templates.confirmTitle')}</h2>
-        <p className="text-sm text-slate-light mb-4">{t(bodyKey, { name: label })}</p>
+        <p className="text-sm text-ink-400 mb-4">{t(bodyKey, { name: label })}</p>
         <div className="flex justify-end gap-2">
-          <button onClick={onCancel} className="px-3 py-1.5 text-sm text-slate-light hover:text-white transition-colors">
+          <button onClick={onCancel} className="px-3 py-1.5 text-sm text-ink-400 hover:text-white transition-colors">
             {t('templates.confirmCancel')}
           </button>
-          <button onClick={onConfirm} className="px-3 py-1.5 text-sm bg-blue-electric text-navy font-semibold rounded-lg hover:bg-blue transition-colors">
+          <button onClick={onConfirm} className="px-3 py-1.5 text-sm bg-flow-400 text-ink-950 font-semibold rounded-lg hover:bg-flow-600 transition-colors">
             {t('templates.confirmApply')}
           </button>
         </div>

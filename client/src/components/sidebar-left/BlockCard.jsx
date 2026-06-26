@@ -21,13 +21,13 @@ export default function BlockCard({ block }) {
       onClick={() => dispatch({ type: ACTIONS.ADD_WIDGET, payload: { blockId: block.id } })}
       className={`
         flex flex-col items-center gap-1.5 p-3 rounded-lg border cursor-grab active:cursor-grabbing
-        bg-slate-mid border-slate-mid hover:border-blue-electric hover:bg-navy-light
+        bg-ink-700 border-ink-700 hover:border-flow-400 hover:bg-ink-800
         transition-all select-none text-center
         ${isDragging ? 'opacity-40 scale-95' : ''}
       `}
     >
-      <Icon size={20} className="text-blue-electric flex-shrink-0" />
-      <span className="text-xs text-slate-light leading-tight">
+      <Icon size={20} className="text-flow-400 flex-shrink-0" />
+      <span className="text-xs text-ink-400 leading-tight">
         {t(`blocks.labels.${block.id}`, { defaultValue: block.label })}
       </span>
     </div>

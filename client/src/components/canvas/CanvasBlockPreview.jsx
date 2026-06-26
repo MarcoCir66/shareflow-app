@@ -18,7 +18,7 @@ const PERSON_IDS = new Set(['organigramma', 'rubrica-colleghi', 'new-entry', 'og
 
 const MONTHS = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic']
 
-const SEVERITY_DOT = { error: 'bg-red-500', warning: 'bg-yellow-400', info: 'bg-blue-electric' }
+const SEVERITY_DOT = { error: 'bg-red-500', warning: 'bg-yellow-400', info: 'bg-flow-400' }
 
 const GRID_COLS_BY_WIDTH   = { full: 'grid-cols-3', twoThirds: 'grid-cols-2', half: 'grid-cols-2', third: 'grid-cols-1' }
 const ITEM_COUNT_BY_WIDTH  = { full: 3, twoThirds: 2, half: 2, third: 1 }

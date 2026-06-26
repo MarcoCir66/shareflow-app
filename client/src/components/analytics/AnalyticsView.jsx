@@ -21,25 +21,25 @@ export default function AnalyticsView({ onClose }) {
   const data = getAnalyticsData(period)
 
   return (
-    <main className="overflow-y-auto bg-surface" style={{ height: 'calc(100vh - 3.5rem)', marginTop: '3.5rem' }}>
+    <main className="overflow-y-auto bg-paper" style={{ height: 'calc(100vh - 3.5rem)', marginTop: '3.5rem' }}>
       <div className="max-w-6xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={onClose}
-            className="flex items-center gap-2 text-slate-light hover:text-navy text-sm"
+            className="flex items-center gap-2 text-ink-400 hover:text-ink-950 text-sm"
           >
             <ArrowLeft size={16} />
             {t('analytics.backToEditor')}
           </button>
         </div>
 
-        <div className="flex gap-2 mb-4 border-b border-slate-mid">
+        <div className="flex gap-2 mb-4 border-b border-ink-700">
           {TABS.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === tab ? 'border-blue text-blue' : 'border-transparent text-slate-light hover:text-navy'
+                activeTab === tab ? 'border-flow-600 text-flow-600' : 'border-transparent text-ink-400 hover:text-ink-950'
               }`}
             >
               {t(`analytics.tab${tab.charAt(0).toUpperCase()}${tab.slice(1)}`)}

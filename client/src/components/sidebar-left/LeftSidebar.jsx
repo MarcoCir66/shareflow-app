@@ -20,7 +20,7 @@ export default function LeftSidebar() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col border-b border-slate-mid flex-shrink-0">
+      <div className="flex flex-col border-b border-ink-700 flex-shrink-0">
         {TABS.map(tabItem => {
           const Icon = icons[tabItem.icon] ?? icons.Box
           return (
@@ -30,8 +30,8 @@ export default function LeftSidebar() {
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider
                   transition-colors border-l-2
                   ${tab === tabItem.id
-                    ? 'text-blue-electric border-blue-electric bg-blue-electric/10'
-                    : 'text-slate-light border-transparent hover:text-white hover:bg-navy-light'}`}
+                    ? 'text-flow-400 border-flow-400 bg-flow-400/10'
+                    : 'text-ink-400 border-transparent hover:text-white hover:bg-ink-800'}`}
               >
                 <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
                 {tabItem.label}

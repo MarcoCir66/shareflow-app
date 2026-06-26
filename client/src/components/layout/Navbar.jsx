@@ -12,40 +12,40 @@ export default function Navbar({ onDeployClick, onAnalyticsClick }) {
   const { t } = useTranslation()
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-navy flex items-center justify-between px-6 border-b border-slate">
+    <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-ink-950 flex items-center justify-between px-6 border-b border-ink-800">
       <div className="flex items-center gap-3">
         <img src="/favicon.svg" alt="" className="w-8 h-8" />
         <div>
           <span className="text-white font-semibold text-sm tracking-wide">ShareFlow</span>
-          <span className="text-slate-light text-xs ml-2 hidden md:inline">
+          <span className="text-ink-400 text-xs ml-2 hidden md:inline">
             {t('navbar.tagline')}
           </span>
         </div>
       </div>
       <div className="flex items-center gap-3">
         {isMsalConfigured ? <AuthSection /> : (
-          <span className="text-xs text-slate-light bg-slate px-3 py-1 rounded-full border border-slate-mid">
+          <span className="text-xs text-ink-400 bg-ink-800 px-3 py-1 rounded-full border border-ink-700">
             {t('navbar.tenant')}
           </span>
         )}
         <LanguageSwitcher />
         <button
           onClick={onAnalyticsClick}
-          className="flex items-center gap-2 text-slate-light hover:text-white border border-slate-mid hover:border-slate text-sm px-3 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-800 text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <LineChart size={14} />
           {t('navbar.analytics')}
         </button>
         <button
           onClick={openPreview}
-          className="flex items-center gap-2 text-slate-light hover:text-white border border-slate-mid hover:border-slate text-sm px-3 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-800 text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <Eye size={14} />
           {t('navbar.preview')}
         </button>
         <button
           onClick={onDeployClick}
-          className="flex items-center gap-2 bg-blue-electric hover:bg-blue text-navy font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
+          className="flex items-center gap-2 bg-flow-400 hover:bg-flow-600 text-ink-950 font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
         >
           {t('navbar.deploy')}
         </button>

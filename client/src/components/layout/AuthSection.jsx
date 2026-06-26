@@ -20,12 +20,12 @@ export default function AuthSection() {
   if (isAuthenticated && account) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs text-slate-light bg-slate px-3 py-1 rounded-full border border-slate-mid">
+        <span className="text-xs text-ink-400 bg-ink-800 px-3 py-1 rounded-full border border-ink-700">
           {account.username}
         </span>
         <button
           onClick={() => instance.logoutPopup()}
-          className="flex items-center gap-1.5 text-xs text-slate-light hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs text-ink-400 hover:text-white transition-colors"
         >
           <LogOut size={14} /> Sign out
         </button>
@@ -36,7 +36,7 @@ export default function AuthSection() {
   return (
     <button
       onClick={() => instance.loginPopup(loginRequest)}
-      className="flex items-center gap-1.5 text-xs text-slate-light hover:text-white bg-slate px-3 py-1 rounded-full border border-slate-mid transition-colors"
+      className="flex items-center gap-1.5 text-xs text-ink-400 hover:text-white bg-ink-800 px-3 py-1 rounded-full border border-ink-700 transition-colors"
     >
       <LogIn size={14} /> Sign in with Microsoft
     </button>

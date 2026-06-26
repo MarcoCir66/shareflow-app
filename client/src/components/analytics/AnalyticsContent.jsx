@@ -67,17 +67,17 @@ export default function AnalyticsContent({ data }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4 bg-surface-card border border-slate-mid rounded-xl px-4 py-3">
-        <label className="flex items-center gap-2 text-sm text-navy">
+      <div className="flex items-center gap-4 bg-white border border-ink-700 rounded-xl px-4 py-3">
+        <label className="flex items-center gap-2 text-sm text-ink-950">
           {t('analytics.siteFilterLabel')}
-          <select value={siteFilter} onChange={e => setSiteFilter(e.target.value)} className="border border-slate-mid rounded-lg px-2 py-1 text-sm">
+          <select value={siteFilter} onChange={e => setSiteFilter(e.target.value)} className="border border-ink-700 rounded-lg px-2 py-1 text-sm">
             <option value="all">{t('analytics.allSites')}</option>
             {data.sites.map(site => <option key={site.name} value={site.name}>{site.name}</option>)}
           </select>
         </label>
-        <label className="flex items-center gap-2 text-sm text-navy">
+        <label className="flex items-center gap-2 text-sm text-ink-950">
           {t('analytics.typeFilterLabel')}
-          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="border border-slate-mid rounded-lg px-2 py-1 text-sm">
+          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="border border-ink-700 rounded-lg px-2 py-1 text-sm">
             <option value="all">{t('analytics.allTypes')}</option>
             <option value="pages">{t('analytics.typePages')}</option>
             <option value="news">{t('analytics.typeNews')}</option>

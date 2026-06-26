@@ -12,18 +12,18 @@ export default function CategoryGroup({ category, blocks }) {
       <Tooltip text={t(`tooltips.blockCategories.${category}`)}>
         <button
           onClick={() => setOpen(o => !o)}
-          className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-slate-mid transition-colors"
+          className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-ink-700 transition-colors"
         >
-          <span className="text-xs font-semibold text-slate-light uppercase tracking-wider">
+          <span className="text-xs font-semibold text-ink-400 uppercase tracking-wider">
             {t(`blocks.categories.${category}`)}
           </span>
           <div className="flex items-center gap-2">
-            <span className="text-xs bg-slate-mid text-slate-light px-1.5 py-0.5 rounded-full">
+            <span className="text-xs bg-ink-700 text-ink-400 px-1.5 py-0.5 rounded-full">
               {blocks.length}
             </span>
             {open
-              ? <ChevronDown size={14} className="text-slate-light" />
-              : <ChevronRight size={14} className="text-slate-light" />
+              ? <ChevronDown size={14} className="text-ink-400" />
+              : <ChevronRight size={14} className="text-ink-400" />
             }
           </div>
         </button>

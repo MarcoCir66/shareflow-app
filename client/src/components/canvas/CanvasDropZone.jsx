@@ -27,11 +27,11 @@ export default function CanvasDropZone() {
         <HeroBanner />
 
         <div className="mb-4">
-          <h2 className="text-navy font-semibold text-sm uppercase tracking-widest">{t('canvas.preview')}</h2>
-          <p className="text-slate text-xs mt-0.5">SharePoint Communication Site — {t2(activePage.title, lang)}</p>
+          <h2 className="text-ink-950 font-semibold text-sm uppercase tracking-widest">{t('canvas.preview')}</h2>
+          <p className="text-ink-800 text-xs mt-0.5">SharePoint Communication Site — {t2(activePage.title, lang)}</p>
         </div>
 
-        <div className="min-h-96 rounded-2xl border-2 border-dashed border-slate-mid bg-white p-4">
+        <div className="min-h-96 rounded-2xl border-2 border-dashed border-ink-700 bg-white p-4">
           {activePage.sections.map(section => (
             <CanvasSection key={section.sectionId} section={section} />
           ))}
@@ -40,7 +40,7 @@ export default function CanvasDropZone() {
             <button
               type="button"
               onClick={() => setAddPickerOpen(o => !o)}
-              className="flex items-center gap-1.5 text-xs font-medium text-slate-light hover:text-blue border border-dashed border-slate-mid hover:border-blue rounded-lg px-3 py-1.5 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-ink-400 hover:text-flow-600 border border-dashed border-ink-700 hover:border-flow-600 rounded-lg px-3 py-1.5 transition-colors"
             >
               <Plus size={14} /> {t('canvas.addSection')}
             </button>

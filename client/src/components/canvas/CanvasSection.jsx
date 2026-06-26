@@ -43,7 +43,7 @@ export default function CanvasSection({ section, readOnly = false }) {
       onClick={() => dispatch({ type: ACTIONS.SELECT_SECTION, payload: { sectionId: section.sectionId } })}
       className={`
         group relative mb-4 p-2 rounded-xl border-2 border-dashed transition-colors cursor-pointer
-        ${isSelected ? 'border-blue bg-blue/5' : 'border-transparent hover:border-slate-mid'}
+        ${isSelected ? 'border-flow-600 bg-flow-600/5' : 'border-transparent hover:border-ink-700'}
       `}
     >
       <div className="absolute -top-3 right-2 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -51,7 +51,7 @@ export default function CanvasSection({ section, readOnly = false }) {
           ref={layoutTriggerRef}
           type="button"
           onClick={e => { e.stopPropagation(); setPickerOpen(o => !o) }}
-          className="p-1.5 rounded-md bg-white border border-gray-200 shadow-sm text-slate hover:text-blue hover:border-blue transition-colors"
+          className="p-1.5 rounded-md bg-white border border-gray-200 shadow-sm text-ink-800 hover:text-flow-600 hover:border-flow-600 transition-colors"
           title={t('canvas.changeLayout')}
         >
           <LayoutGrid size={14} />
@@ -63,7 +63,7 @@ export default function CanvasSection({ section, readOnly = false }) {
               e.stopPropagation()
               dispatch({ type: ACTIONS.REMOVE_SECTION, payload: { sectionId: section.sectionId } })
             }}
-            className="p-1.5 rounded-md bg-white border border-gray-200 shadow-sm text-slate hover:text-red-500 hover:border-red-300 transition-colors"
+            className="p-1.5 rounded-md bg-white border border-gray-200 shadow-sm text-ink-800 hover:text-red-500 hover:border-red-300 transition-colors"
             title={t('canvas.deleteSection')}
           >
             <Trash2 size={14} />

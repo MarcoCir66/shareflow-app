@@ -38,11 +38,11 @@ export default function CanvasColumn({ sectionId, column, widthHint, readOnly = 
   return (
     <div
       ref={setNodeRef}
-      className={`min-h-[7rem] rounded-xl transition-colors ${isOver ? 'bg-blue/5' : ''}`}
+      className={`min-h-[7rem] rounded-xl transition-colors ${isOver ? 'bg-flow-600/5' : ''}`}
     >
       <SortableContext items={column.widgets.map(w => w.instanceId)} strategy={verticalListSortingStrategy}>
         {column.widgets.length === 0 ? (
-          <div className="h-28 flex items-center justify-center text-center text-xs text-slate-light border-2 border-dashed border-slate-mid rounded-xl px-3">
+          <div className="h-28 flex items-center justify-center text-center text-xs text-ink-400 border-2 border-dashed border-ink-700 rounded-xl px-3">
             {t('canvas.dropHere')}
           </div>
         ) : (

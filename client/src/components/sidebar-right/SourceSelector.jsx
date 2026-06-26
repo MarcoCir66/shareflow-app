@@ -7,7 +7,7 @@ export default function SourceSelector({ sourceTypes, value, onChange }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-light">
+      <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">
         {t('content.dataSource')}
       </p>
 
@@ -19,8 +19,8 @@ export default function SourceSelector({ sourceTypes, value, onChange }) {
               onClick={() => onChange({ ...value, type })}
               className={`flex-1 text-center py-1 px-1 rounded text-[10px] font-medium transition-colors ${
                 value.type === type
-                  ? 'bg-blue text-white'
-                  : 'bg-slate text-slate-light hover:text-white'
+                  ? 'bg-flow-600 text-white'
+                  : 'bg-ink-800 text-ink-400 hover:text-white'
               }`}
             >
               {t(`source.${type}`, { defaultValue: SOURCE_TYPE_LABELS[type] })}
@@ -30,18 +30,18 @@ export default function SourceSelector({ sourceTypes, value, onChange }) {
       )}
 
       {sourceTypes.length === 1 && (
-        <p className="text-xs text-slate-light">
+        <p className="text-xs text-ink-400">
           {t(`source.${sourceTypes[0]}`, { defaultValue: SOURCE_TYPE_LABELS[sourceTypes[0]] })}
         </p>
       )}
 
       {isManual ? (
-        <div className="bg-blue/10 border border-blue/20 rounded p-2 text-xs text-blue-electric">
+        <div className="bg-flow-600/10 border border-flow-600/20 rounded p-2 text-xs text-flow-400">
           {t('content.manualBanner')}
         </div>
       ) : (
         <div>
-          <label className="text-[10px] text-slate-light block mb-1">{t('content.urlLabel')}</label>
+          <label className="text-[10px] text-ink-400 block mb-1">{t('content.urlLabel')}</label>
           <input
             type="url"
             value={value.url}
@@ -54,7 +54,7 @@ export default function SourceSelector({ sourceTypes, value, onChange }) {
                   ? 'https://example.com/feed.xml'
                   : 'https://api.example.com/endpoint',
             })}
-            className="w-full text-xs bg-slate border border-slate-mid rounded px-2 py-1.5 text-white placeholder-slate-mid focus:outline-none focus:border-blue"
+            className="w-full text-xs bg-ink-800 border border-ink-700 rounded px-2 py-1.5 text-white placeholder-ink-700 focus:outline-none focus:border-flow-600"
           />
         </div>
       )}

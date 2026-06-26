@@ -76,11 +76,11 @@ export default function DeployModal({ onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="deploy-modal-title" className="bg-slate rounded-2xl border border-slate-mid w-full max-w-md shadow-2xl">
-        <div className="flex items-center justify-between p-5 border-b border-slate-mid">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="deploy-modal-title" className="bg-ink-800 rounded-2xl border border-ink-700 w-full max-w-md shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b border-ink-700">
           <h2 id="deploy-modal-title" className="text-white font-semibold">{t('deploy.title')}</h2>
           {(done || failed) && (
-            <button onClick={onClose} className="text-slate-light hover:text-white transition-colors">
+            <button onClick={onClose} className="text-ink-400 hover:text-white transition-colors">
               <X size={18} />
             </button>
           )}
@@ -93,7 +93,7 @@ export default function DeployModal({ onClose }) {
             </p>
             <button
               onClick={onClose}
-              className="w-full py-2 rounded-lg bg-blue-electric text-navy font-semibold text-sm hover:bg-blue transition-colors"
+              className="w-full py-2 rounded-lg bg-flow-400 text-ink-950 font-semibold text-sm hover:bg-flow-600 transition-colors"
             >
               {t('deploy.close')}
             </button>
@@ -105,10 +105,10 @@ export default function DeployModal({ onClose }) {
                 const stepStatus = i < currentStep ? 'done' : i === currentStep ? 'active' : 'pending'
                 return (
                   <div key={step.id} className="flex items-center gap-3">
-                    {stepStatus === 'done'   && <CheckCircle2 size={18} className="text-blue-electric flex-shrink-0" />}
-                    {stepStatus === 'active' && <Loader2 size={18} className="text-blue-electric animate-spin flex-shrink-0" />}
-                    {stepStatus === 'pending'&& <Circle size={18} className="text-slate-mid flex-shrink-0" />}
-                    <span className={`text-sm ${stepStatus === 'pending' ? 'text-slate-light' : 'text-white'}`}>
+                    {stepStatus === 'done'   && <CheckCircle2 size={18} className="text-flow-400 flex-shrink-0" />}
+                    {stepStatus === 'active' && <Loader2 size={18} className="text-flow-400 animate-spin flex-shrink-0" />}
+                    {stepStatus === 'pending'&& <Circle size={18} className="text-ink-700 flex-shrink-0" />}
+                    <span className={`text-sm ${stepStatus === 'pending' ? 'text-ink-400' : 'text-white'}`}>
                       {step.label}
                     </span>
                   </div>
@@ -118,21 +118,21 @@ export default function DeployModal({ onClose }) {
 
             {done && (
               <div className="px-5 pb-5">
-                <div className="bg-navy rounded-xl p-4 border border-blue/30">
-                  <p className="text-xs text-slate-light mb-1">{t('deploy.siteReady')}</p>
+                <div className="bg-ink-950 rounded-xl p-4 border border-flow-600/30">
+                  <p className="text-xs text-ink-400 mb-1">{t('deploy.siteReady')}</p>
                   <p className="text-white font-semibold text-sm mb-3">{siteName}</p>
                   <a
                     href={result?.siteUrl ?? '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-blue-electric hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs text-flow-400 hover:underline"
                   >
                     {t('deploy.openInSharePoint')} <ExternalLink size={12} />
                   </a>
                 </div>
                 <button
                   onClick={onClose}
-                  className="mt-3 w-full py-2 rounded-lg bg-blue-electric text-navy font-semibold text-sm hover:bg-blue transition-colors"
+                  className="mt-3 w-full py-2 rounded-lg bg-flow-400 text-ink-950 font-semibold text-sm hover:bg-flow-600 transition-colors"
                 >
                   {t('deploy.done')}
                 </button>

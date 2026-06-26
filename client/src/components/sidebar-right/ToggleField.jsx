@@ -6,7 +6,7 @@ export default function ToggleField({ label, value, onChange }) {
         onClick={() => onChange(!value)}
         className={`
           relative w-10 h-5 rounded-full transition-colors
-          ${value ? 'bg-blue-electric' : 'bg-slate-mid'}
+          ${value ? 'bg-flow-400' : 'bg-ink-700'}
         `}
       >
         <span

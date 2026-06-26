@@ -16,8 +16,8 @@ export default function PreviewApp() {
 
   if (!state) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <p className="text-slate text-sm">
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <p className="text-ink-800 text-sm">
           Apri ShareFlow nell&apos;editor per vedere la preview.
         </p>
       </div>
@@ -30,10 +30,10 @@ export default function PreviewApp() {
   if (!activePage) {
     return (
       <PreviewProvider state={state}>
-        <div className="min-h-screen bg-surface flex flex-col">
+        <div className="min-h-screen bg-paper flex flex-col">
           <PreviewToolbar device={device} onDevice={setDevice} />
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-slate text-sm">Pagina non trovata nella preview.</p>
+            <p className="text-ink-800 text-sm">Pagina non trovata nella preview.</p>
           </div>
         </div>
       </PreviewProvider>
@@ -42,7 +42,7 @@ export default function PreviewApp() {
 
   return (
     <PreviewProvider state={state}>
-      <div className="min-h-screen bg-surface flex flex-col">
+      <div className="min-h-screen bg-paper flex flex-col">
         <PreviewToolbar device={device} onDevice={setDevice} />
         <div className="flex-1 overflow-y-auto p-6">
           <div

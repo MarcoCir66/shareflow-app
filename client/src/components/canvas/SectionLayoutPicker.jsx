@@ -13,7 +13,7 @@ export default function SectionLayoutPicker({ value, onSelect, asMenuItems = fal
           title={layout.label}
           className={`
             w-10 h-8 rounded border p-1 grid gap-0.5 ${layout.kind === 'grid' ? layout.gridCols : 'grid-rows-3'}
-            ${value === key ? 'border-blue ring-1 ring-blue/30' : 'border-gray-200 hover:border-gray-300'}
+            ${value === key ? 'border-flow-600 ring-1 ring-flow-600/30' : 'border-gray-200 hover:border-gray-300'}
           `}
         >
           {layout.kind === 'grid' ? (
