@@ -1,6 +1,8 @@
 import crypto from 'node:crypto'
-import { isGraphConfigured, getGraphAccessToken } from './msalClient.js'
+import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
 import { getGraphClient } from './graphClient.js'
+import { createCommunicationSite } from './sharepointClient.js'
+import { buildCanvasLayout } from './pageBuilder.js'
 import { persistJob, loadJob } from './jobStore.js'
 import logger from './logger.js'
 
@@ -8,6 +10,12 @@ const STEP_COUNT = 6
 const STEP_DELAY_MS = Number(process.env.PROVISIONING_STEP_DELAY_MS ?? 900)
 
 const jobs = new Map()
+
+function requireEnv(name) {
+  const val = process.env[name]
+  if (!val) throw new Error(`Missing required environment variable: ${name}`)
+  return val
+}
 
 export function resolveSiteName(siteName) {
   const value = siteName && typeof siteName === 'object'
@@ -57,6 +65,12 @@ async function runStep(jobId, step) {
           await configurePages(job)
         }
         break
+      case 5:
+        // Publishing page
+        if (isGraphConfigured()) {
+          await publishPage(job)
+        }
+        break
     }
   } catch (err) {
     logger.error({ jobId, step, err: err.message }, 'provisioning step failed')
@@ -83,62 +97,98 @@ async function runStep(jobId, step) {
 }
 
 async function createSharePointSite(job) {
+  const hostname = requireEnv('SHAREPOINT_HOSTNAME')
+  const owner = requireEnv('SHAREPOINT_SITE_OWNER')
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
-  const mailNickname = `${slugify(siteNameStr)}-${Date.now().toString(36)}`
-  const group = await job.graphClient.api('/groups').post({
-    displayName: siteNameStr,
-    mailNickname,
-    groupTypes: ['Unified'],
-    mailEnabled: true,
-    securityEnabled: false,
+  const slug = `${slugify(siteNameStr)}-${Date.now().toString(36)}`
+
+  const token = await getSharePointAccessToken(hostname)
+  const { siteUrl } = await createCommunicationSite({
+    hostname,
+    token,
+    title: siteNameStr,
+    slug,
+    owner,
   })
-  // SharePoint site provisioning is async — poll until available (up to 60s)
-  let site = null
-  for (let attempt = 0; attempt < 12; attempt++) {
-    await new Promise(r => setTimeout(r, 5000))
-    try {
-      site = await job.graphClient.api(`/groups/${group.id}/sites/root`).get()
-      break
-    } catch {
-      logger.info({ groupId: group.id, attempt }, 'site not yet provisioned, retrying...')
-    }
-  }
-  if (!site) throw new Error('SharePoint site provisioning timed out after 60s')
+
+  job.siteUrl = siteUrl
+
+  // Resolve siteId via Graph for subsequent steps
+  const encodedPath = encodeURIComponent(`/sites/${slug}`)
+  const site = await job.graphClient.api(`/sites/${hostname}:${encodedPath}`).get()
   job.siteId = site.id
-  job.siteUrl = site.webUrl
 }
 
 async function provisionLists(job) {
-  const widgets = job.tenantConfiguration?.widgets ?? []
-  for (const widget of widgets) {
-    await job.graphClient.api(`/sites/${job.siteId}/lists`).post({
-      displayName: widget.blockId,
-      list: { template: 'genericList' },
-    })
+  const pages = job.tenantConfiguration?.pages ?? []
+  const allWidgets = pages.flatMap(p =>
+    p.sections?.flatMap(s =>
+      s.columns?.flatMap(c => c.widgets ?? []) ?? []
+    ) ?? []
+  )
+  const listBlocks = allWidgets.filter(w => w.dataSource?.type === 'sharepoint-list' && w.dataSource?.url)
+
+  for (const widget of listBlocks) {
+    try {
+      await job.graphClient.api(`/sites/${job.siteId}/lists`).post({
+        displayName: widget.blockId,
+        list: { template: 'genericList' },
+      })
+    } catch (err) {
+      // List may already exist — log and continue
+      logger.warn({ blockId: widget.blockId, err: err.message }, 'list creation skipped')
+    }
   }
 }
 
 async function configurePages(job) {
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
-  let pages
+  const pages = job.tenantConfiguration?.pages ?? []
+  const firstPage = pages[0] ?? { sections: [] }
+
+  const { canvasLayout, unmappedBlocks } = buildCanvasLayout(firstPage)
+  if (unmappedBlocks.length > 0) {
+    logger.info({ unmappedBlocks }, 'skipping unmapped blocks in canvasLayout')
+  }
+
+  // Find or create Home.aspx
+  let pagesList
   try {
-    pages = await job.graphClient.api(`/sites/${job.siteId}/pages`).get()
+    pagesList = await job.graphClient.api(`/sites/${job.siteId}/pages`).get()
   } catch {
-    pages = { value: [] }
+    pagesList = { value: [] }
   }
-  const existing = pages.value?.find(p => p.name === 'Home.aspx')
+  const existing = pagesList.value?.find(p => p.name === 'Home.aspx')
+
+  const pagePayload = {
+    '@odata.type': '#microsoft.graph.sitePage',
+    title: siteNameStr,
+    name: 'Home.aspx',
+    pageLayout: 'article',
+    canvasLayout,
+  }
+
   if (existing) {
-    await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}/microsoft.graph.sitePage`).patch({
-      title: siteNameStr,
-    })
+    await job.graphClient
+      .api(`/sites/${job.siteId}/pages/${existing.id}/microsoft.graph.sitePage`)
+      .version('beta')
+      .patch(pagePayload)
+    job.pageId = existing.id
   } else {
-    await job.graphClient.api(`/sites/${job.siteId}/pages`).post({
-      '@odata.type': '#microsoft.graph.sitePage',
-      name: 'Home.aspx',
-      title: siteNameStr,
-      pageLayout: 'article',
-    })
+    const created = await job.graphClient
+      .api(`/sites/${job.siteId}/pages`)
+      .version('beta')
+      .post(pagePayload)
+    job.pageId = created.id
   }
+}
+
+async function publishPage(job) {
+  if (!job.pageId) return
+  await job.graphClient
+    .api(`/sites/${job.siteId}/pages/${job.pageId}/microsoft.graph.sitePage/publish`)
+    .version('beta')
+    .post({})
 }
 
 export function createJob(tenantConfiguration) {
@@ -153,6 +203,7 @@ export function createJob(tenantConfiguration) {
     error: null,
     siteId: null,
     siteUrl: null,
+    pageId: null,
     graphClient: null,
     timer: null,
     createdAt: new Date().toISOString(),
