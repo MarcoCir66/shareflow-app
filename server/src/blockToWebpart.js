@@ -21,12 +21,7 @@ function node(webPartType, title, properties) {
     '@odata.type': '#microsoft.graph.standardWebPart',
     id: crypto.randomUUID(),
     webPartType,
-    data: {
-      dataVersion: '1.0',
-      title,
-      properties,
-      serverProcessedContent: { htmlStrings: {}, searchablePlainTexts: {}, imageSources: {}, links: {} },
-    },
+    data: { dataVersion: '1.0', title, properties },
   }
 }
 
