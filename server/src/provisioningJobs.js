@@ -1,7 +1,6 @@
 import crypto from 'node:crypto'
-import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
+import { isGraphConfigured, getGraphAccessToken } from './msalClient.js'
 import { getGraphClient } from './graphClient.js'
-import { createCommunicationSite } from './sharepointClient.js'
 import { buildCanvasLayout } from './pageBuilder.js'
 import { persistJob, loadJob } from './jobStore.js'
 import logger from './logger.js'
@@ -48,7 +47,7 @@ async function runStep(jobId, step) {
         }
         break
       case 2:
-        // Creating SharePoint Communication Site
+        // Creating SharePoint Team Site via Microsoft 365 Group
         if (isGraphConfigured()) {
           await createSharePointSite(job)
         }
@@ -97,38 +96,34 @@ async function runStep(jobId, step) {
   job.timer = setTimeout(() => runStep(jobId, job.currentStep), STEP_DELAY_MS)
 }
 
-async function waitForGraphSite(graphClient, hostname, slug, { maxAttempts = 10, intervalMs = 5000 } = {}) {
+async function waitForGroupSite(graphClient, groupId, { maxAttempts = 12, intervalMs = 10000 } = {}) {
   for (let i = 0; i < maxAttempts; i++) {
     try {
-      return await graphClient.api(`/sites/${hostname}:/sites/${slug}`).get()
+      return await graphClient.api(`/groups/${groupId}/sites/root`).get()
     } catch {
       if (i < maxAttempts - 1) await new Promise(r => setTimeout(r, intervalMs))
     }
   }
-  throw new Error(`Graph site not found after ${maxAttempts} attempts: ${hostname}/sites/${slug}`)
+  throw new Error(`SharePoint site not provisioned after ${maxAttempts} attempts for group ${groupId}`)
 }
 
 async function createSharePointSite(job) {
-  const hostname = requireEnv('SHAREPOINT_HOSTNAME')
-  const owner = requireEnv('SHAREPOINT_SITE_OWNER')
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
-  const slug = `${slugify(siteNameStr)}-${Date.now().toString(36)}`
+  const mailNickname = `shareflow-${slugify(siteNameStr)}-${Date.now().toString(36)}`
 
-  const adminHostname = hostname.replace('.sharepoint.com', '-admin.sharepoint.com')
-  const token = await getSharePointAccessToken(adminHostname)
-  const { siteUrl } = await createCommunicationSite({
-    hostname,
-    token,
-    title: siteNameStr,
-    slug,
-    owner,
-    lcid: 1040,
+  const group = await job.graphClient.api('/groups').post({
+    displayName: siteNameStr,
+    mailNickname,
+    mailEnabled: true,
+    securityEnabled: false,
+    groupTypes: ['Unified'],
+    visibility: 'Private',
   })
 
-  job.siteUrl = siteUrl
+  job.groupId = group.id
 
-  // Resolve siteId via Graph for subsequent steps — Graph may lag after site creation
-  const site = await waitForGraphSite(job.graphClient, hostname, slug)
+  const site = await waitForGroupSite(job.graphClient, group.id)
+  job.siteUrl = site.webUrl
   job.siteId = site.id
 }
 
@@ -217,6 +212,7 @@ export function createJob(tenantConfiguration) {
     tenantConfiguration,
     result: null,
     error: null,
+    groupId: null,
     siteId: null,
     siteUrl: null,
     pageId: null,
