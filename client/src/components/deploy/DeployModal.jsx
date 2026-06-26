@@ -47,7 +47,12 @@ export default function DeployModal({ onClose }) {
     tenantConfigRef.current = tenantConfiguration
 
     validateDeploy(tenantConfiguration)
-      .then(({ unmappedBlocks: ub }) => {
+      .then(({ unmappedBlocks: ub, error }) => {
+        if (ub === null) {
+          console.warn('Pre-deploy validation failed, proceeding without check:', error)
+          return startProvisioning(tenantConfiguration)
+            .then(({ jobId: newJobId }) => setJobId(newJobId))
+        }
         if (ub.length > 0) {
           setUnmappedBlocks(ub)
           setStatus('warning')

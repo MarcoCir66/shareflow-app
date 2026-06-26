@@ -36,6 +36,6 @@ export async function validateDeploy(tenantConfiguration) {
     headers: { 'Content-Type': 'application/json', ...authHeaders },
     body: JSON.stringify({ tenantConfiguration }),
   })
-  if (!res.ok) return { unmappedBlocks: [] }
+  if (!res.ok) return { unmappedBlocks: null, error: `validate failed (${res.status})` }
   return res.json()
 }

@@ -86,6 +86,7 @@ async function runStep(jobId, step) {
     job.status = 'done'
     job.result = {
       siteUrl: job.siteUrl ?? `https://contoso.sharepoint.com/sites/${slugify(job.tenantConfiguration?.siteName)}`,
+      pagesDeployed: 1,
     }
     logger.info({ jobId, siteUrl: job.result.siteUrl }, 'provisioning completed')
     persistJob(job)
@@ -94,6 +95,17 @@ async function runStep(jobId, step) {
 
   persistJob(job)
   job.timer = setTimeout(() => runStep(jobId, job.currentStep), STEP_DELAY_MS)
+}
+
+async function waitForGraphSite(graphClient, hostname, slug, { maxAttempts = 10, intervalMs = 5000 } = {}) {
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      return await graphClient.api(`/sites/${hostname}:/sites/${slug}`).get()
+    } catch {
+      if (i < maxAttempts - 1) await new Promise(r => setTimeout(r, intervalMs))
+    }
+  }
+  throw new Error(`Graph site not found after ${maxAttempts} attempts: ${hostname}/sites/${slug}`)
 }
 
 async function createSharePointSite(job) {
@@ -109,12 +121,13 @@ async function createSharePointSite(job) {
     title: siteNameStr,
     slug,
     owner,
+    lcid: 1040,
   })
 
   job.siteUrl = siteUrl
 
-  // Resolve siteId via Graph for subsequent steps
-  const site = await job.graphClient.api(`/sites/${hostname}:/sites/${slug}`).get()
+  // Resolve siteId via Graph for subsequent steps — Graph may lag after site creation
+  const site = await waitForGraphSite(job.graphClient, hostname, slug)
   job.siteId = site.id
 }
 
@@ -144,6 +157,9 @@ async function configurePages(job) {
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   const pages = job.tenantConfiguration?.pages ?? []
   const firstPage = pages[0] ?? { sections: [] }
+  if (pages.length > 1) {
+    logger.warn({ totalPages: pages.length }, 'Phase 1: only the first page is deployed to SharePoint; additional pages are skipped')
+  }
 
   const { canvasLayout, unmappedBlocks } = buildCanvasLayout(firstPage)
   if (unmappedBlocks.length > 0) {
