@@ -13,25 +13,28 @@ import { t2 } from '../../utils/localizedText.js'
 
 export default function CanvasDropZone() {
   const { state, dispatch, ACTIONS } = useConfigurator()
-  const { accentColor } = useTheme()
+  const { accentColor, template } = useTheme()
   const { t } = useTranslation()
   const lang = useLang()
   const [addPickerOpen, setAddPickerOpen] = useState(false)
   const activePage = findPage(state.pages, state.activePageId)
   if (!activePage) return null
 
+  const labelText = template.dark ? 'text-white/50' : 'text-ink-950'
+  const labelSubText = template.dark ? 'text-white/30' : 'text-ink-800'
+
   return (
-    <div className="min-h-full p-6">
+    <div className={`min-h-full p-6 ${template.pageBg}`}>
       <div className="max-w-2xl mx-auto" style={{ '--theme-accent': accentColor }}>
         <CanvasTopNav />
         <HeroBanner />
 
         <div className="mb-4">
-          <h2 className="text-ink-950 font-semibold text-sm uppercase tracking-widest">{t('canvas.preview')}</h2>
-          <p className="text-ink-800 text-xs mt-0.5">SharePoint Communication Site — {t2(activePage.title, lang)}</p>
+          <h2 className={`${labelText} font-semibold text-sm uppercase tracking-widest`}>{t('canvas.preview')}</h2>
+          <p className={`${labelSubText} text-xs mt-0.5`}>SharePoint Communication Site — {t2(activePage.title, lang)}</p>
         </div>
 
-        <div className="min-h-96 rounded-2xl border-2 border-dashed border-ink-700 bg-white p-4">
+        <div className="min-h-96 rounded-2xl border-2 border-dashed border-ink-700/50 p-4">
           {activePage.sections.map(section => (
             <CanvasSection key={section.sectionId} section={section} />
           ))}

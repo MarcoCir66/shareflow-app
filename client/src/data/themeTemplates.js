@@ -10,6 +10,8 @@ export const THEME_TEMPLATES = [
     name: 'Corporate Classic',
     accentColor: '#0078D4',
     swatch: { nav: '#0F1C2E', hero: '#1A2F4A', card: '#FFFFFF' },
+    pageBg: 'bg-ink-950',
+    dark: true,
     nav: {
       wrapper: 'bg-ink-950 rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -40,6 +42,8 @@ export const THEME_TEMPLATES = [
     name: 'Modern Light',
     accentColor: '#14B8A6',
     swatch: { nav: '#FFFFFF', hero: '#EAF4FF', card: '#FFFFFF' },
+    pageBg: 'bg-paper',
+    dark: false,
     nav: {
       wrapper: 'bg-white shadow-sm rounded-xl px-2',
       tabActive: 'text-ink-950 border-[var(--theme-accent)]',
@@ -70,6 +74,8 @@ export const THEME_TEMPLATES = [
     name: 'Dark Glass',
     accentColor: '#00B4FF',
     swatch: { nav: '#0F1C2E', hero: '#241B4E', card: '#2D3E50' },
+    pageBg: 'bg-ink-950',
+    dark: true,
     nav: {
       wrapper: 'bg-ink-950/90 backdrop-blur border-b border-white/10 rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -100,6 +106,8 @@ export const THEME_TEMPLATES = [
     name: 'Gradient Brand',
     accentColor: '#0F8B7E',
     swatch: { nav: '#0d0d1f', hero: '#0F8B7E', card: '#FFFFFF' },
+    pageBg: 'bg-[#0d0d1f]',
+    dark: true,
     nav: {
       wrapper: 'bg-ink-950 rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
@@ -130,6 +138,8 @@ export const THEME_TEMPLATES = [
     name: 'Vibrant Color',
     accentColor: '#E94F37',
     swatch: { nav: '#5B2A86', hero: '#E94F37', card: '#FFFFFF' },
+    pageBg: 'bg-paper',
+    dark: false,
     nav: {
       wrapper: 'bg-[#5B2A86] rounded-xl px-2',
       tabActive: 'text-white border-[var(--theme-accent)]',
