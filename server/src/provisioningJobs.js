@@ -174,7 +174,6 @@ async function configurePages(job) {
   const pagePayload = {
     '@odata.type': '#microsoft.graph.sitePage',
     title: siteNameStr,
-    name: 'Home.aspx',
     pageLayout: 'article',
     canvasLayout,
   }
