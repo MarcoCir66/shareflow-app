@@ -148,7 +148,7 @@ const MAPPINGS = {
   'documenti':           documentLibraryMapper,
   'embed-custom':        embedMapper,
   'motore-ricerca':      searchBoxMapper,
-  'carosello-contenuti': highlightedContentMapper,
+  // 'carosello-contenuti': highlightedContentMapper, // GUID e377ea37 is Bing Maps — verify correct Highlighted Content GUID
   'polls-survey':        formsMapper,
   'multimedia-gallery':  streamMapper,
 }
