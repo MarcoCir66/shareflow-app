@@ -171,24 +171,17 @@ async function configurePages(job) {
   }
   const existing = pagesList.value?.find(p => p.name === 'Home.aspx')
 
-  const pagePayload = {
-    '@odata.type': '#microsoft.graph.sitePage',
-    title: siteNameStr,
-    pageLayout: 'article',
-    canvasLayout,
-  }
-
   if (existing) {
     await job.graphClient
       .api(`/sites/${job.siteId}/pages/${existing.id}/microsoft.graph.sitePage`)
       .version('beta')
-      .patch(pagePayload)
+      .patch({ '@odata.type': '#microsoft.graph.sitePage', title: siteNameStr, canvasLayout })
     job.pageId = existing.id
   } else {
     const created = await job.graphClient
       .api(`/sites/${job.siteId}/pages`)
       .version('beta')
-      .post(pagePayload)
+      .post({ '@odata.type': '#microsoft.graph.sitePage', title: siteNameStr, pageLayout: 'article', canvasLayout })
     job.pageId = created.id
   }
 }
