@@ -25,7 +25,7 @@ function placeholderTextNode(blockId) {
  * @param {object} page - ShareFlow page with sections array
  * @returns {{ canvasLayout: object, unmappedBlocks: string[] }}
  */
-export function buildCanvasLayout(page) {
+export function buildCanvasLayout(page, ctx) {
   const unmappedBlocks = []
   const seenUnmapped = new Set()
   let colIdCounter = 1
@@ -36,7 +36,7 @@ export function buildCanvasLayout(page) {
       const webparts = (col.widgets ?? []).reduce((acc, widget) => {
         if (widget.props?.visible === false) return acc
 
-        const node = mapBlock(widget)
+        const node = mapBlock(widget, ctx)
         if (!node) {
           if (!seenUnmapped.has(widget.blockId)) {
             unmappedBlocks.push(widget.blockId)
