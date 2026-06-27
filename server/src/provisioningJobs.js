@@ -16,9 +16,9 @@ function requireEnv(name) {
   return val
 }
 
-export function resolveSiteName(siteName) {
+export function resolveSiteName(siteName, preferLang = 'it') {
   const value = siteName && typeof siteName === 'object'
-    ? (siteName.en ?? siteName.it ?? Object.values(siteName)[0] ?? 'site')
+    ? (siteName[preferLang] ?? siteName.en ?? siteName.it ?? Object.values(siteName)[0] ?? 'site')
     : (siteName ?? 'site')
   return String(value)
 }
@@ -153,14 +153,16 @@ async function provisionLists(job) {
 }
 
 async function configurePages(job) {
-  const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
   const pages = job.tenantConfiguration?.pages ?? []
-  const firstPage = pages[0] ?? { sections: [] }
+  const activePageId = job.tenantConfiguration?.activePageId
+  const targetPage = (activePageId && pages.find(p => p.pageId === activePageId)) ?? pages[0] ?? { sections: [], title: {} }
+
   if (pages.length > 1) {
-    logger.warn({ totalPages: pages.length }, 'Phase 1: only the first page is deployed to SharePoint; additional pages are skipped')
+    logger.warn({ totalPages: pages.length, deployingPageId: targetPage.pageId }, 'Phase 1: only the active page is deployed to SharePoint; additional pages are skipped')
   }
 
-  const { canvasLayout, unmappedBlocks } = buildCanvasLayout(firstPage)
+  const pageTitleStr = resolveSiteName(targetPage.title) || resolveSiteName(job.tenantConfiguration?.siteName)
+  const { canvasLayout, unmappedBlocks } = buildCanvasLayout(targetPage)
   logger.info({ sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
 
   // Find or create Home.aspx
@@ -185,7 +187,7 @@ async function configurePages(job) {
     .post({
       '@odata.type': '#microsoft.graph.sitePage',
       name: 'Home.aspx',
-      title: siteNameStr,
+      title: pageTitleStr,
       pageLayout: 'article',
       canvasLayout,
     })

@@ -30,13 +30,11 @@ router.post('/validate', (req, res) => {
   if (!parsed.success) {
     return res.status(400).json({ error: 'Invalid request body', details: parsed.error.issues })
   }
-  const pages = parsed.data.tenantConfiguration.pages ?? []
-  const allUnmapped = new Set()
-  for (const page of pages) {
-    const { unmappedBlocks } = buildCanvasLayout(page)
-    unmappedBlocks.forEach(b => allUnmapped.add(b))
-  }
-  res.json({ unmappedBlocks: [...allUnmapped].map(blockId => ({ blockId })) })
+  const tc = parsed.data.tenantConfiguration
+  const pages = tc.pages ?? []
+  const activePage = (tc.activePageId && pages.find(p => p.pageId === tc.activePageId)) ?? pages[0] ?? { sections: [] }
+  const { unmappedBlocks } = buildCanvasLayout(activePage)
+  res.json({ unmappedBlocks: unmappedBlocks.map(blockId => ({ blockId })) })
 })
 
 export default router

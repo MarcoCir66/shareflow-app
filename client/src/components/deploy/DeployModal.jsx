@@ -43,7 +43,7 @@ export default function DeployModal({ onClose }) {
 
     dispatch({ type: ACTIONS.EXPORT_CONFIGURATION })
 
-    const tenantConfiguration = buildTenantExport(state.pages, state.tenantConfiguration)
+    const tenantConfiguration = buildTenantExport(state.pages, state.tenantConfiguration, state.activePageId)
     tenantConfigRef.current = tenantConfiguration
 
     validateDeploy(tenantConfiguration)

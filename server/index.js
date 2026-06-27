@@ -8,7 +8,7 @@ import logger from './src/logger.js'
 
 const app = express()
 
-const allowedOrigin = process.env.CLIENT_ORIGIN ?? 'http://localhost:5173'
+const allowedOrigin = process.env.CLIENT_ORIGIN ?? /^http:\/\/localhost:\d+$/
 app.use(cors({ origin: allowedOrigin }))
 app.use(express.json())
 

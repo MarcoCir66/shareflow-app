@@ -1,3 +1,4 @@
+import crypto from 'node:crypto'
 import { mapBlock } from './blockToWebpart.js'
 
 const LAYOUT_MAP = {
@@ -7,6 +8,14 @@ const LAYOUT_MAP = {
   oneThirdLeft:  { spLayout: 'oneThirdLeftColumn',  widths: [4, 8] },
   oneThirdRight: { spLayout: 'oneThirdRightColumn', widths: [8, 4] },
   accordion:     { spLayout: 'oneColumn',           widths: [12] },
+}
+
+function placeholderTextNode(blockId) {
+  return {
+    '@odata.type': '#microsoft.graph.textWebPart',
+    id: crypto.randomUUID(),
+    innerHtml: `<p><em>[${blockId}]</em></p>`,
+  }
 }
 
 /**
@@ -25,13 +34,15 @@ export function buildCanvasLayout(page) {
     const layoutInfo = LAYOUT_MAP[section.layout] ?? LAYOUT_MAP.oneColumn
     const columns = (section.columns ?? []).map((col, cIdx) => {
       const webparts = (col.widgets ?? []).reduce((acc, widget) => {
+        if (widget.props?.visible === false) return acc
+
         const node = mapBlock(widget)
         if (!node) {
           if (!seenUnmapped.has(widget.blockId)) {
             unmappedBlocks.push(widget.blockId)
             seenUnmapped.add(widget.blockId)
           }
-          return acc
+          return [...acc, placeholderTextNode(widget.blockId)]
         }
         return [...acc, node]
       }, [])

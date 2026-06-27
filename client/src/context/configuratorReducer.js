@@ -423,7 +423,7 @@ export function configuratorReducer(state, action) {
     case ACTIONS.EXPORT_CONFIGURATION:
       return {
         ...state,
-        tenantConfiguration: buildTenantExport(state.pages, state.tenantConfiguration),
+        tenantConfiguration: buildTenantExport(state.pages, state.tenantConfiguration, state.activePageId),
       }
     case ACTIONS.APPLY_TEMPLATE: {
       const { pages, theme } = action.payload

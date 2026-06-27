@@ -158,7 +158,7 @@ function toNavNode({ pageId, title, slug, children }) {
  * a flat, globally-ordered `widgets` array (backward compatible with the
  * server's single-list provisioning step).
  */
-export function buildTenantExport(pages, tenantConfiguration) {
+export function buildTenantExport(pages, tenantConfiguration, activePageId) {
   const pagesExport = pages.map(page => ({
     pageId: page.pageId,
     title: page.title,
@@ -169,6 +169,7 @@ export function buildTenantExport(pages, tenantConfiguration) {
   }))
   return {
     ...tenantConfiguration,
+    activePageId: activePageId ?? null,
     pages: pagesExport,
     navigation: buildNavigationExport(pages),
     widgets: pagesExport.flatMap(p => p.widgets).map((w, i) => ({ ...w, order: i })),
