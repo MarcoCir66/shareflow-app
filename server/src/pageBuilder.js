@@ -19,6 +19,7 @@ const LAYOUT_MAP = {
 export function buildCanvasLayout(page) {
   const unmappedBlocks = []
   const seenUnmapped = new Set()
+  let colIdCounter = 1
 
   const horizontalSections = (page.sections ?? []).map((section, sIdx) => {
     const layoutInfo = LAYOUT_MAP[section.layout] ?? LAYOUT_MAP.oneColumn
@@ -36,7 +37,7 @@ export function buildCanvasLayout(page) {
       }, [])
 
       return {
-        id: String(cIdx + 1),
+        id: String(colIdCounter++),
         width: layoutInfo.widths[cIdx] ?? 12,
         webparts,
       }

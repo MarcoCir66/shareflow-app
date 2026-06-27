@@ -161,9 +161,7 @@ async function configurePages(job) {
   }
 
   const { canvasLayout, unmappedBlocks } = buildCanvasLayout(firstPage)
-  if (unmappedBlocks.length > 0) {
-    logger.info({ unmappedBlocks }, 'skipping unmapped blocks in canvasLayout')
-  }
+  logger.info({ sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
 
   // Find or create Home.aspx
   let pagesList
@@ -174,27 +172,41 @@ async function configurePages(job) {
   }
   const existing = pagesList.value?.find(p => p.name === 'Home.aspx')
 
+  // If a "home" layout page exists, delete it so we can create a clean article page.
+  // pageLayout:"home" (Team Site default) does not render canvasLayout sections beyond section 1.
   if (existing) {
-    await job.graphClient
-      .api(`/sites/${job.siteId}/pages/${existing.id}/microsoft.graph.sitePage`)
-      .version('beta')
-      .patch({ '@odata.type': '#microsoft.graph.sitePage', title: siteNameStr, canvasLayout })
-    job.pageId = existing.id
-  } else {
-    const created = await job.graphClient
-      .api(`/sites/${job.siteId}/pages`)
-      .version('beta')
-      .post({ '@odata.type': '#microsoft.graph.sitePage', title: siteNameStr, pageLayout: 'article', canvasLayout })
-    job.pageId = created.id
+    logger.info({ existingPageId: existing.id }, 'deleting existing home-layout page')
+    await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}`).version('beta').delete()
   }
+
+  const created = await job.graphClient
+    .api(`/sites/${job.siteId}/pages`)
+    .version('beta')
+    .post({
+      '@odata.type': '#microsoft.graph.sitePage',
+      name: 'Home.aspx',
+      title: siteNameStr,
+      pageLayout: 'article',
+      canvasLayout,
+    })
+  logger.info({ createdPageId: created?.id, pageLayout: created?.pageLayout }, 'created article page')
+  job.pageId = created.id
 }
 
 async function publishPage(job) {
   if (!job.pageId) return
-  await job.graphClient
+  logger.info({ pageId: job.pageId }, 'publishing page')
+  const publishResult = await job.graphClient
     .api(`/sites/${job.siteId}/pages/${job.pageId}/microsoft.graph.sitePage/publish`)
     .version('beta')
     .post({})
+  logger.info({ publishResult: JSON.stringify(publishResult) }, 'publish result')
+  // Verify published state
+  const afterPublish = await job.graphClient
+    .api(`/sites/${job.siteId}/pages/${job.pageId}/microsoft.graph.sitePage?$expand=canvasLayout`)
+    .version('beta')
+    .get()
+  logger.info({ publishedSections: afterPublish?.canvasLayout?.horizontalSections?.length, publishingState: afterPublish?.publishingState?.level }, 'page after publish')
 }
 
 export function createJob(tenantConfiguration) {

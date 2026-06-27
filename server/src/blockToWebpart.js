@@ -50,10 +50,11 @@ function eventsMapper(block) {
 
 function textMapper(block) {
   const text = block.props?.content?.[0]?.text ?? block.props?.title ?? block.blockId
-  return node(WP.TEXT, 'Text', {
-    text: `<p>${text}</p>`,
-    spaceBeforeSection: 3,
-  })
+  return {
+    '@odata.type': '#microsoft.graph.textWebPart',
+    id: crypto.randomUUID(),
+    innerHtml: `<p>${text}</p>`,
+  }
 }
 
 function quickLinksMapper(block) {
