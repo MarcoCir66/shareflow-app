@@ -4,7 +4,7 @@ import crypto from 'node:crypto'
 // Verify via: GET /beta/sites/{id}/pages/{pageId}?$expand=canvasLayout
 const WP = {
   NEWS:               '8c88f208-6c77-4bdb-86a0-0c47b4316588',
-  EVENTS:             '20745d7d-8581-4a6c-bf26-68279bc914f0',
+  GROUP_CALENDAR:     '6676088b-e28e-4a90-b9cb-d0d0303cd2eb', // "Calendario di gruppo" — reads M365 Group Exchange calendar
   QUICK_LINKS:        'c70391ea-0b10-4ee9-b2b4-006d3fcad0cd',
   TEXT:               '1ef5ed11-ce7b-44be-bc5e-4abd55101d16',
   BUTTON:             '0f087d7f-520e-42b7-89c0-1b892b68ca60',
@@ -37,14 +37,16 @@ function newsMapper(block) {
   })
 }
 
-function eventsMapper(block) {
-  const url = block.dataSource?.url ?? ''
-  const isCalendar = block.blockId === 'calendario-eventi'
-  return node(WP.EVENTS, 'Events', {
-    layoutId: isCalendar ? 'MonthView' : 'Filmstrip',
-    dataProviderId: 'events',
-    webUrl: url,
-    showChrome: true,
+function eventsMapper(_block, ctx) {
+  return node(WP.GROUP_CALENDAR, 'Calendario di gruppo', {
+    selectedGroupId: ctx?.groupId ?? '',
+    selectedGroupName: ctx?.groupName ?? '',
+    selectedGroupEmail: '',
+    accessType: 'private',
+    showPerPage: 3,
+    title: '',
+    timeSpanLimitInMonth: 6,
+    useContextualGroup: false,
   })
 }
 
@@ -157,11 +159,13 @@ const MAPPINGS = {
 /**
  * Maps a ShareFlow block to a SharePoint web part node.
  * Returns null if no mapping exists for this blockId.
+ * @param {object} block
+ * @param {{ siteUrl?: string }} [ctx] - optional provisioning context
  */
-export function mapBlock(block) {
+export function mapBlock(block, ctx) {
   const mapper = MAPPINGS[block.blockId]
   if (!mapper) return null
-  return mapper(block)
+  return mapper(block, ctx)
 }
 
 export const MAPPED_BLOCK_IDS = Object.keys(MAPPINGS)

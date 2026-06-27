@@ -56,6 +56,7 @@ async function runStep(jobId, step) {
         // Provisioning Lists & Content Types
         if (isGraphConfigured()) {
           await provisionLists(job)
+          await provisionManualContent(job)
         }
         break
       case 4:
@@ -152,6 +153,129 @@ async function provisionLists(job) {
   }
 }
 
+function slugifyTitle(title) {
+  return String(title ?? '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'news'
+}
+
+function toSpDate(dateStr) {
+  if (!dateStr) return null
+  const d = new Date(dateStr)
+  return isNaN(d.getTime()) ? null : d.toISOString()
+}
+
+async function getOrCreateEventsList(job) {
+  try {
+    const list = await job.graphClient
+      .api(`/sites/${job.siteId}/lists/Events`)
+      .version('beta')
+      .get()
+    return list.id
+  } catch {
+    const newList = await job.graphClient
+      .api(`/sites/${job.siteId}/lists`)
+      .version('beta')
+      .post({ displayName: 'Events', list: { template: 'events' } })
+    return newList.id
+  }
+}
+
+function isManualWithItems(w) {
+  return (
+    w.props?.contentSource?.type === 'manual' &&
+    Array.isArray(w.props?.contentItems) &&
+    w.props.contentItems.length > 0
+  )
+}
+
+async function provisionManualContent(job) {
+  const pages = job.tenantConfiguration?.pages ?? []
+  const activePageId = job.tenantConfiguration?.activePageId
+  const targetPage = (activePageId && pages.find(p => p.pageId === activePageId)) ?? pages[0] ?? { sections: [] }
+
+  const allWidgets = (targetPage.sections ?? []).flatMap(s =>
+    s.columns?.flatMap(c => c.widgets ?? []) ?? []
+  )
+
+  // --- News posts ---
+  const newsWidgets = allWidgets.filter(w => w.blockId?.startsWith('news-') && isManualWithItems(w))
+
+  for (const widget of newsWidgets) {
+    for (const item of widget.props.contentItems) {
+      if (!item.title) continue
+      try {
+        const name = `${slugifyTitle(item.title)}-${Date.now().toString(36)}.aspx`
+        // 'newsPost' layout is only valid on communication sites.
+        // Group-connected team sites require 'article'; promotedState cannot be set
+        // via Graph API beta — news posts appear as plain article pages.
+        const body = {
+          '@odata.type': '#microsoft.graph.sitePage',
+          name,
+          title: item.title,
+          pageLayout: 'article',
+        }
+        if (item.body) body.description = item.body
+        if (item.imageUrl) body.thumbnailWebUrl = item.imageUrl
+
+        const page = await job.graphClient
+          .api(`/sites/${job.siteId}/pages`)
+          .version('beta')
+          .post(body)
+
+        await job.graphClient
+          .api(`/sites/${job.siteId}/pages/${page.id}/microsoft.graph.sitePage/publish`)
+          .version('beta')
+          .post({})
+
+        logger.info({ blockId: widget.blockId, title: item.title }, 'manual news post created and published')
+      } catch (err) {
+        logger.warn({ blockId: widget.blockId, title: item.title, err: err.message }, 'manual news post creation failed, skipping')
+      }
+    }
+  }
+
+  // --- Events ---
+  const eventsWidgets = allWidgets.filter(w =>
+    (w.blockId?.startsWith('eventi-') || w.blockId === 'calendario-eventi') && isManualWithItems(w)
+  )
+
+  if (eventsWidgets.length > 0) {
+    let eventsListId = null
+    try {
+      eventsListId = await getOrCreateEventsList(job)
+    } catch (err) {
+      logger.warn({ err: err.message }, 'events list setup failed, skipping event items')
+    }
+
+    if (eventsListId) {
+      for (const widget of eventsWidgets) {
+        for (const item of widget.props.contentItems) {
+          if (!item.title) continue
+          try {
+            const startDate = toSpDate(item.date) ?? new Date().toISOString()
+            const endDate = toSpDate(item.endDate) ?? startDate
+            await job.graphClient
+              .api(`/sites/${job.siteId}/lists/${eventsListId}/items`)
+              .version('beta')
+              .post({
+                fields: {
+                  Title: item.title,
+                  EventDate: startDate,
+                  EndDate: endDate,
+                  Location: item.location ?? '',
+                  Description: item.description ?? '',
+                  fAllDayEvent: true,
+                },
+              })
+            logger.info({ blockId: widget.blockId, title: item.title }, 'manual event item created')
+          } catch (err) {
+            logger.warn({ blockId: widget.blockId, title: item.title, err: err.message }, 'manual event item creation failed, skipping')
+          }
+        }
+      }
+    }
+  }
+}
+
 async function configurePages(job) {
   const pages = job.tenantConfiguration?.pages ?? []
   const activePageId = job.tenantConfiguration?.activePageId
@@ -162,7 +286,11 @@ async function configurePages(job) {
   }
 
   const pageTitleStr = resolveSiteName(targetPage.title) || resolveSiteName(job.tenantConfiguration?.siteName)
-  const { canvasLayout, unmappedBlocks } = buildCanvasLayout(targetPage)
+  const { canvasLayout, unmappedBlocks } = buildCanvasLayout(targetPage, {
+    siteUrl: job.siteUrl,
+    groupId: job.groupId ?? null,
+    groupName: resolveSiteName(job.tenantConfiguration?.siteName),
+  })
   logger.info({ sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
 
   // Find or create Home.aspx
