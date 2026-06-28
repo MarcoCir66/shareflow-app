@@ -35,6 +35,7 @@ export default function DeployModal({ onClose }) {
     { id: 4, label: t('deploy.step4') },
     { id: 5, label: t('deploy.step5') },
     { id: 6, label: t('deploy.step6') },
+    { id: 7, label: t('deploy.step7') },
   ]
 
   useEffect(() => {

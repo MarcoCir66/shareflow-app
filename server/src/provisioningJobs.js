@@ -1,11 +1,12 @@
 import crypto from 'node:crypto'
-import { isGraphConfigured, getGraphAccessToken } from './msalClient.js'
+import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
 import { getGraphClient } from './graphClient.js'
 import { buildCanvasLayout } from './pageBuilder.js'
+import { setTopNavigation } from './sharepointClient.js'
 import { persistJob, loadJob } from './jobStore.js'
 import logger from './logger.js'
 
-const STEP_COUNT = 6
+const STEP_COUNT = 7
 const STEP_DELAY_MS = Number(process.env.PROVISIONING_STEP_DELAY_MS ?? 900)
 
 const jobs = new Map()
@@ -69,6 +70,12 @@ async function runStep(jobId, step) {
         // Publishing page
         if (isGraphConfigured()) {
           await publishPage(job)
+        }
+        break
+      case 6:
+        // Building site navigation
+        if (isGraphConfigured()) {
+          await buildNavigation(job)
         }
         break
     }
@@ -337,6 +344,29 @@ async function publishPage(job) {
     .version('beta')
     .get()
   logger.info({ publishedSections: afterPublish?.canvasLayout?.horizontalSections?.length, publishingState: afterPublish?.publishingState?.level }, 'page after publish')
+}
+
+async function buildNavigation(job) {
+  if (!job.siteUrl) return
+  const navNodes = job.tenantConfiguration?.navigation ?? []
+  if (navNodes.length === 0) {
+    logger.info('no navigation nodes to provision, skipping')
+    return
+  }
+
+  const hostname = new URL(job.siteUrl).hostname
+  const token = await getSharePointAccessToken(hostname)
+  const activePageId = job.tenantConfiguration?.activePageId
+
+  // The active page was deployed as Home.aspx; remap its slug accordingly
+  function remapNode(node) {
+    const slug = node.pageId === activePageId ? 'Home' : node.slug
+    return { ...node, slug, children: (node.children ?? []).map(remapNode) }
+  }
+  const remapped = navNodes.map(remapNode)
+
+  await setTopNavigation(job.siteUrl, token, remapped)
+  logger.info({ nodeCount: navNodes.length }, 'site navigation built')
 }
 
 export function createJob(tenantConfiguration) {

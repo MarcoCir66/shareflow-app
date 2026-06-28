@@ -1,5 +1,92 @@
 import logger from './logger.js'
 
+/**
+ * Clears the top navigation bar of a SharePoint site and replaces it with
+ * the provided nav nodes (2-level max: root + children).
+ *
+ * @param {string} siteUrl - full SP site URL, e.g. https://contoso.sharepoint.com/sites/mysite
+ * @param {string} token   - SharePoint-scoped bearer token
+ * @param {Array}  navNodes - [{ title, slug, children: [{ title, slug }] }]
+ * @param {string} preferLang - language key for localized titles
+ */
+export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'it') {
+  function resolveTitle(title) {
+    if (!title || typeof title === 'string') return title ?? 'Page'
+    return title[preferLang] ?? title.en ?? title.it ?? Object.values(title)[0] ?? 'Page'
+  }
+
+  const baseUrl = siteUrl.replace(/\/$/, '')
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json;odata=verbose',
+    Accept: 'application/json;odata=verbose',
+  }
+
+  // Clear existing top nav nodes
+  const listRes = await fetch(`${baseUrl}/_api/web/navigation/topnavigationbar`, { headers })
+  if (listRes.ok) {
+    const listData = await listRes.json()
+    const existing = listData?.d?.results ?? []
+    for (const n of existing) {
+      const delRes = await fetch(
+        `${baseUrl}/_api/web/navigation/topnavigationbar/GetById(${n.Id})`,
+        { method: 'DELETE', headers }
+      )
+      if (!delRes.ok) logger.warn({ nodeId: n.Id }, 'failed to delete existing nav node')
+    }
+  }
+
+  // Add new nav nodes
+  for (const navNode of navNodes) {
+    const title = resolveTitle(navNode.title)
+    const url = `${baseUrl}/SitePages/${navNode.slug}.aspx`
+
+    const addRes = await fetch(`${baseUrl}/_api/web/navigation/topnavigationbar`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        __metadata: { type: 'SP.NavigationNode' },
+        IsExternal: false,
+        Title: title,
+        Url: url,
+      }),
+    })
+
+    if (!addRes.ok) {
+      const errText = await addRes.text().catch(() => '')
+      logger.warn({ title, url, status: addRes.status, err: errText }, 'failed to add top nav node')
+      continue
+    }
+
+    if (navNode.children?.length > 0) {
+      const nodeData = await addRes.json()
+      const nodeId = nodeData?.d?.Id
+      if (nodeId) {
+        for (const child of navNode.children) {
+          const childTitle = resolveTitle(child.title)
+          const childUrl = `${baseUrl}/SitePages/${child.slug}.aspx`
+          const childRes = await fetch(
+            `${baseUrl}/_api/web/navigation/topnavigationbar/GetById(${nodeId})/Children`,
+            {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({
+                __metadata: { type: 'SP.NavigationNode' },
+                IsExternal: false,
+                Title: childTitle,
+                Url: childUrl,
+              }),
+            }
+          )
+          if (!childRes.ok) logger.warn({ childTitle, childUrl }, 'failed to add child nav node')
+        }
+      }
+    }
+  }
+
+  logger.info({ siteUrl, count: navNodes.length }, 'top navigation set')
+}
+
 export async function createCommunicationSite({
   hostname,
   token,
