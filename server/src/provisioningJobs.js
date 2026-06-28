@@ -283,51 +283,66 @@ async function provisionManualContent(job) {
   }
 }
 
+function pageSpFilename(page, activePageId) {
+  if (page.pageId === activePageId) return 'Home.aspx'
+  const s = page.slug ?? 'pagina'
+  return s.charAt(0).toUpperCase() + s.slice(1) + '.aspx'
+}
+
 async function configurePages(job) {
   const pages = job.tenantConfiguration?.pages ?? []
   const activePageId = job.tenantConfiguration?.activePageId
-  const targetPage = (activePageId && pages.find(p => p.pageId === activePageId)) ?? pages[0] ?? { sections: [], title: {} }
+  if (pages.length === 0) return
 
-  if (pages.length > 1) {
-    logger.warn({ totalPages: pages.length, deployingPageId: targetPage.pageId }, 'Phase 1: only the active page is deployed to SharePoint; additional pages are skipped')
-  }
+  const siteName = resolveSiteName(job.tenantConfiguration?.siteName)
 
-  const pageTitleStr = resolveSiteName(targetPage.title) || resolveSiteName(job.tenantConfiguration?.siteName)
-  const { canvasLayout, unmappedBlocks } = buildCanvasLayout(targetPage, {
-    siteUrl: job.siteUrl,
-    groupId: job.groupId ?? null,
-    groupName: resolveSiteName(job.tenantConfiguration?.siteName),
-  })
-  logger.info({ sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
-
-  // Find or create Home.aspx
   let pagesList
   try {
     pagesList = await job.graphClient.api(`/sites/${job.siteId}/pages`).get()
   } catch {
     pagesList = { value: [] }
   }
-  const existing = pagesList.value?.find(p => p.name === 'Home.aspx')
+  const existingByName = new Map(
+    (pagesList.value ?? []).map(p => [p.name?.toLowerCase(), p])
+  )
 
-  // If a "home" layout page exists, delete it so we can create a clean article page.
-  // pageLayout:"home" (Team Site default) does not render canvasLayout sections beyond section 1.
-  if (existing) {
-    logger.info({ existingPageId: existing.id }, 'deleting existing home-layout page')
-    await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}`).version('beta').delete()
-  }
-
-  const created = await job.graphClient
-    .api(`/sites/${job.siteId}/pages`)
-    .version('beta')
-    .post({
-      '@odata.type': '#microsoft.graph.sitePage',
-      name: 'Home.aspx',
-      title: pageTitleStr,
-      pageLayout: 'article',
-      canvasLayout,
+  for (const page of pages) {
+    const spName = pageSpFilename(page, activePageId)
+    const titleStr = resolveSiteName(page.title) || siteName
+    const { canvasLayout, unmappedBlocks } = buildCanvasLayout(page, {
+      siteUrl: job.siteUrl,
+      groupId: job.groupId ?? null,
+      groupName: siteName,
     })
-  logger.info({ createdPageId: created?.id, pageLayout: created?.pageLayout }, 'created article page')
-  job.pageId = created.id
+    logger.info({ spName, sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
+
+    const existing = existingByName.get(spName.toLowerCase())
+    if (existing) {
+      logger.info({ existingPageId: existing.id, spName }, 'deleting existing page')
+      await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}`).version('beta').delete()
+    }
+
+    const created = await job.graphClient
+      .api(`/sites/${job.siteId}/pages`)
+      .version('beta')
+      .post({
+        '@odata.type': '#microsoft.graph.sitePage',
+        name: spName,
+        title: titleStr,
+        pageLayout: 'article',
+        canvasLayout,
+      })
+    logger.info({ createdPageId: created?.id, spName }, 'created page')
+
+    // Publish immediately — unpublished (draft) pages are rejected by SP REST nav write
+    await job.graphClient
+      .api(`/sites/${job.siteId}/pages/${created.id}/microsoft.graph.sitePage/publish`)
+      .version('beta')
+      .post({})
+    logger.info({ spName }, 'published page')
+
+    if (page.pageId === activePageId) job.pageId = created.id
+  }
 }
 
 async function publishPage(job) {
@@ -349,39 +364,30 @@ async function publishPage(job) {
 async function buildNavigation(job) {
   if (!job.siteUrl) return
   const navNodes = job.tenantConfiguration?.navigation ?? []
-  if (navNodes.length === 0) {
-    logger.info('no navigation nodes to provision, skipping')
-    return
-  }
+  if (navNodes.length === 0) { logger.info('no navigation nodes to provision, skipping'); return }
 
   const hostname = new URL(job.siteUrl).hostname
   const token = await getSharePointAccessToken(hostname)
   const activePageId = job.tenantConfiguration?.activePageId
 
-  // Phase 1: only Home.aspx is deployed. Build a flat list of root-level
-  // nav entries whose SP page exists. Non-deployed pages are skipped so SP
-  // doesn't reject the node with a 500 "file not found" error.
-  // Children are also omitted — they are never deployed in phase 1.
-  function findActiveNode(nodes) {
-    for (const node of nodes) {
-      if (node.pageId === activePageId) return { ...node, slug: 'Home', children: [] }
-      const found = findActiveNode(node.children ?? [])
-      if (found) return found
-    }
-    return null
+  // Map each nav node to the SP slug that matches its deployed .aspx filename.
+  // Active page → 'Home' (Home.aspx); others → their ShareFlow slug.
+  // SP Quick Launch supports max 2 levels: children of children are dropped.
+  function toSpNode(node, depth = 0) {
+    const spSlug = node.pageId === activePageId ? 'Home' : (node.slug ?? node.pageId)
+    const children = depth === 0
+      ? (node.children ?? []).map(c => toSpNode(c, 1))
+      : []
+    return { ...node, slug: spSlug, children }
   }
-  const activeNode = findActiveNode(navNodes)
-  if (!activeNode) {
-    logger.warn({ activePageId }, 'active page not in nav tree, skipping nav build')
-    return
-  }
-  const deployedNodes = [activeNode]
 
-  const result = await setTopNavigation(job.siteUrl, token, deployedNodes)
+  const spNavNodes = navNodes.map(n => toSpNode(n, 0))
+
+  const result = await setTopNavigation(job.siteUrl, token, spNavNodes)
   if (result?.skipped) {
     logger.warn({ reason: result.reason }, 'site navigation skipped — certificate-based auth required for SP REST navigation writes')
   } else {
-    logger.info({ nodeCount: navNodes.length }, 'site navigation built')
+    logger.info({ nodeCount: spNavNodes.length }, 'site navigation built')
   }
 }
 
