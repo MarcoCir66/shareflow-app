@@ -167,9 +167,11 @@ export function buildTenantExport(pages, tenantConfiguration, activePageId) {
     sections: page.sections,
     widgets: flattenWidgets(page.sections),
   }))
+  // Home page = first root-level page, regardless of which tab is active in the UI
+  const homePageId = pages.find(p => p.parentId == null)?.pageId ?? activePageId ?? null
   return {
     ...tenantConfiguration,
-    activePageId: activePageId ?? null,
+    activePageId: homePageId,
     pages: pagesExport,
     navigation: buildNavigationExport(pages),
     widgets: pagesExport.flatMap(p => p.widgets).map((w, i) => ({ ...w, order: i })),

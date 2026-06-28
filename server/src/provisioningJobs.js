@@ -300,31 +300,81 @@ async function configurePages(job) {
     logger.info({ spName, sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
 
     const existing = existingByName.get(spName.toLowerCase())
-    if (existing) {
-      logger.info({ existingPageId: existing.id, spName }, 'deleting existing page')
-      await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}`).version('beta').delete()
+    logger.info({ spName, existingId: existing?.id ?? null }, 'page existing check')
+    let pageId
+
+    if (existing?.id) {
+      // PATCH first — update in-place avoids delete/recreate name-collision race conditions
+      try {
+        await job.graphClient
+          .api(`/sites/${job.siteId}/pages/${existing.id}/microsoft.graph.sitePage`)
+          .version('beta')
+          .patch({ title: titleStr, canvasLayout })
+        logger.info({ existingPageId: existing.id, spName }, 'patched existing page')
+        pageId = existing.id
+      } catch (patchErr) {
+        logger.warn({ spName, existingId: existing.id, err: patchErr.message }, 'patch failed, trying delete+recreate')
+        try {
+          await job.graphClient.api(`/sites/${job.siteId}/pages/${existing.id}`).version('beta').delete()
+          logger.info({ existingPageId: existing.id, spName }, 'deleted existing page for recreate')
+          await new Promise(r => setTimeout(r, 4000))
+        } catch (delErr) {
+          logger.warn({ spName, err: delErr.message }, 'delete also failed, will attempt POST anyway')
+        }
+      }
     }
 
-    const created = await job.graphClient
-      .api(`/sites/${job.siteId}/pages`)
-      .version('beta')
-      .post({
-        '@odata.type': '#microsoft.graph.sitePage',
-        name: spName,
-        title: titleStr,
-        pageLayout: 'article',
-        canvasLayout,
-      })
-    logger.info({ createdPageId: created?.id, spName }, 'created page')
+    if (!pageId) {
+      logger.info({ spName, siteId: job.siteId }, 'creating page via POST')
+      let created
+      for (let attempt = 0; attempt < 6; attempt++) {
+        try {
+          created = await job.graphClient
+            .api(`/sites/${job.siteId}/pages`)
+            .version('beta')
+            .post({
+              '@odata.type': '#microsoft.graph.sitePage',
+              name: spName,
+              title: titleStr,
+              pageLayout: 'article',
+              canvasLayout,
+            })
+          break
+        } catch (err) {
+          const msg = err.message?.toLowerCase() ?? ''
+          const isRetryable = err.statusCode === 404 || err.statusCode === 503
+            || msg.includes('not found') || msg.includes('not ready')
+            || msg.includes('name already exists') || msg.includes('already exists')
+          if (attempt < 5 && isRetryable) {
+            const delay = (attempt + 1) * 4000
+            logger.warn({ spName, attempt, delay, statusCode: err.statusCode, err: err.message }, 'page POST failed, retrying')
+            await new Promise(r => setTimeout(r, delay))
+          } else {
+            throw new Error(`POST ${spName} (attempt ${attempt + 1}): ${err.message}`)
+          }
+        }
+      }
+      logger.info({ createdPageId: created?.id, spName }, 'created page')
+      pageId = created?.id
+    }
+
+    if (!pageId) {
+      throw new Error(`pageId is null after create/patch for ${spName}`)
+    }
 
     // Publish immediately — unpublished (draft) pages are rejected by SP REST nav write
-    await job.graphClient
-      .api(`/sites/${job.siteId}/pages/${created.id}/microsoft.graph.sitePage/publish`)
-      .version('beta')
-      .post({})
+    logger.info({ spName, pageId }, 'publishing page')
+    try {
+      await job.graphClient
+        .api(`/sites/${job.siteId}/pages/${pageId}/microsoft.graph.sitePage/publish`)
+        .version('beta')
+        .post({})
+    } catch (err) {
+      throw new Error(`PUBLISH ${spName} (pageId ${pageId}): ${err.message}`)
+    }
     logger.info({ spName }, 'published page')
 
-    if (page.pageId === activePageId) job.pageId = created.id
+    if (page.pageId === activePageId) job.pageId = pageId
   }
 }
 
