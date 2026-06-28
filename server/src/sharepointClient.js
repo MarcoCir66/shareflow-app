@@ -22,14 +22,48 @@ export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'i
     Accept: 'application/json;odata=verbose',
   }
 
-  // Clear existing top nav nodes
-  const listRes = await fetch(`${baseUrl}/_api/web/navigation/topnavigationbar`, { headers })
+  // Probe write access before touching existing nodes
+  // SP REST navigation write endpoints reject app-only client_credentials tokens (client secret).
+  // They work only with delegated tokens or certificate-based app-only tokens.
+  const probeRes = await fetch(`${baseUrl}/_api/web/navigation/quicklaunch`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      __metadata: { type: 'SP.NavigationNode' },
+      IsExternal: true,
+      Title: '__probe__',
+      Url: 'https://probe',
+    }),
+  })
+  if (probeRes.status === 401) {
+    const body = await probeRes.text().catch(() => '')
+    if (body.includes('Unsupported app only token')) {
+      logger.warn(
+        { siteUrl },
+        'SP navigation skipped: quicklaunch write requires delegated or certificate-based app-only auth, not client_credentials with secret'
+      )
+      return { skipped: true, reason: 'unsupported-app-only-token' }
+    }
+  }
+  // If probe succeeded, delete it immediately
+  if (probeRes.ok) {
+    const probeData = await probeRes.json().catch(() => null)
+    const probeId = probeData?.d?.Id
+    if (probeId) {
+      await fetch(`${baseUrl}/_api/web/navigation/quicklaunch/GetById(${probeId})`, {
+        method: 'DELETE', headers,
+      })
+    }
+  }
+
+  // Clear existing quick launch nodes
+  const listRes = await fetch(`${baseUrl}/_api/web/navigation/quicklaunch`, { headers })
   if (listRes.ok) {
     const listData = await listRes.json()
     const existing = listData?.d?.results ?? []
     for (const n of existing) {
       const delRes = await fetch(
-        `${baseUrl}/_api/web/navigation/topnavigationbar/GetById(${n.Id})`,
+        `${baseUrl}/_api/web/navigation/quicklaunch/GetById(${n.Id})`,
         { method: 'DELETE', headers }
       )
       if (!delRes.ok) logger.warn({ nodeId: n.Id }, 'failed to delete existing nav node')
@@ -41,7 +75,7 @@ export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'i
     const title = resolveTitle(navNode.title)
     const url = `${baseUrl}/SitePages/${navNode.slug}.aspx`
 
-    const addRes = await fetch(`${baseUrl}/_api/web/navigation/topnavigationbar`, {
+    const addRes = await fetch(`${baseUrl}/_api/web/navigation/quicklaunch`, {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -54,7 +88,7 @@ export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'i
 
     if (!addRes.ok) {
       const errText = await addRes.text().catch(() => '')
-      logger.warn({ title, url, status: addRes.status, err: errText }, 'failed to add top nav node')
+      logger.warn({ title, url, status: addRes.status, err: errText }, 'failed to add quick launch node')
       continue
     }
 
@@ -66,7 +100,7 @@ export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'i
           const childTitle = resolveTitle(child.title)
           const childUrl = `${baseUrl}/SitePages/${child.slug}.aspx`
           const childRes = await fetch(
-            `${baseUrl}/_api/web/navigation/topnavigationbar/GetById(${nodeId})/Children`,
+            `${baseUrl}/_api/web/navigation/quicklaunch/GetById(${nodeId})/Children`,
             {
               method: 'POST',
               headers,

@@ -365,8 +365,12 @@ async function buildNavigation(job) {
   }
   const remapped = navNodes.map(remapNode)
 
-  await setTopNavigation(job.siteUrl, token, remapped)
-  logger.info({ nodeCount: navNodes.length }, 'site navigation built')
+  const result = await setTopNavigation(job.siteUrl, token, remapped)
+  if (result?.skipped) {
+    logger.warn({ reason: result.reason }, 'site navigation skipped — certificate-based auth required for SP REST navigation writes')
+  } else {
+    logger.info({ nodeCount: navNodes.length }, 'site navigation built')
+  }
 }
 
 export function createJob(tenantConfiguration) {
