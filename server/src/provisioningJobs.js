@@ -358,14 +358,26 @@ async function buildNavigation(job) {
   const token = await getSharePointAccessToken(hostname)
   const activePageId = job.tenantConfiguration?.activePageId
 
-  // The active page was deployed as Home.aspx; remap its slug accordingly
-  function remapNode(node) {
-    const slug = node.pageId === activePageId ? 'Home' : node.slug
-    return { ...node, slug, children: (node.children ?? []).map(remapNode) }
+  // Phase 1: only Home.aspx is deployed. Build a flat list of root-level
+  // nav entries whose SP page exists. Non-deployed pages are skipped so SP
+  // doesn't reject the node with a 500 "file not found" error.
+  // Children are also omitted — they are never deployed in phase 1.
+  function findActiveNode(nodes) {
+    for (const node of nodes) {
+      if (node.pageId === activePageId) return { ...node, slug: 'Home', children: [] }
+      const found = findActiveNode(node.children ?? [])
+      if (found) return found
+    }
+    return null
   }
-  const remapped = navNodes.map(remapNode)
+  const activeNode = findActiveNode(navNodes)
+  if (!activeNode) {
+    logger.warn({ activePageId }, 'active page not in nav tree, skipping nav build')
+    return
+  }
+  const deployedNodes = [activeNode]
 
-  const result = await setTopNavigation(job.siteUrl, token, remapped)
+  const result = await setTopNavigation(job.siteUrl, token, deployedNodes)
   if (result?.skipped) {
     logger.warn({ reason: result.reason }, 'site navigation skipped — certificate-based auth required for SP REST navigation writes')
   } else {

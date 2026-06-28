@@ -80,7 +80,7 @@ export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'i
       headers,
       body: JSON.stringify({
         __metadata: { type: 'SP.NavigationNode' },
-        IsExternal: false,
+        IsExternal: true,
         Title: title,
         Url: url,
       }),
@@ -106,7 +106,7 @@ export async function setTopNavigation(siteUrl, token, navNodes, preferLang = 'i
               headers,
               body: JSON.stringify({
                 __metadata: { type: 'SP.NavigationNode' },
-                IsExternal: false,
+                IsExternal: true,
                 Title: childTitle,
                 Url: childUrl,
               }),
