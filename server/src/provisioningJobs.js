@@ -2,7 +2,7 @@ import crypto from 'node:crypto'
 import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
 import { getGraphClient } from './graphClient.js'
 import { buildCanvasLayout } from './pageBuilder.js'
-import { setTopNavigation } from './sharepointClient.js'
+import { setTopNavigation, createCommunicationSite } from './sharepointClient.js'
 import { persistJob, loadJob } from './jobStore.js'
 import logger from './logger.js'
 
@@ -104,38 +104,21 @@ async function runStep(jobId, step) {
   job.timer = setTimeout(() => runStep(jobId, job.currentStep), STEP_DELAY_MS)
 }
 
-async function waitForGroupSite(graphClient, groupId, { maxAttempts = 12, intervalMs = 10000 } = {}) {
-  for (let i = 0; i < maxAttempts; i++) {
-    try {
-      return await graphClient.api(`/groups/${groupId}/sites/root`).get()
-    } catch {
-      if (i < maxAttempts - 1) await new Promise(r => setTimeout(r, intervalMs))
-    }
-  }
-  throw new Error(`SharePoint site not provisioned after ${maxAttempts} attempts for group ${groupId}`)
-}
-
 async function createSharePointSite(job) {
+  const hostname = requireEnv('SHAREPOINT_HOSTNAME')
   const owner = requireEnv('SHAREPOINT_SITE_OWNER')
   const siteNameStr = resolveSiteName(job.tenantConfiguration?.siteName)
-  const mailNickname = `shareflow-${slugify(siteNameStr)}-${Date.now().toString(36)}`
+  const slug = `shareflow-${slugify(siteNameStr)}-${Date.now().toString(36)}`
 
-  const group = await job.graphClient.api('/groups').post({
-    displayName: siteNameStr,
-    mailNickname,
-    mailEnabled: true,
-    securityEnabled: false,
-    groupTypes: ['Unified'],
-    visibility: 'Private',
-    'owners@odata.bind': [`https://graph.microsoft.com/v1.0/users/${owner}`],
-    'members@odata.bind': [`https://graph.microsoft.com/v1.0/users/${owner}`],
-  })
+  const token = await getSharePointAccessToken(hostname)
+  const { siteUrl } = await createCommunicationSite({ hostname, token, title: siteNameStr, slug, owner })
+  job.siteUrl = siteUrl
 
-  job.groupId = group.id
-
-  const site = await waitForGroupSite(job.graphClient, group.id)
-  job.siteUrl = site.webUrl
+  // Resolve Graph siteId from the Communication Site URL
+  const urlPath = new URL(siteUrl).pathname
+  const site = await job.graphClient.api(`/sites/${hostname}:${urlPath}`).get()
   job.siteId = site.id
+  // Communication Sites have no M365 Group — job.groupId remains null
 }
 
 async function provisionLists(job) {
