@@ -197,25 +197,29 @@ async function _patchSiteLogoUrl(baseUrl, spToken, logoUrl) {
   }
 }
 
+// Built-in SP "Blank" Communication Site design ID — applying it marks site as designed,
+// which suppresses the "Start designing your site" first-run dialog.
+const BLANK_COMM_SITE_DESIGN_ID = 'f6cc5403-0d63-442e-96c0-285923709ffc'
+
 /**
- * Hides the "Start designing your site" first-run dialog on new Communication Sites.
- * SP stores this as a property bag key on the web, not as a typed SP.Web property.
+ * Suppresses the "Start designing your site" first-run dialog on new Communication Sites
+ * by applying the built-in Blank site design via SiteScriptUtility.
  */
 export async function dismissWelcomeDialog(siteUrl, spToken) {
   if (!siteUrl || !spToken) return
   const baseUrl = siteUrl.replace(/\/$/, '')
-  // Set via allproperties (property bag) — the correct endpoint for untyped web properties
-  await fetch(`${baseUrl}/_api/web/allproperties`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${spToken}`,
-      'Content-Type': 'application/json;odata=verbose',
-      Accept: 'application/json;odata=verbose',
-      'X-HTTP-Method': 'MERGE',
-      'If-Match': '*',
-    },
-    body: JSON.stringify({ '__metadata': { 'type': 'SP.PropertyValues' }, HideFirstTimeRunDialog: 'true' }),
-  })
+  await fetch(
+    `${baseUrl}/_api/Microsoft.Sharepoint.Utilities.WebTemplateExtensions.SiteScriptUtility.ApplySiteDesign`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${spToken}`,
+        'Content-Type': 'application/json;odata=verbose',
+        Accept: 'application/json;odata=verbose',
+      },
+      body: JSON.stringify({ siteDesignId: BLANK_COMM_SITE_DESIGN_ID, webUrl: siteUrl }),
+    }
+  )
 }
 
 /**
