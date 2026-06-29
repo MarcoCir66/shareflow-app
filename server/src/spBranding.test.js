@@ -63,7 +63,7 @@ describe('uploadSiteLogo', () => {
     }
     await uploadSiteLogo('https://contoso.sharepoint.com/sites/test', 'mytoken', 'data:image/png;base64,iVBORw0KGgo=')
     assert.equal(calls.length, 2)
-    assert.ok(calls[0].url.includes('SiteAssets'), `first call should upload to SiteAssets: ${calls[0].url}`)
+    assert.ok(calls[0].url.includes('/sites/test/SiteAssets'), `first call should upload to SiteAssets with full path: ${calls[0].url}`)
     assert.equal(calls[0].method, 'POST')
     assert.ok(calls[1].url.includes('/_api/web'), `second call should PATCH web: ${calls[1].url}`)
   })

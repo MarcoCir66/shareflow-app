@@ -128,6 +128,7 @@ async function applyBranding(job) {
   catch (e) { logger.warn({ err: e.message }, 'branding: SP token unavailable') }
 
   if (spToken) {
+    logger.info({ siteUrl: job.siteUrl, hasLogo: !!theme.logoBase64 }, 'branding: starting SP calls')
     try { await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64) }
     catch (e) { logger.warn({ err: e.message }, 'logo upload skipped') }
 
@@ -136,6 +137,8 @@ async function applyBranding(job) {
 
     try { await applyHeaderBackground(job.siteUrl, spToken, theme.backgroundImageUrl) }
     catch (e) { logger.warn({ err: e.message }, 'header background skipped') }
+  } else {
+    logger.warn({ siteUrl: job.siteUrl }, 'branding: no SP token, all branding skipped')
   }
 }
 

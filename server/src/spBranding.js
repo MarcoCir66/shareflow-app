@@ -116,10 +116,12 @@ export async function uploadSiteLogo(siteUrl, spToken, logoBase64) {
   const ext = mimeType === 'image/svg+xml' ? 'svg' : mimeType === 'image/jpeg' ? 'jpg' : 'png'
   const filename = `shareflow-logo.${ext}`
   const baseUrl = siteUrl.replace(/\/$/, '')
+  const sitePath = new URL(siteUrl).pathname.replace(/\/$/, '') // e.g. /sites/mysite
+  const siteAssetsPath = `${sitePath}/SiteAssets`
 
-  // Upload binary to SiteAssets library
+  // Upload binary to SiteAssets library (full server-relative path required)
   const uploadRes = await fetch(
-    `${baseUrl}/_api/web/getfolderbyserverrelativeurl('SiteAssets')/files/add(url='${filename}',overwrite=true)`,
+    `${baseUrl}/_api/web/getfolderbyserverrelativeurl('${siteAssetsPath}')/files/add(url='${filename}',overwrite=true)`,
     {
       method: 'POST',
       headers: {
