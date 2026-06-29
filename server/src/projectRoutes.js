@@ -58,7 +58,9 @@ router.put('/:id', (req, res) => {
     name, description, client, status, tags,
     canvasState: canvas_state, spUrl: sp_url,
   })
-  res.json(updated)
+  if (!updated) return res.status(404).json({ error: 'Project not found' })
+  const { canvasState: _cs, ...meta } = updated
+  res.json(meta)
 })
 
 router.delete('/:id', (req, res) => {

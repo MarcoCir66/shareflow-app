@@ -8,7 +8,7 @@ function openPreview() {
   window.open('/?mode=preview', 'shareflow-preview')
 }
 
-export default function Navbar({ projectName, saving, onSave, onGoToDashboard, onDeployClick, onAnalyticsClick }) {
+export default function Navbar({ projectName, saving, onSave, onGoToDashboard, onEditProject, onDeployClick, onAnalyticsClick }) {
   const { t } = useTranslation()
 
   return (
@@ -18,7 +18,9 @@ export default function Navbar({ projectName, saving, onSave, onGoToDashboard, o
         <div>
           <span className="text-white font-semibold text-sm tracking-wide">ShareFlow</span>
           {projectName && (
-            <span className="text-ink-400 text-xs ml-2 hidden md:inline">{projectName}</span>
+            onEditProject
+              ? <button onClick={onEditProject} className="text-ink-400 hover:text-white text-xs ml-2 hidden md:inline transition-colors">{projectName}</button>
+              : <span className="text-ink-400 text-xs ml-2 hidden md:inline">{projectName}</span>
           )}
         </div>
       </div>

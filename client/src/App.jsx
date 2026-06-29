@@ -17,6 +17,7 @@ import DeployModal from './components/deploy/DeployModal.jsx'
 import CanvasBlockPreview from './components/canvas/CanvasBlockPreview.jsx'
 import AnalyticsView from './components/analytics/AnalyticsView.jsx'
 import ProjectDashboard from './components/projects/ProjectDashboard.jsx'
+import ProjectFormModal from './components/projects/ProjectFormModal.jsx'
 import { updateProject } from './lib/projectsApi.js'
 
 const COLUMN_PREFIX = 'column-'
@@ -38,11 +39,12 @@ function collisionDetectionStrategy(args) {
   return closestCenter(args)
 }
 
-function AppCanvas({ projectId, projectName, onGoToDashboard }) {
+function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDashboard }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
   usePreviewSync(state)
   const [deployOpen, setDeployOpen]     = useState(false)
   const [analyticsOpen, setAnalyticsOpen] = useState(false)
+  const [editOpen, setEditOpen]         = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
   const [saving, setSaving]             = useState(false)
 
@@ -89,6 +91,17 @@ function AppCanvas({ projectId, projectName, onGoToDashboard }) {
     await updateProject(projectId, { sp_url: siteUrl, status: 'published' })
   }
 
+  async function handleEditProject(formData) {
+    const updated = await updateProject(projectId, {
+      name: formData.name,
+      client: formData.client,
+      description: formData.description,
+      tags: formData.tags,
+      status: formData.status,
+    })
+    onUpdateMeta(updated)
+  }
+
   const overlayBlock = activeDragData?.type === 'catalog-block' ? blockById[activeDragData.blockId] : null
 
   return (
@@ -98,6 +111,7 @@ function AppCanvas({ projectId, projectName, onGoToDashboard }) {
         saving={saving}
         onSave={handleSave}
         onGoToDashboard={onGoToDashboard}
+        onEditProject={() => setEditOpen(true)}
         onDeployClick={() => setDeployOpen(true)}
         onAnalyticsClick={() => setAnalyticsOpen(true)}
       />
@@ -114,6 +128,7 @@ function AppCanvas({ projectId, projectName, onGoToDashboard }) {
         )}
       </DragOverlay>
       {deployOpen && <DeployModal onClose={() => setDeployOpen(false)} onSuccess={handleDeploySuccess} />}
+      {editOpen && <ProjectFormModal mode="edit" project={projectMeta} onSubmit={handleEditProject} onClose={() => setEditOpen(false)} />}
     </DndContext>
   )
 }
@@ -124,7 +139,11 @@ function AppRoot() {
 
   function handleOpenProject(project) {
     dispatch({ type: ACTIONS.LOAD_PROJECT, payload: { canvasState: project.canvasState } })
-    setActiveProject({ id: project.id, name: project.name })
+    setActiveProject({ id: project.id, name: project.name, description: project.description, client: project.client, tags: project.tags, status: project.status })
+  }
+
+  function handleUpdateMeta(meta) {
+    setActiveProject(prev => ({ ...prev, ...meta }))
   }
 
   if (!activeProject) {
@@ -135,6 +154,8 @@ function AppRoot() {
     <AppCanvas
       projectId={activeProject.id}
       projectName={activeProject.name}
+      projectMeta={activeProject}
+      onUpdateMeta={handleUpdateMeta}
       onGoToDashboard={() => setActiveProject(null)}
     />
   )
