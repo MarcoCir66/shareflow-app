@@ -8,7 +8,7 @@ import { useLang } from '../../hooks/useLang.js'
 import { t2 } from '../../utils/localizedText.js'
 import { useFocusTrap } from '../../hooks/useFocusTrap.js'
 
-export default function DeployModal({ onClose }) {
+export default function DeployModal({ onClose, onSuccess }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
   const { t } = useTranslation()
   const lang = useLang()
@@ -77,6 +77,9 @@ export default function DeployModal({ onClose }) {
         if (job.status === 'done') {
           setStatus('done')
           setResult(job.result)
+          if (job.result?.siteUrl && onSuccess) {
+            onSuccess(job.result.siteUrl).catch(console.error)
+          }
         } else if (job.status === 'error') {
           setStatus('error')
           setErrorMessage(job.error)

@@ -1,4 +1,4 @@
-import { Eye, LineChart } from 'lucide-react'
+import { Eye, LineChart, Save, LayoutDashboard } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { isMsalConfigured } from '../../auth/msalInstance.js'
 import AuthSection from './AuthSection.jsx'
@@ -8,7 +8,7 @@ function openPreview() {
   window.open('/?mode=preview', 'shareflow-preview')
 }
 
-export default function Navbar({ onDeployClick, onAnalyticsClick }) {
+export default function Navbar({ projectName, saving, onSave, onGoToDashboard, onDeployClick, onAnalyticsClick }) {
   const { t } = useTranslation()
 
   return (
@@ -17,34 +17,47 @@ export default function Navbar({ onDeployClick, onAnalyticsClick }) {
         <img src="/favicon.svg" alt="" className="w-8 h-8" />
         <div>
           <span className="text-white font-semibold text-sm tracking-wide">ShareFlow</span>
-          <span className="text-ink-400 text-xs ml-2 hidden md:inline">
-            {t('navbar.tagline')}
-          </span>
+          {projectName && (
+            <span className="text-ink-400 text-xs ml-2 hidden md:inline">{projectName}</span>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-3">
+        {onGoToDashboard && (
+          <button onClick={onGoToDashboard}
+            className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-600 text-sm px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <LayoutDashboard size={14} />
+            Progetti
+          </button>
+        )}
+        {onSave && (
+          <button onClick={onSave} disabled={saving}
+            className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-600 text-sm px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          >
+            <Save size={14} />
+            {saving ? 'Salvataggio...' : 'Salva'}
+          </button>
+        )}
         {isMsalConfigured ? <AuthSection /> : (
           <span className="text-xs text-ink-400 bg-ink-800 px-3 py-1 rounded-full border border-ink-700">
             {t('navbar.tenant')}
           </span>
         )}
         <LanguageSwitcher />
-        <button
-          onClick={onAnalyticsClick}
+        <button onClick={onAnalyticsClick}
           className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-800 text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <LineChart size={14} />
           {t('navbar.analytics')}
         </button>
-        <button
-          onClick={openPreview}
+        <button onClick={openPreview}
           className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-800 text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <Eye size={14} />
           {t('navbar.preview')}
         </button>
-        <button
-          onClick={onDeployClick}
+        <button onClick={onDeployClick}
           className="flex items-center gap-2 bg-flow-400 hover:bg-flow-600 text-ink-950 font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
         >
           {t('navbar.deploy')}
