@@ -17,6 +17,7 @@ export default function CanvasTopNav() {
   const lang = useLang()
   const [closedRootId, setClosedRootId] = useState(null)
   const tree = buildPageTree(state.pages)
+  const logo = state.tenantConfiguration?.theme?.logoBase64 ?? null
   const activeRoot = tree.find(root => isInSubtree(root, state.activePageId))
   if (!activeRoot) return null
   const openRoot = activeRoot && activeRoot.children.length > 0 && activeRoot.pageId !== closedRootId
@@ -50,7 +51,15 @@ export default function CanvasTopNav() {
 
   return (
     <div className={`mb-4 ${template.nav.wrapper}`} style={navStyle}>
-      <nav className="flex gap-1 overflow-x-auto">
+      <div className="flex items-center">
+        {logo && (
+          <img
+            src={logo}
+            alt=""
+            className="w-8 h-8 object-contain mx-2 flex-shrink-0"
+          />
+        )}
+        <nav className="flex gap-1 overflow-x-auto flex-1">
         {tree.map(page => (
           <button
             key={page.pageId}
@@ -65,7 +74,8 @@ export default function CanvasTopNav() {
             )}
           </button>
         ))}
-      </nav>
+        </nav>
+      </div>
       {openRoot && (
         <MegaMenuPanel node={openRoot} activePageId={state.activePageId} onSelect={select} template={template} lang={lang} />
       )}
