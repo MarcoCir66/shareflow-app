@@ -107,7 +107,7 @@ export function generateSpPalette(accentHex, pageHex) {
  * Uses the SP token (no Graph/additional permissions required).
  * No-op if siteUrl, spToken, or logoBase64 is falsy.
  */
-export async function uploadSiteLogo(siteUrl, spToken, logoBase64, maxAttempts = 4) {
+export async function uploadSiteLogo(siteUrl, spToken, logoBase64, maxAttempts = 1) {
   if (!siteUrl || !spToken || !logoBase64) return
   const match = logoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/)
   if (!match) return
@@ -119,7 +119,6 @@ export async function uploadSiteLogo(siteUrl, spToken, logoBase64, maxAttempts =
   const sitePath = new URL(siteUrl).pathname.replace(/\/$/, '') // e.g. /sites/mysite
   const siteAssetsPath = `${sitePath}/SiteAssets`
 
-  // Retry: new SP sites may need seconds before SiteAssets is writable
   let uploadJson
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     if (attempt > 0) await new Promise(r => setTimeout(r, 8000 * attempt))
@@ -139,13 +138,48 @@ export async function uploadSiteLogo(siteUrl, spToken, logoBase64, maxAttempts =
     if (uploadRes.ok) { uploadJson = await uploadRes.json(); break }
     const text = await uploadRes.text().catch(() => '')
     if (attempt === maxAttempts - 1) throw new Error(`SiteAssets upload ${uploadRes.status}: ${text}`)
-    // Only retry on transient errors (403 on new sites, 503)
     if (uploadRes.status !== 403 && uploadRes.status !== 503) throw new Error(`SiteAssets upload ${uploadRes.status}: ${text}`)
   }
   const logoUrl = uploadJson?.d?.ServerRelativeUrl
   if (!logoUrl) throw new Error('SiteAssets upload: no ServerRelativeUrl in response')
 
-  // Set SiteLogoUrl web property
+  await _patchSiteLogoUrl(baseUrl, spToken, logoUrl)
+}
+
+/**
+ * Uploads logo via MS Graph drive API and sets SiteLogoUrl.
+ * Fallback when SP REST SiteAssets upload returns 403 (insufficient app permissions).
+ */
+export async function uploadSiteLogoViaGraph(siteId, graphToken, spToken, siteUrl, logoBase64) {
+  if (!siteId || !graphToken || !spToken || !siteUrl || !logoBase64) return
+  const match = logoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/)
+  if (!match) return
+  const [, mimeType, b64] = match
+  const buffer = Buffer.from(b64, 'base64')
+  const ext = mimeType === 'image/svg+xml' ? 'svg' : mimeType === 'image/jpeg' ? 'jpg' : 'png'
+  const filename = `shareflow-logo.${ext}`
+
+  // Upload to site's default document library root via Graph
+  const uploadRes = await fetch(
+    `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/root:/${filename}:/content`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${graphToken}`, 'Content-Type': mimeType },
+      body: buffer,
+    }
+  )
+  if (!uploadRes.ok) {
+    const text = await uploadRes.text().catch(() => '')
+    throw new Error(`Graph logo upload ${uploadRes.status}: ${text}`)
+  }
+  const fileInfo = await uploadRes.json()
+  const logoUrl = fileInfo.webUrl
+  if (!logoUrl) throw new Error('Graph logo upload: no webUrl in response')
+
+  await _patchSiteLogoUrl(siteUrl.replace(/\/$/, ''), spToken, logoUrl)
+}
+
+async function _patchSiteLogoUrl(baseUrl, spToken, logoUrl) {
   const patchRes = await fetch(`${baseUrl}/_api/web`, {
     method: 'POST',
     headers: {

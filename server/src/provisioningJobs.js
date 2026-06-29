@@ -1,7 +1,7 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
-import { uploadSiteLogo, applySiteTheme, applyHeaderBackground } from './spBranding.js'
+import { uploadSiteLogo, uploadSiteLogoViaGraph, applySiteTheme, applyHeaderBackground } from './spBranding.js'
 import { getGraphClient } from './graphClient.js'
 import { buildCanvasLayout } from './pageBuilder.js'
 import { setTopNavigation, createCommunicationSite } from './sharepointClient.js'
@@ -130,8 +130,24 @@ async function applyBranding(job) {
 
   const debugLog = { siteUrl: job.siteUrl, hasLogo: !!theme.logoBase64, hasSpToken: !!spToken, results: {} }
   if (spToken) {
-    try { await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64); debugLog.results.logo = 'ok' }
-    catch (e) { debugLog.results.logo = e.message; logger.warn({ err: e.message }, 'logo upload skipped') }
+    try {
+      await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64)
+      debugLog.results.logo = 'ok'
+    } catch (e) {
+      // SP REST failed (likely 403 — app lacks write on SiteAssets); try Graph API fallback
+      if (graphToken && job.siteId) {
+        try {
+          await uploadSiteLogoViaGraph(job.siteId, graphToken, spToken, job.siteUrl, theme.logoBase64)
+          debugLog.results.logo = 'ok (via graph)'
+        } catch (e2) {
+          debugLog.results.logo = `SP: ${e.message} | Graph: ${e2.message}`
+          logger.warn({ spErr: e.message, graphErr: e2.message }, 'logo upload failed on both paths')
+        }
+      } else {
+        debugLog.results.logo = e.message
+        logger.warn({ err: e.message }, 'logo upload skipped')
+      }
+    }
 
     try { await applySiteTheme(job.siteUrl, spToken, theme.accentColor, theme.pageColor); debugLog.results.theme = 'ok' }
     catch (e) { debugLog.results.theme = e.message; logger.warn({ err: e.message }, 'theme apply skipped') }
