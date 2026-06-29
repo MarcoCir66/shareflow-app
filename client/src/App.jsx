@@ -1,5 +1,5 @@
 // client/src/App.jsx
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { DndContext, DragOverlay, PointerSensor, KeyboardSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useConfigurator } from './hooks/useConfigurator.js'
@@ -39,6 +39,8 @@ function collisionDetectionStrategy(args) {
   return closestCenter(args)
 }
 
+const AUTOSAVE_DELAY_MS = 3000
+
 function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDashboard }) {
   const { state, dispatch, ACTIONS } = useConfigurator()
   usePreviewSync(state)
@@ -47,12 +49,30 @@ function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDa
   const [editOpen, setEditOpen]         = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
   const [saving, setSaving]             = useState(false)
+  const debounceTimer   = useRef(null)
+  const isInitialLoad   = useRef(true)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
   const activePage = findPage(state.pages, state.activePageId)
+
+  useEffect(() => {
+    if (isInitialLoad.current) { isInitialLoad.current = false; return }
+    clearTimeout(debounceTimer.current)
+    debounceTimer.current = setTimeout(async () => {
+      setSaving(true)
+      try {
+        await updateProject(projectId, {
+          canvas_state: { pages: state.pages, activePageId: state.activePageId, tenantConfiguration: state.tenantConfiguration },
+        })
+      } finally {
+        setSaving(false)
+      }
+    }, AUTOSAVE_DELAY_MS)
+    return () => clearTimeout(debounceTimer.current)
+  }, [state.pages, state.activePageId, state.tenantConfiguration])
 
   function handleDragStart({ active }) { setActiveDragData(active.data.current) }
 
@@ -77,6 +97,7 @@ function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDa
   }
 
   async function handleSave() {
+    clearTimeout(debounceTimer.current)
     setSaving(true)
     try {
       await updateProject(projectId, {
