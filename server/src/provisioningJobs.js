@@ -128,7 +128,7 @@ async function applyBranding(job) {
   try { spToken = await getSharePointAccessToken(hostname) }
   catch (e) { logger.warn({ err: e.message }, 'branding: SP token unavailable') }
 
-  const debugLog = { siteUrl: job.siteUrl, hasLogo: !!theme.logoBase64, hasSpToken: !!spToken, results: {} }
+  const debugLog = { siteUrl: job.siteUrl, hasLogo: !!theme.logoBase64, hasSpToken: !!spToken, pageColor: theme.pageColor ?? null, accentColor: theme.accentColor ?? null, results: {} }
   if (spToken) {
     try {
       await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64)

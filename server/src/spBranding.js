@@ -72,16 +72,25 @@ export function generateSpPalette(accentHex, pageHex) {
   if (!accentHex) return null
   const isInverted = pageHex ? hexLuminance(pageHex) < 0.35 : false
 
-  const palette = {
-    themePrimary:         accentHex,
-    themeSecondary:       shift(accentHex, 10),
-    themeTertiary:        shift(accentHex, 30),
-    themeLight:           shift(accentHex, 50),
-    themeLighter:         shift(accentHex, 65),
-    themeLighterAlt:      shift(accentHex, 80),
-    themeDarkAlt:         shift(accentHex, -10),
-    themeDark:            shift(accentHex, -25),
-    themeDarker:          shift(accentHex, -40),
+  // For inverted (dark) themes, the neutral scale is generated from the dark
+  // background color rather than hardcoded light values — otherwise SP sections
+  // remain white even when the theme is applied with isInverted:true.
+  const bg = pageHex ?? '#ffffff'
+  const neutral = isInverted ? {
+    neutralLighterAlt:    shift(bg,  5),
+    neutralLighter:       shift(bg,  8),
+    neutralLight:         shift(bg, 11),
+    neutralQuaternaryAlt: shift(bg, 14),
+    neutralQuaternary:    shift(bg, 17),
+    neutralTertiaryAlt:   shift(bg, 28),
+    neutralTertiary:      '#c8c6c4',
+    neutralSecondary:     '#d0d0d0',
+    neutralPrimaryAlt:    '#dadada',
+    neutralPrimary:       '#ffffff',
+    neutralDark:          '#f4f4f4',
+    black:                '#f8f8f8',
+    white:                bg,
+  } : {
     neutralLighterAlt:    '#faf9f8',
     neutralLighter:       '#f3f2f1',
     neutralLight:         '#edebe9',
@@ -95,7 +104,20 @@ export function generateSpPalette(accentHex, pageHex) {
     neutralDark:          '#201f1e',
     black:                '#000000',
     white:                '#ffffff',
-    bodyBackground:       pageHex ?? '#ffffff',
+  }
+
+  const palette = {
+    themePrimary:         accentHex,
+    themeSecondary:       shift(accentHex, 10),
+    themeTertiary:        shift(accentHex, 30),
+    themeLight:           shift(accentHex, 50),
+    themeLighter:         shift(accentHex, 65),
+    themeLighterAlt:      shift(accentHex, 80),
+    themeDarkAlt:         shift(accentHex, -10),
+    themeDark:            shift(accentHex, -25),
+    themeDarker:          shift(accentHex, -40),
+    ...neutral,
+    bodyBackground:       bg,
     bodyText:             isInverted ? '#ffffff' : '#323130',
   }
 
@@ -238,7 +260,7 @@ export async function applySiteTheme(siteUrl, spToken, accentColor, pageColor) {
       'Content-Type': 'application/json;odata=verbose',
       Accept: 'application/json;odata=verbose',
     },
-    body: JSON.stringify({ name: 'Shareflow Theme', palette: result.palette, isInverted: result.isInverted }),
+    body: JSON.stringify({ name: 'Shareflow Theme', themeJson: JSON.stringify({ palette: result.palette, isInverted: result.isInverted }) }),
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
