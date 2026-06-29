@@ -103,23 +103,57 @@ export function generateSpPalette(accentHex, pageHex) {
 }
 
 /**
- * Uploads a base64-encoded logo to the SharePoint site via Graph API.
- * No-op if logoBase64 or accessToken is falsy.
+ * Uploads a base64-encoded logo to SiteAssets and sets SiteLogoUrl via SharePoint REST API.
+ * Uses the SP token (no Graph/additional permissions required).
+ * No-op if siteUrl, spToken, or logoBase64 is falsy.
  */
-export async function uploadSiteLogo(siteId, logoBase64, accessToken) {
-  if (!siteId || !logoBase64 || !accessToken) return
+export async function uploadSiteLogo(siteUrl, spToken, logoBase64) {
+  if (!siteUrl || !spToken || !logoBase64) return
   const match = logoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/)
   if (!match) return
   const [, mimeType, b64] = match
   const buffer = Buffer.from(b64, 'base64')
-  const res = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/logo`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': mimeType },
-    body: buffer,
+  const ext = mimeType === 'image/svg+xml' ? 'svg' : mimeType === 'image/jpeg' ? 'jpg' : 'png'
+  const filename = `shareflow-logo.${ext}`
+  const baseUrl = siteUrl.replace(/\/$/, '')
+
+  // Upload binary to SiteAssets library
+  const uploadRes = await fetch(
+    `${baseUrl}/_api/web/getfolderbyserverrelativeurl('SiteAssets')/files/add(url='${filename}',overwrite=true)`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${spToken}`,
+        Accept: 'application/json;odata=verbose',
+        'Content-Type': 'application/octet-stream',
+        'Content-Length': String(buffer.length),
+      },
+      body: buffer,
+    }
+  )
+  if (!uploadRes.ok) {
+    const text = await uploadRes.text().catch(() => '')
+    throw new Error(`SiteAssets upload ${uploadRes.status}: ${text}`)
+  }
+  const uploadJson = await uploadRes.json()
+  const logoUrl = uploadJson.d?.ServerRelativeUrl
+  if (!logoUrl) throw new Error('SiteAssets upload: no ServerRelativeUrl in response')
+
+  // Set SiteLogoUrl web property
+  const patchRes = await fetch(`${baseUrl}/_api/web`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${spToken}`,
+      'Content-Type': 'application/json;odata=verbose',
+      Accept: 'application/json;odata=verbose',
+      'X-HTTP-Method': 'MERGE',
+      'If-Match': '*',
+    },
+    body: JSON.stringify({ '__metadata': { 'type': 'SP.Web' }, SiteLogoUrl: logoUrl }),
   })
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    throw new Error(`logo PUT ${res.status}: ${text}`)
+  if (!patchRes.ok && patchRes.status !== 204) {
+    const text = await patchRes.text().catch(() => '')
+    throw new Error(`set SiteLogoUrl ${patchRes.status}: ${text}`)
   }
 }
 

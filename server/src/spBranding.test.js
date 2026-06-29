@@ -48,28 +48,30 @@ describe('uploadSiteLogo', () => {
   it('returns without fetching when logoBase64 is null', async () => {
     let called = false
     globalThis.fetch = async () => { called = true; return { ok: true } }
-    await uploadSiteLogo('site123', null, 'token')
+    await uploadSiteLogo('https://contoso.sharepoint.com/sites/test', 'token', null)
     assert.ok(!called)
   })
 
-  it('PUTs to Graph logo endpoint with correct headers', async () => {
-    let capturedUrl, capturedMethod, capturedContentType
+  it('POSTs to SiteAssets then PATCHes web SiteLogoUrl', async () => {
+    const calls = []
     globalThis.fetch = async (url, opts) => {
-      capturedUrl = url
-      capturedMethod = opts.method
-      capturedContentType = opts.headers['Content-Type']
-      return { ok: true }
+      calls.push({ url, method: opts.method })
+      if (url.includes('SiteAssets')) {
+        return { ok: true, json: async () => ({ d: { ServerRelativeUrl: '/sites/test/SiteAssets/shareflow-logo.png' } }) }
+      }
+      return { ok: true, status: 204 }
     }
-    await uploadSiteLogo('site123', 'data:image/png;base64,iVBORw0KGgo=', 'mytoken')
-    assert.ok(capturedUrl.includes('/sites/site123/logo'), `unexpected url: ${capturedUrl}`)
-    assert.equal(capturedMethod, 'PUT')
-    assert.equal(capturedContentType, 'image/png')
+    await uploadSiteLogo('https://contoso.sharepoint.com/sites/test', 'mytoken', 'data:image/png;base64,iVBORw0KGgo=')
+    assert.equal(calls.length, 2)
+    assert.ok(calls[0].url.includes('SiteAssets'), `first call should upload to SiteAssets: ${calls[0].url}`)
+    assert.equal(calls[0].method, 'POST')
+    assert.ok(calls[1].url.includes('/_api/web'), `second call should PATCH web: ${calls[1].url}`)
   })
 
-  it('throws on non-ok response', async () => {
+  it('throws on SiteAssets upload failure', async () => {
     globalThis.fetch = async () => ({ ok: false, status: 403, text: async () => 'Forbidden' })
     await assert.rejects(
-      () => uploadSiteLogo('site123', 'data:image/png;base64,iVBORw0KGgo=', 'tok'),
+      () => uploadSiteLogo('https://contoso.sharepoint.com/sites/test', 'tok', 'data:image/png;base64,iVBORw0KGgo='),
       /403/
     )
   })

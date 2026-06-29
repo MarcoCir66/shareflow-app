@@ -127,12 +127,10 @@ async function applyBranding(job) {
   try { spToken = await getSharePointAccessToken(hostname) }
   catch (e) { logger.warn({ err: e.message }, 'branding: SP token unavailable') }
 
-  if (graphToken) {
-    try { await uploadSiteLogo(job.siteId, theme.logoBase64, graphToken) }
-    catch (e) { logger.warn({ err: e.message }, 'logo upload skipped') }
-  }
-
   if (spToken) {
+    try { await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64) }
+    catch (e) { logger.warn({ err: e.message }, 'logo upload skipped') }
+
     try { await applySiteTheme(job.siteUrl, spToken, theme.accentColor, theme.pageColor) }
     catch (e) { logger.warn({ err: e.message }, 'theme apply skipped') }
 
