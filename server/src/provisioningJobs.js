@@ -1,7 +1,7 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
-import { uploadSiteLogo, uploadSiteLogoViaGraph, applySiteTheme, applyHeaderBackground } from './spBranding.js'
+import { uploadSiteLogo, uploadSiteLogoViaGraph, applySiteTheme, applyHeaderBackground, dismissWelcomeDialog } from './spBranding.js'
 import { getGraphClient } from './graphClient.js'
 import { buildCanvasLayout } from './pageBuilder.js'
 import { setTopNavigation, createCommunicationSite } from './sharepointClient.js'
@@ -154,6 +154,8 @@ async function applyBranding(job) {
 
     try { await applyHeaderBackground(job.siteUrl, spToken, theme.backgroundImageUrl); debugLog.results.header = 'ok' }
     catch (e) { debugLog.results.header = e.message; logger.warn({ err: e.message }, 'header background skipped') }
+
+    try { await dismissWelcomeDialog(job.siteUrl, spToken) } catch {}
   } else {
     debugLog.results.logo = debugLog.results.theme = debugLog.results.header = 'skipped: no SP token'
   }

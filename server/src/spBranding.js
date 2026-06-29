@@ -198,6 +198,25 @@ async function _patchSiteLogoUrl(baseUrl, spToken, logoUrl) {
 }
 
 /**
+ * Hides the "Start designing your site" first-run dialog on new Communication Sites.
+ */
+export async function dismissWelcomeDialog(siteUrl, spToken) {
+  if (!siteUrl || !spToken) return
+  const baseUrl = siteUrl.replace(/\/$/, '')
+  await fetch(`${baseUrl}/_api/web`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${spToken}`,
+      'Content-Type': 'application/json;odata=verbose',
+      Accept: 'application/json;odata=verbose',
+      'X-HTTP-Method': 'MERGE',
+      'If-Match': '*',
+    },
+    body: JSON.stringify({ '__metadata': { 'type': 'SP.Web' }, HideFirstTimeRunDialog: true }),
+  })
+}
+
+/**
  * Applies a custom color theme to a SharePoint site via ThemeManager REST API.
  * No-op if accentColor or spToken is falsy.
  */
