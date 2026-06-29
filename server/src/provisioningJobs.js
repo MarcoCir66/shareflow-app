@@ -141,7 +141,7 @@ async function applyBranding(job) {
   } else {
     debugLog.results.logo = debugLog.results.theme = debugLog.results.header = 'skipped: no SP token'
   }
-  try { fs.writeFileSync(new URL('../../data/branding-debug.json', import.meta.url), JSON.stringify(debugLog, null, 2)) } catch {}
+  try { fs.writeFileSync(new URL('../data/branding-debug.json', import.meta.url), JSON.stringify(debugLog, null, 2)) } catch (e) { logger.warn({ err: e.message }, 'branding debug write failed') }
 }
 
 async function createSharePointSite(job) {

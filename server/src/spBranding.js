@@ -107,7 +107,7 @@ export function generateSpPalette(accentHex, pageHex) {
  * Uses the SP token (no Graph/additional permissions required).
  * No-op if siteUrl, spToken, or logoBase64 is falsy.
  */
-export async function uploadSiteLogo(siteUrl, spToken, logoBase64) {
+export async function uploadSiteLogo(siteUrl, spToken, logoBase64, maxAttempts = 4) {
   if (!siteUrl || !spToken || !logoBase64) return
   const match = logoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/)
   if (!match) return
@@ -119,26 +119,30 @@ export async function uploadSiteLogo(siteUrl, spToken, logoBase64) {
   const sitePath = new URL(siteUrl).pathname.replace(/\/$/, '') // e.g. /sites/mysite
   const siteAssetsPath = `${sitePath}/SiteAssets`
 
-  // Upload binary to SiteAssets library (full server-relative path required)
-  const uploadRes = await fetch(
-    `${baseUrl}/_api/web/getfolderbyserverrelativeurl('${siteAssetsPath}')/files/add(url='${filename}',overwrite=true)`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${spToken}`,
-        Accept: 'application/json;odata=verbose',
-        'Content-Type': 'application/octet-stream',
-        'Content-Length': String(buffer.length),
-      },
-      body: buffer,
-    }
-  )
-  if (!uploadRes.ok) {
+  // Retry: new SP sites may need seconds before SiteAssets is writable
+  let uploadJson
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    if (attempt > 0) await new Promise(r => setTimeout(r, 8000 * attempt))
+    const uploadRes = await fetch(
+      `${baseUrl}/_api/web/getfolderbyserverrelativeurl('${siteAssetsPath}')/files/add(url='${filename}',overwrite=true)`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${spToken}`,
+          Accept: 'application/json;odata=verbose',
+          'Content-Type': 'application/octet-stream',
+          'Content-Length': String(buffer.length),
+        },
+        body: buffer,
+      }
+    )
+    if (uploadRes.ok) { uploadJson = await uploadRes.json(); break }
     const text = await uploadRes.text().catch(() => '')
-    throw new Error(`SiteAssets upload ${uploadRes.status}: ${text}`)
+    if (attempt === maxAttempts - 1) throw new Error(`SiteAssets upload ${uploadRes.status}: ${text}`)
+    // Only retry on transient errors (403 on new sites, 503)
+    if (uploadRes.status !== 403 && uploadRes.status !== 503) throw new Error(`SiteAssets upload ${uploadRes.status}: ${text}`)
   }
-  const uploadJson = await uploadRes.json()
-  const logoUrl = uploadJson.d?.ServerRelativeUrl
+  const logoUrl = uploadJson?.d?.ServerRelativeUrl
   if (!logoUrl) throw new Error('SiteAssets upload: no ServerRelativeUrl in response')
 
   // Set SiteLogoUrl web property

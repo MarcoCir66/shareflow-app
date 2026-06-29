@@ -71,7 +71,7 @@ describe('uploadSiteLogo', () => {
   it('throws on SiteAssets upload failure', async () => {
     globalThis.fetch = async () => ({ ok: false, status: 403, text: async () => 'Forbidden' })
     await assert.rejects(
-      () => uploadSiteLogo('https://contoso.sharepoint.com/sites/test', 'tok', 'data:image/png;base64,iVBORw0KGgo='),
+      () => uploadSiteLogo('https://contoso.sharepoint.com/sites/test', 'tok', 'data:image/png;base64,iVBORw0KGgo=', 1),
       /403/
     )
   })
