@@ -1,4 +1,5 @@
 import crypto from 'node:crypto'
+import fs from 'node:fs'
 import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
 import { uploadSiteLogo, applySiteTheme, applyHeaderBackground } from './spBranding.js'
 import { getGraphClient } from './graphClient.js'
@@ -127,19 +128,20 @@ async function applyBranding(job) {
   try { spToken = await getSharePointAccessToken(hostname) }
   catch (e) { logger.warn({ err: e.message }, 'branding: SP token unavailable') }
 
+  const debugLog = { siteUrl: job.siteUrl, hasLogo: !!theme.logoBase64, hasSpToken: !!spToken, results: {} }
   if (spToken) {
-    logger.info({ siteUrl: job.siteUrl, hasLogo: !!theme.logoBase64 }, 'branding: starting SP calls')
-    try { await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64) }
-    catch (e) { logger.warn({ err: e.message }, 'logo upload skipped') }
+    try { await uploadSiteLogo(job.siteUrl, spToken, theme.logoBase64); debugLog.results.logo = 'ok' }
+    catch (e) { debugLog.results.logo = e.message; logger.warn({ err: e.message }, 'logo upload skipped') }
 
-    try { await applySiteTheme(job.siteUrl, spToken, theme.accentColor, theme.pageColor) }
-    catch (e) { logger.warn({ err: e.message }, 'theme apply skipped') }
+    try { await applySiteTheme(job.siteUrl, spToken, theme.accentColor, theme.pageColor); debugLog.results.theme = 'ok' }
+    catch (e) { debugLog.results.theme = e.message; logger.warn({ err: e.message }, 'theme apply skipped') }
 
-    try { await applyHeaderBackground(job.siteUrl, spToken, theme.backgroundImageUrl) }
-    catch (e) { logger.warn({ err: e.message }, 'header background skipped') }
+    try { await applyHeaderBackground(job.siteUrl, spToken, theme.backgroundImageUrl); debugLog.results.header = 'ok' }
+    catch (e) { debugLog.results.header = e.message; logger.warn({ err: e.message }, 'header background skipped') }
   } else {
-    logger.warn({ siteUrl: job.siteUrl }, 'branding: no SP token, all branding skipped')
+    debugLog.results.logo = debugLog.results.theme = debugLog.results.header = 'skipped: no SP token'
   }
+  try { fs.writeFileSync(new URL('../../data/branding-debug.json', import.meta.url), JSON.stringify(debugLog, null, 2)) } catch {}
 }
 
 async function createSharePointSite(job) {
