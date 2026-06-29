@@ -68,3 +68,39 @@ describe('buildCanvasLayout', () => {
     assert.deepEqual(canvasLayout.horizontalSections, [])
   })
 })
+
+describe('buildCanvasLayout section emphasis', () => {
+  const twoSections = {
+    sections: [
+      { sectionId: 's1', layout: 'oneColumn', columns: [{ columnId: 'c1', widgets: [] }] },
+      { sectionId: 's2', layout: 'oneColumn', columns: [{ columnId: 'c2', widgets: [] }] },
+    ],
+  }
+
+  it('all none when no pageColor in ctx', () => {
+    const { canvasLayout } = buildCanvasLayout(twoSections)
+    for (const s of canvasLayout.horizontalSections) assert.equal(s.emphasis, 'none')
+  })
+
+  it('all none when ctx.pageColor is null', () => {
+    const { canvasLayout } = buildCanvasLayout(twoSections, { pageColor: null })
+    for (const s of canvasLayout.horizontalSections) assert.equal(s.emphasis, 'none')
+  })
+
+  it('dark pageColor (#15140f): even sections none, odd sections soft', () => {
+    const { canvasLayout } = buildCanvasLayout(twoSections, { pageColor: '#15140f' })
+    assert.equal(canvasLayout.horizontalSections[0].emphasis, 'none')
+    assert.equal(canvasLayout.horizontalSections[1].emphasis, 'soft')
+  })
+
+  it('mid-tone pageColor (#b0b0b0): even sections none, odd sections neutral', () => {
+    const { canvasLayout } = buildCanvasLayout(twoSections, { pageColor: '#b0b0b0' })
+    assert.equal(canvasLayout.horizontalSections[0].emphasis, 'none')
+    assert.equal(canvasLayout.horizontalSections[1].emphasis, 'neutral')
+  })
+
+  it('light pageColor (#ffffff): all sections none', () => {
+    const { canvasLayout } = buildCanvasLayout(twoSections, { pageColor: '#ffffff' })
+    for (const s of canvasLayout.horizontalSections) assert.equal(s.emphasis, 'none')
+  })
+})

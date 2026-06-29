@@ -10,6 +10,32 @@ const LAYOUT_MAP = {
   accordion:     { spLayout: 'oneColumn',           widths: [12] },
 }
 
+function hexToRgb(hex) {
+  const h = (hex || '#ffffff').replace('#', '').padEnd(6, '0')
+  return [
+    parseInt(h.slice(0, 2), 16) / 255,
+    parseInt(h.slice(2, 4), 16) / 255,
+    parseInt(h.slice(4, 6), 16) / 255,
+  ]
+}
+
+function hexLuminance(hex) {
+  if (!hex || hex.length < 4) return 1
+  const [r, g, b] = hexToRgb(hex).map(c =>
+    c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  )
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+function sectionEmphasis(pageColor, idx) {
+  if (!pageColor) return 'none'
+  if (idx % 2 === 0) return 'none'
+  const lum = hexLuminance(pageColor)
+  if (lum < 0.35) return 'soft'
+  if (lum < 0.65) return 'neutral'
+  return 'none'
+}
+
 function placeholderTextNode(blockId) {
   return {
     '@odata.type': '#microsoft.graph.textWebPart',
@@ -57,7 +83,7 @@ export function buildCanvasLayout(page, ctx) {
     return {
       id: String(sIdx + 1),
       layout: layoutInfo.spLayout,
-      emphasis: 'none',
+      emphasis: sectionEmphasis(ctx?.pageColor ?? null, sIdx),
       columns,
     }
   })
