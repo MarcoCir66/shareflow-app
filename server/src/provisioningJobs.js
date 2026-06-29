@@ -1,12 +1,13 @@
 import crypto from 'node:crypto'
 import { isGraphConfigured, getGraphAccessToken, getSharePointAccessToken } from './msalClient.js'
+import { uploadSiteLogo, applySiteTheme, applyHeaderBackground } from './spBranding.js'
 import { getGraphClient } from './graphClient.js'
 import { buildCanvasLayout } from './pageBuilder.js'
 import { setTopNavigation, createCommunicationSite } from './sharepointClient.js'
 import { persistJob, loadJob } from './jobStore.js'
 import logger from './logger.js'
 
-const STEP_COUNT = 7
+const STEP_COUNT = 8
 const STEP_DELAY_MS = Number(process.env.PROVISIONING_STEP_DELAY_MS ?? 900)
 
 const jobs = new Map()
@@ -48,31 +49,37 @@ async function runStep(jobId, step) {
         }
         break
       case 2:
-        // Creating SharePoint Team Site via Microsoft 365 Group
+        // Creating SharePoint Communication Site
         if (isGraphConfigured()) {
           await createSharePointSite(job)
         }
         break
       case 3:
+        // Applying Site Branding
+        if (isGraphConfigured()) {
+          await applyBranding(job)
+        }
+        break
+      case 4:
         // Provisioning Lists & Content Types
         if (isGraphConfigured()) {
           await provisionLists(job)
           await provisionManualContent(job)
         }
         break
-      case 4:
+      case 5:
         // Configuring Pages & Webparts
         if (isGraphConfigured()) {
           await configurePages(job)
         }
         break
-      case 5:
+      case 6:
         // Publishing page
         if (isGraphConfigured()) {
           await publishPage(job)
         }
         break
-      case 6:
+      case 7:
         // Building site navigation
         if (isGraphConfigured()) {
           await buildNavigation(job)
@@ -102,6 +109,32 @@ async function runStep(jobId, step) {
 
   persistJob(job)
   job.timer = setTimeout(() => runStep(jobId, job.currentStep), STEP_DELAY_MS)
+}
+
+async function applyBranding(job) {
+  const theme = job.tenantConfiguration?.theme ?? {}
+  const hostname = new URL(job.siteUrl).hostname
+
+  let graphToken
+  try { graphToken = await getGraphAccessToken() }
+  catch (e) { logger.warn({ err: e.message }, 'branding: graph token unavailable') }
+
+  let spToken
+  try { spToken = await getSharePointAccessToken(hostname) }
+  catch (e) { logger.warn({ err: e.message }, 'branding: SP token unavailable') }
+
+  if (graphToken) {
+    try { await uploadSiteLogo(job.siteId, theme.logoBase64, graphToken) }
+    catch (e) { logger.warn({ err: e.message }, 'logo upload skipped') }
+  }
+
+  if (spToken) {
+    try { await applySiteTheme(job.siteUrl, spToken, theme.accentColor, theme.pageColor) }
+    catch (e) { logger.warn({ err: e.message }, 'theme apply skipped') }
+
+    try { await applyHeaderBackground(job.siteUrl, spToken, theme.backgroundImageUrl) }
+    catch (e) { logger.warn({ err: e.message }, 'header background skipped') }
+  }
 }
 
 async function createSharePointSite(job) {
@@ -296,6 +329,7 @@ async function configurePages(job) {
       siteUrl: job.siteUrl,
       groupId: job.groupId ?? null,
       groupName: siteName,
+      pageColor: job.tenantConfiguration?.theme?.pageColor ?? null,
     })
     logger.info({ spName, sections: canvasLayout.horizontalSections?.length, unmappedBlocks }, 'canvasLayout built')
 
