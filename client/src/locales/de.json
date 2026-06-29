@@ -23,7 +23,10 @@
     "backgroundImageLabel": "Hintergrundbild",
     "backgroundImageHint": "URL eines Bildes, das als Hintergrund für das Hero-Banner und die Navigationsleiste verwendet wird",
     "backgroundImageRemove": "Bild entfernen",
-    "pageColor": "Seitenhintergrund"
+    "pageColor": "Seitenhintergrund",
+    "logoLabel": "Unternehmenslogo",
+    "logoUpload": "Logo hochladen",
+    "logoChange": "Ändern"
   },
   "blocks": {
     "search": "Blöcke suchen…",

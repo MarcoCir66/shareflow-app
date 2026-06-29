@@ -1,4 +1,5 @@
-import { Check } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useConfigurator } from '../../hooks/useConfigurator.js'
 import { useTheme } from '../../hooks/useTheme.js'
@@ -50,8 +51,69 @@ export default function AppearancePanel() {
     dispatch({ type: ACTIONS.SET_TENANT_META, payload: { siteName: updated } })
   }
 
+  const logoBase64 = theme?.logoBase64 ?? null
+  const logoInputRef = useRef(null)
+  const [logoError, setLogoError] = useState('')
+
+  function handleLogoFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 200_000) {
+      setLogoError('File troppo grande (max 200 KB)')
+      e.target.value = ''
+      return
+    }
+    setLogoError('')
+    const reader = new FileReader()
+    reader.onload = ev => {
+      dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, logoBase64: ev.target.result } } })
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function removeLogo() {
+    dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, logoBase64: null } } })
+    setLogoError('')
+  }
+
   return (
     <div className="p-3 space-y-4 overflow-y-auto h-full">
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">
+          {t('appearance.logoLabel')}
+        </h3>
+        <div className="flex items-center gap-2">
+          {logoBase64 && (
+            <img
+              src={logoBase64}
+              alt="logo"
+              className="w-10 h-10 object-contain rounded border border-ink-700 bg-ink-800 flex-shrink-0"
+            />
+          )}
+          <button
+            type="button"
+            onClick={() => logoInputRef.current?.click()}
+            className="text-xs px-2 py-1.5 rounded bg-ink-700 text-white hover:bg-ink-600 transition-colors"
+          >
+            {logoBase64 ? t('appearance.logoChange') : t('appearance.logoUpload')}
+          </button>
+          {logoBase64 && (
+            <button type="button" onClick={removeLogo} className="text-ink-400 hover:text-white transition-colors">
+              <X size={14} />
+            </button>
+          )}
+          <input
+            ref={logoInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/svg+xml"
+            className="hidden"
+            onChange={handleLogoFile}
+          />
+        </div>
+        {logoError && <p className="text-xs text-red-400 mt-1">{logoError}</p>}
+        <p className="text-xs text-ink-400 mt-1">PNG · JPG · SVG · max 200 KB</p>
+      </div>
+
       <div>
         <Tooltip text={t('tooltips.appearanceSections.siteName')}>
           <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-2">

@@ -23,7 +23,10 @@
     "backgroundImageLabel": "Background image",
     "backgroundImageHint": "URL of an image to use as the background of the hero banner and top navigation",
     "backgroundImageRemove": "Remove image",
-    "pageColor": "Page background"
+    "pageColor": "Page background",
+    "logoLabel": "Company logo",
+    "logoUpload": "Upload logo",
+    "logoChange": "Change"
   },
   "blocks": {
     "search": "Search blocks…",

@@ -23,7 +23,10 @@
     "backgroundImageLabel": "Image de fond",
     "backgroundImageHint": "URL d'une image à utiliser comme fond de la bannière d'accueil et de la barre de navigation",
     "backgroundImageRemove": "Supprimer l'image",
-    "pageColor": "Fond de page"
+    "pageColor": "Fond de page",
+    "logoLabel": "Logo de l'entreprise",
+    "logoUpload": "Téléverser le logo",
+    "logoChange": "Changer"
   },
   "blocks": {
     "search": "Rechercher des blocs…",

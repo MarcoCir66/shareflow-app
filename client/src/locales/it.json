@@ -23,7 +23,10 @@
     "backgroundImageLabel": "Immagine di sfondo",
     "backgroundImageHint": "URL di un'immagine da usare come sfondo dell'hero banner e della barra di navigazione",
     "backgroundImageRemove": "Rimuovi immagine",
-    "pageColor": "Sfondo pagina"
+    "pageColor": "Sfondo pagina",
+    "logoLabel": "Logo aziendale",
+    "logoUpload": "Carica logo",
+    "logoChange": "Cambia"
   },
   "blocks": {
     "search": "Cerca blocchi…",
