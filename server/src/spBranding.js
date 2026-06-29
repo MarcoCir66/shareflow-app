@@ -199,11 +199,13 @@ async function _patchSiteLogoUrl(baseUrl, spToken, logoUrl) {
 
 /**
  * Hides the "Start designing your site" first-run dialog on new Communication Sites.
+ * SP stores this as a property bag key on the web, not as a typed SP.Web property.
  */
 export async function dismissWelcomeDialog(siteUrl, spToken) {
   if (!siteUrl || !spToken) return
   const baseUrl = siteUrl.replace(/\/$/, '')
-  await fetch(`${baseUrl}/_api/web`, {
+  // Set via allproperties (property bag) — the correct endpoint for untyped web properties
+  await fetch(`${baseUrl}/_api/web/allproperties`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${spToken}`,
@@ -212,7 +214,7 @@ export async function dismissWelcomeDialog(siteUrl, spToken) {
       'X-HTTP-Method': 'MERGE',
       'If-Match': '*',
     },
-    body: JSON.stringify({ '__metadata': { 'type': 'SP.Web' }, HideFirstTimeRunDialog: true }),
+    body: JSON.stringify({ '__metadata': { 'type': 'SP.PropertyValues' }, HideFirstTimeRunDialog: 'true' }),
   })
 }
 

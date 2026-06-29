@@ -52,15 +52,18 @@ describe('buildCanvasLayout', () => {
     assert.deepEqual(unmappedBlocks.sort(), ['anniversari', 'kudos'])
   })
 
-  it('skips unmapped blocks in the layout', () => {
+  it('replaces unmapped blocks with placeholder text nodes', () => {
     const page = makePage('oneColumn', [
       { blockId: 'kudos' },
       { blockId: 'news-corporate' },
     ])
     const { canvasLayout } = buildCanvasLayout(page)
     const webparts = canvasLayout.horizontalSections[0].columns[0].webparts
-    assert.equal(webparts.length, 1)
-    assert.equal(webparts[0].webPartType, '8c88f208-6c77-4bdb-86a0-0c47b4316588')
+    assert.equal(webparts.length, 2)
+    // first = placeholder for unmapped 'kudos'
+    assert.equal(webparts[0]['@odata.type'], '#microsoft.graph.textWebPart')
+    // second = real news-corporate webpart
+    assert.equal(webparts[1].webPartType, '8c88f208-6c77-4bdb-86a0-0c47b4316588')
   })
 
   it('returns empty horizontalSections for a page with no sections', () => {
@@ -87,16 +90,14 @@ describe('buildCanvasLayout section emphasis', () => {
     for (const s of canvasLayout.horizontalSections) assert.equal(s.emphasis, 'none')
   })
 
-  it('dark pageColor (#15140f): even sections none, odd sections soft', () => {
+  it('dark pageColor (#15140f): all sections none (SP dark mode uses bodyBackground for none)', () => {
     const { canvasLayout } = buildCanvasLayout(twoSections, { pageColor: '#15140f' })
-    assert.equal(canvasLayout.horizontalSections[0].emphasis, 'none')
-    assert.equal(canvasLayout.horizontalSections[1].emphasis, 'soft')
+    for (const s of canvasLayout.horizontalSections) assert.equal(s.emphasis, 'none')
   })
 
-  it('mid-tone pageColor (#b0b0b0): even sections none, odd sections neutral', () => {
+  it('mid-tone pageColor (#b0b0b0): all sections neutral', () => {
     const { canvasLayout } = buildCanvasLayout(twoSections, { pageColor: '#b0b0b0' })
-    assert.equal(canvasLayout.horizontalSections[0].emphasis, 'none')
-    assert.equal(canvasLayout.horizontalSections[1].emphasis, 'neutral')
+    for (const s of canvasLayout.horizontalSections) assert.equal(s.emphasis, 'neutral')
   })
 
   it('light pageColor (#ffffff): all sections none', () => {

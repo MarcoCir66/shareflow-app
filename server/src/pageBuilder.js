@@ -31,9 +31,12 @@ function hexLuminance(hex) {
 function sectionEmphasis(pageColor) {
   if (!pageColor) return 'none'
   const lum = hexLuminance(pageColor)
-  if (lum < 0.35) return 'strong'
-  if (lum < 0.65) return 'neutral'
-  return 'none'
+  // In dark SP themes (isInverted), 'none' sections use bodyBackground (the dark color).
+  // 'strong' uses themePrimary (accent), which would be wrong.
+  // In light themes, 'neutral'/'strong' tint toward bodyBackground.
+  if (lum < 0.35) return 'none'   // dark: SP already uses bodyBackground for 'none'
+  if (lum < 0.65) return 'neutral' // mid: tint toward bodyBackground
+  return 'none'                     // light/white: default
 }
 
 function placeholderTextNode(blockId) {
