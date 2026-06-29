@@ -112,6 +112,10 @@ async function runStep(jobId, step) {
 }
 
 async function applyBranding(job) {
+  if (!job.siteUrl) {
+    logger.warn({ jobId: job.id }, 'branding skipped: siteUrl not set')
+    return
+  }
   const theme = job.tenantConfiguration?.theme ?? {}
   const hostname = new URL(job.siteUrl).hostname
 

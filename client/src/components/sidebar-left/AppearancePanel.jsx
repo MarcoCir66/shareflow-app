@@ -53,6 +53,8 @@ export default function AppearancePanel() {
 
   const logoBase64 = theme?.logoBase64 ?? null
   const logoInputRef = useRef(null)
+  const themeRef = useRef(theme)
+  themeRef.current = theme
   const [logoError, setLogoError] = useState('')
 
   function handleLogoFile(e) {
@@ -66,7 +68,7 @@ export default function AppearancePanel() {
     setLogoError('')
     const reader = new FileReader()
     reader.onload = ev => {
-      dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, logoBase64: ev.target.result } } })
+      dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...themeRef.current, logoBase64: ev.target.result } } })
     }
     reader.readAsDataURL(file)
   }
@@ -74,6 +76,7 @@ export default function AppearancePanel() {
   function removeLogo() {
     dispatch({ type: ACTIONS.SET_TENANT_META, payload: { theme: { ...theme, logoBase64: null } } })
     setLogoError('')
+    if (logoInputRef.current) logoInputRef.current.value = ''
   }
 
   return (

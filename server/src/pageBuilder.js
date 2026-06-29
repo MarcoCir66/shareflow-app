@@ -11,7 +11,8 @@ const LAYOUT_MAP = {
 }
 
 function hexToRgb(hex) {
-  const h = (hex || '#ffffff').replace('#', '').padEnd(6, '0')
+  const raw = (hex || '#ffffff').replace('#', '')
+  const h = raw.length === 3 ? raw.split('').map(c => c + c).join('') : raw
   return [
     parseInt(h.slice(0, 2), 16) / 255,
     parseInt(h.slice(2, 4), 16) / 255,

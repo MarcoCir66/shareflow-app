@@ -1,6 +1,7 @@
 // hex '#rrggbb' → [r, g, b] each 0–1
 function hexToRgb(hex) {
-  const h = (hex || '#ffffff').replace('#', '').padEnd(6, '0')
+  const raw = (hex || '#ffffff').replace('#', '')
+  const h = raw.length === 3 ? raw.split('').map(c => c + c).join('') : raw
   return [
     parseInt(h.slice(0, 2), 16) / 255,
     parseInt(h.slice(2, 4), 16) / 255,
@@ -106,7 +107,7 @@ export function generateSpPalette(accentHex, pageHex) {
  * No-op if logoBase64 or accessToken is falsy.
  */
 export async function uploadSiteLogo(siteId, logoBase64, accessToken) {
-  if (!logoBase64 || !accessToken) return
+  if (!siteId || !logoBase64 || !accessToken) return
   const match = logoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/)
   if (!match) return
   const [, mimeType, b64] = match
