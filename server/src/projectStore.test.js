@@ -31,6 +31,7 @@ test('listProjectsByUser returns only that user projects, without canvasState', 
   assert.ok(list.some(p => p.id === 'p2'))
   assert.ok(list.every(p => p.id !== 'p3'))
   assert.ok(list.every(p => !('canvasState' in p)), 'list must not include canvasState')
+  assert.ok(list.every(p => 'userId' in p), 'list must include userId')
 })
 
 test('updateProject patches only specified fields', () => {

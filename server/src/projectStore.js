@@ -39,7 +39,7 @@ function toFull(row) {
 
 function toMeta(row) {
   return {
-    id: row.id, name: row.name, description: row.description,
+    id: row.id, userId: row.user_id, name: row.name, description: row.description,
     client: row.client, status: row.status, tags: JSON.parse(row.tags),
     spUrl: row.sp_url, createdAt: row.created_at, updatedAt: row.updated_at,
   }
@@ -77,7 +77,7 @@ export function updateProject(id, fields) {
   if (fields.client !== undefined)      { sets.push('client = @client');           params.client = fields.client }
   if (fields.status !== undefined)      { sets.push('status = @status');           params.status = fields.status }
   if (fields.tags !== undefined)        { sets.push('tags = @tags');               params.tags = JSON.stringify(fields.tags) }
-  if (fields.canvasState != null)       { sets.push('canvas_state = @canvasState'); params.canvasState = JSON.stringify(fields.canvasState) }
+  if (fields.canvasState !== undefined)  { sets.push('canvas_state = @canvasState'); params.canvasState = JSON.stringify(fields.canvasState) }
   if (fields.spUrl !== undefined)       { sets.push('sp_url = @spUrl');            params.spUrl = fields.spUrl }
   db.prepare(`UPDATE projects SET ${sets.join(', ')} WHERE id = @id`).run(params)
   return getProject(id)
