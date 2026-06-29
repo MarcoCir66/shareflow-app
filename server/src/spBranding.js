@@ -100,3 +100,70 @@ export function generateSpPalette(accentHex, pageHex) {
 
   return { palette, isInverted }
 }
+
+/**
+ * Uploads a base64-encoded logo to the SharePoint site via Graph API.
+ * No-op if logoBase64 or accessToken is falsy.
+ */
+export async function uploadSiteLogo(siteId, logoBase64, accessToken) {
+  if (!logoBase64 || !accessToken) return
+  const match = logoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/)
+  if (!match) return
+  const [, mimeType, b64] = match
+  const buffer = Buffer.from(b64, 'base64')
+  const res = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/logo`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': mimeType },
+    body: buffer,
+  })
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`logo PUT ${res.status}: ${text}`)
+  }
+}
+
+/**
+ * Applies a custom color theme to a SharePoint site via ThemeManager REST API.
+ * No-op if accentColor or spToken is falsy.
+ */
+export async function applySiteTheme(siteUrl, spToken, accentColor, pageColor) {
+  if (!accentColor || !spToken) return
+  const result = generateSpPalette(accentColor, pageColor)
+  if (!result) return
+  const baseUrl = siteUrl.replace(/\/$/, '')
+  const res = await fetch(`${baseUrl}/_api/ThemeManager/ApplyTheme`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${spToken}`,
+      'Content-Type': 'application/json;odata=verbose',
+      Accept: 'application/json;odata=verbose',
+    },
+    body: JSON.stringify({ name: 'Shareflow Theme', palette: result.palette, isInverted: result.isInverted }),
+  })
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`ThemeManager/ApplyTheme ${res.status}: ${text}`)
+  }
+}
+
+/**
+ * Sets the SharePoint site header background image via web chrome options.
+ * No-op if backgroundImageUrl or spToken is falsy.
+ */
+export async function applyHeaderBackground(siteUrl, spToken, backgroundImageUrl) {
+  if (!backgroundImageUrl || !spToken) return
+  const baseUrl = siteUrl.replace(/\/$/, '')
+  const res = await fetch(`${baseUrl}/_api/web/SetChromeOptions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${spToken}`,
+      'Content-Type': 'application/json;odata=verbose',
+      Accept: 'application/json;odata=verbose',
+    },
+    body: JSON.stringify({ options: { headerLayout: 4, backgroundImageUrl } }),
+  })
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`SetChromeOptions ${res.status}: ${text}`)
+  }
+}
