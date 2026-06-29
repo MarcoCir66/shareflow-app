@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { configuratorReducer, ACTIONS } from './configuratorReducer.js'
+import { configuratorReducer, ACTIONS, initialState } from './configuratorReducer.js'
 import { blockById } from '../data/blockCatalog.js'
 import { pageTemplateById } from '../data/pageTemplates.js'
 import { siteTemplateById } from '../data/siteTemplates.js'
@@ -680,4 +680,19 @@ test('CHANGE_SECTION_LAYOUT to the same layout the section already has is a no-o
   ])
   const next = configuratorReducer(state, { type: ACTIONS.CHANGE_SECTION_LAYOUT, payload: { sectionId: 'section-1', layout: 'accordion' } })
   expect(next).toBe(state)
+})
+
+test('LOAD_PROJECT replaces canvas state and clears transient selection', () => {
+  const stateWithSelection = makeState({ selectedWidgetInstanceId: 'w1', selectedSectionId: 's1' })
+  const canvasState = {
+    pages: [{ pageId: 'custom', title: { it: 'X', en: 'X', fr: 'X', de: 'X' }, slug: 'x', parentId: null, sections: [] }],
+    activePageId: 'custom',
+    tenantConfiguration: { ...initialState.tenantConfiguration, siteName: { it: 'Saved', en: 'Saved', fr: 'Saved', de: 'Saved' } },
+  }
+  const result = configuratorReducer(stateWithSelection, { type: ACTIONS.LOAD_PROJECT, payload: { canvasState } })
+  expect(result.pages).toEqual(canvasState.pages)
+  expect(result.activePageId).toBe('custom')
+  expect(result.tenantConfiguration.siteName).toEqual(canvasState.tenantConfiguration.siteName)
+  expect(result.selectedWidgetInstanceId).toBe(null)
+  expect(result.selectedSectionId).toBe(null)
 })

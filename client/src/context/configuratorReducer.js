@@ -31,6 +31,7 @@ export const ACTIONS = {
   SET_TENANT_META:      'SET_TENANT_META',
   EXPORT_CONFIGURATION: 'EXPORT_CONFIGURATION',
   APPLY_TEMPLATE:       'APPLY_TEMPLATE',
+  LOAD_PROJECT:         'LOAD_PROJECT',
 }
 
 const DEFAULT_PANEL_LABELS = { it: 'Pannello', en: 'Panel', fr: 'Panneau', de: 'Panel' }
@@ -466,6 +467,12 @@ export function configuratorReducer(state, action) {
         selectedSectionId: null,
       }
     }
+    case ACTIONS.LOAD_PROJECT:
+      return {
+        ...action.payload.canvasState,
+        selectedWidgetInstanceId: null,
+        selectedSectionId: null,
+      }
     default:
       return state
   }
