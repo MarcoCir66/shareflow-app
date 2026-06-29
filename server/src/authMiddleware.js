@@ -33,6 +33,7 @@ function buildDefaultVerifyToken() {
 export function createRequireAuth(verifyToken) {
   return async function requireAuth(req, res, next) {
     if (process.env.AUTH_DISABLED === 'true') {
+      req.user = { oid: 'test-user', name: 'Test User', preferred_username: 'test@example.com' }
       return next()
     }
 

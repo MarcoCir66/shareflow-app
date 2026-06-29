@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import provisioningRoutes from './src/provisioningRoutes.js'
+import projectRoutes from './src/projectRoutes.js'
 import { requireAuth } from './src/authMiddleware.js'
 import logger from './src/logger.js'
 
@@ -39,6 +40,7 @@ const limiter = rateLimit({
   legacyHeaders: false,
 })
 app.use('/api/provisioning', limiter, requireAuth, provisioningRoutes)
+app.use('/api/projects', limiter, requireAuth, projectRoutes)
 
 const PORT = process.env.PORT ?? 3001
 app.listen(PORT, '0.0.0.0', () => {
