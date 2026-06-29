@@ -3,6 +3,7 @@
  */
 import { arrayMove } from '@dnd-kit/sortable'
 import { flattenWidgets } from './sectionHelpers.js'
+import { resolveTheme } from '../data/themeTemplates.js'
 
 const ROOT_KEY = '__root__'
 
@@ -169,8 +170,11 @@ export function buildTenantExport(pages, tenantConfiguration, activePageId) {
   }))
   // Home page = first root-level page, regardless of which tab is active in the UI
   const homePageId = pages.find(p => p.parentId == null)?.pageId ?? activePageId ?? null
+  // Resolve effective colors from template defaults so server always receives concrete values
+  const { accentColor, pageColor } = resolveTheme(tenantConfiguration.theme)
   return {
     ...tenantConfiguration,
+    theme: { ...tenantConfiguration.theme, accentColor, pageColor },
     activePageId: homePageId,
     pages: pagesExport,
     navigation: buildNavigationExport(pages),
