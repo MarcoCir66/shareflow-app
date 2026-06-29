@@ -28,11 +28,10 @@ function hexLuminance(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
-function sectionEmphasis(pageColor, idx) {
+function sectionEmphasis(pageColor) {
   if (!pageColor) return 'none'
-  if (idx % 2 === 0) return 'none'
   const lum = hexLuminance(pageColor)
-  if (lum < 0.35) return 'soft'
+  if (lum < 0.35) return 'strong'
   if (lum < 0.65) return 'neutral'
   return 'none'
 }
@@ -84,7 +83,7 @@ export function buildCanvasLayout(page, ctx) {
     return {
       id: String(sIdx + 1),
       layout: layoutInfo.spLayout,
-      emphasis: sectionEmphasis(ctx?.pageColor ?? null, sIdx),
+      emphasis: sectionEmphasis(ctx?.pageColor ?? null),
       columns,
     }
   })
