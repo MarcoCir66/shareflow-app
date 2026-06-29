@@ -55,7 +55,7 @@ export default function CanvasTopNav() {
         {logo && (
           <img
             src={logo}
-            alt=""
+            alt="logo"
             className="w-8 h-8 object-contain mx-2 flex-shrink-0"
           />
         )}
