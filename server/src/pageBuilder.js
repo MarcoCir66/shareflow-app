@@ -52,7 +52,7 @@ function placeholderTextNode(blockId) {
  * SharePoint Graph API canvasLayout object.
  *
  * @param {object} page - ShareFlow page with sections array
- * @returns {{ canvasLayout: object, unmappedBlocks: string[], pageFlags: { commentsEnabled: boolean, reactionsEnabled: boolean } }}
+ * @returns {{ canvasLayout: object, unmappedBlocks: string[], pageFlags: { commentsEnabled: boolean, reactionsEnabled: boolean, mlpEnabled: boolean } }}
  */
 export function buildCanvasLayout(page, ctx) {
   const unmappedBlocks = []
@@ -66,6 +66,7 @@ export function buildCanvasLayout(page, ctx) {
   const pageFlags = {
     commentsEnabled:  allWidgetIds.includes('commenti-contenuto'),
     reactionsEnabled: allWidgetIds.includes('like-contenuto'),
+    mlpEnabled:       allWidgetIds.includes('multilingua'),
   }
 
   const horizontalSections = (page.sections ?? []).map((section, sIdx) => {

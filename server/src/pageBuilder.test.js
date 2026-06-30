@@ -110,6 +110,31 @@ describe('buildCanvasLayout', () => {
     assert.equal(pageFlags.commentsEnabled, false)
     assert.equal(pageFlags.reactionsEnabled, false)
   })
+
+  it('returns pageFlags.mlpEnabled true when multilingua block is present', () => {
+    const page = makePage('oneColumn', [{ blockId: 'multilingua' }])
+    const { pageFlags } = buildCanvasLayout(page)
+    assert.equal(pageFlags.mlpEnabled, true)
+    assert.equal(pageFlags.commentsEnabled, false)
+  })
+
+  it('returns pageFlags.mlpEnabled false when multilingua is absent', () => {
+    const page = makePage('oneColumn', [{ blockId: 'news-corporate', props: {} }])
+    const { pageFlags } = buildCanvasLayout(page)
+    assert.equal(pageFlags.mlpEnabled, false)
+  })
+
+  it('silently skips multilingua — no placeholder, not in unmappedBlocks, produces no WP node', () => {
+    const page = makePage('oneColumn', [
+      { blockId: 'multilingua' },
+      { blockId: 'news-corporate', props: {} },
+    ])
+    const { canvasLayout, unmappedBlocks } = buildCanvasLayout(page)
+    assert.equal(unmappedBlocks.includes('multilingua'), false)
+    const webparts = canvasLayout.horizontalSections[0].columns[0].webparts
+    assert.equal(webparts.length, 1)
+    assert.equal(webparts[0].webPartType, '8c88f208-6c77-4bdb-86a0-0c47b4316588')
+  })
 })
 
 describe('buildCanvasLayout section emphasis', () => {
