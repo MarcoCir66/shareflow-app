@@ -70,6 +70,46 @@ describe('buildCanvasLayout', () => {
     const { canvasLayout } = buildCanvasLayout({ sections: [] })
     assert.deepEqual(canvasLayout.horizontalSections, [])
   })
+
+  it('silently skips commenti-contenuto — no placeholder, not in unmappedBlocks', () => {
+    const page = makePage('oneColumn', [
+      { blockId: 'commenti-contenuto' },
+      { blockId: 'news-corporate', props: {} },
+    ])
+    const { canvasLayout, unmappedBlocks } = buildCanvasLayout(page)
+    assert.equal(unmappedBlocks.includes('commenti-contenuto'), false)
+    const webparts = canvasLayout.horizontalSections[0].columns[0].webparts
+    assert.equal(webparts.length, 1, 'only news-corporate should produce a WP node')
+    assert.equal(webparts[0].webPartType, '8c88f208-6c77-4bdb-86a0-0c47b4316588')
+  })
+
+  it('silently skips like-contenuto — no placeholder, not in unmappedBlocks', () => {
+    const page = makePage('oneColumn', [{ blockId: 'like-contenuto' }])
+    const { canvasLayout, unmappedBlocks } = buildCanvasLayout(page)
+    assert.equal(unmappedBlocks.includes('like-contenuto'), false)
+    assert.equal(canvasLayout.horizontalSections[0].columns[0].webparts.length, 0)
+  })
+
+  it('returns pageFlags.commentsEnabled true when commenti-contenuto is present', () => {
+    const page = makePage('oneColumn', [{ blockId: 'commenti-contenuto' }])
+    const { pageFlags } = buildCanvasLayout(page)
+    assert.equal(pageFlags.commentsEnabled, true)
+    assert.equal(pageFlags.reactionsEnabled, false)
+  })
+
+  it('returns pageFlags.reactionsEnabled true when like-contenuto is present', () => {
+    const page = makePage('oneColumn', [{ blockId: 'like-contenuto' }])
+    const { pageFlags } = buildCanvasLayout(page)
+    assert.equal(pageFlags.commentsEnabled, false)
+    assert.equal(pageFlags.reactionsEnabled, true)
+  })
+
+  it('returns pageFlags with both false when neither semantic block is present', () => {
+    const page = makePage('oneColumn', [{ blockId: 'news-corporate', props: {} }])
+    const { pageFlags } = buildCanvasLayout(page)
+    assert.equal(pageFlags.commentsEnabled, false)
+    assert.equal(pageFlags.reactionsEnabled, false)
+  })
 })
 
 describe('buildCanvasLayout section emphasis', () => {

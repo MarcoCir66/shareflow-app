@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import { mapBlock } from './blockToWebpart.js'
+import { mapBlock, SEMANTIC_PAGE_FLAGS } from './blockToWebpart.js'
 
 const LAYOUT_MAP = {
   oneColumn:     { spLayout: 'oneColumn',           widths: [12] },
@@ -59,11 +59,21 @@ export function buildCanvasLayout(page, ctx) {
   const seenUnmapped = new Set()
   let colIdCounter = 1
 
+  // Detect semantic blocks that trigger page-level SP settings (no WP node produced)
+  const allWidgetIds = (page.sections ?? [])
+    .flatMap(s => (s.columns ?? []).flatMap(c => c.widgets ?? []))
+    .map(w => w.blockId)
+  const pageFlags = {
+    commentsEnabled:  allWidgetIds.includes('commenti-contenuto'),
+    reactionsEnabled: allWidgetIds.includes('like-contenuto'),
+  }
+
   const horizontalSections = (page.sections ?? []).map((section, sIdx) => {
     const layoutInfo = LAYOUT_MAP[section.layout] ?? LAYOUT_MAP.oneColumn
     const columns = (section.columns ?? []).map((col, cIdx) => {
       const webparts = (col.widgets ?? []).reduce((acc, widget) => {
         if (widget.props?.visible === false) return acc
+        if (SEMANTIC_PAGE_FLAGS.includes(widget.blockId)) return acc  // skip silently
 
         const node = mapBlock(widget, ctx)
         if (!node) {
@@ -94,5 +104,6 @@ export function buildCanvasLayout(page, ctx) {
   return {
     canvasLayout: { horizontalSections },
     unmappedBlocks,
+    pageFlags,
   }
 }

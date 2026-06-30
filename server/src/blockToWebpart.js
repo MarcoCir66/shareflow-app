@@ -180,3 +180,5 @@ export function mapBlock(block, ctx) {
 }
 
 export const MAPPED_BLOCK_IDS = Object.keys(MAPPINGS)
+
+export const SEMANTIC_PAGE_FLAGS = ['commenti-contenuto', 'like-contenuto']

@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { mapBlock } from './blockToWebpart.js'
+import { mapBlock, SEMANTIC_PAGE_FLAGS } from './blockToWebpart.js'
 
 describe('mapBlock', () => {
   it('returns null for unknown blockId', () => {
@@ -64,5 +64,21 @@ describe('mapBlock', () => {
     assert.ok(result)
     assert.equal(result.webPartType, 'b19b3b9e-8d13-4fec-a93c-401a091c0099')
     assert.equal(result.data.properties.formUrl, 'https://forms.office.com/r/abc')
+  })
+})
+
+describe('SEMANTIC_PAGE_FLAGS', () => {
+  it('exports an array', () => {
+    assert.ok(Array.isArray(SEMANTIC_PAGE_FLAGS))
+  })
+
+  it('includes commenti-contenuto and like-contenuto', () => {
+    assert.ok(SEMANTIC_PAGE_FLAGS.includes('commenti-contenuto'))
+    assert.ok(SEMANTIC_PAGE_FLAGS.includes('like-contenuto'))
+  })
+
+  it('mapBlock returns null for semantic blocks (they are not mapped as WP nodes)', () => {
+    assert.equal(mapBlock({ blockId: 'commenti-contenuto' }), null)
+    assert.equal(mapBlock({ blockId: 'like-contenuto' }), null)
   })
 })
