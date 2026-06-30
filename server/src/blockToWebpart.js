@@ -10,11 +10,11 @@ const WP = {
   BUTTON:             '0f087d7f-520e-42b7-89c0-1b892b68ca60',
   EMBED:              '490d7c76-1824-45b2-9de3-676421c997fa',
   DOCUMENT_LIBRARY:   'c9335c66-4e64-4c0c-a53b-63e1a32a7a5e',
-  HIGHLIGHTED_CONTENT:'e377ea37-9047-43b9-8cdb-a761be2f8e09',
+  HIGHLIGHTED_CONTENT:'daf0b71c-6de8-4ef7-b511-faae7c388708',
   FORMS:              'b19b3b9e-8d13-4fec-a93c-401a091c0099',
   STREAM:             '275c0095-a77e-4f6d-a2a0-6a7626911518',
   SEARCH_BOX:         '8f94f9ea-6fba-4aba-90f6-b21bdba5a0bd',
-  PEOPLE:             'TODO-VERIFY-GUID', // GUID not yet verified — replace before using in production
+  PEOPLE:             '7f718435-ee4d-431c-bdbf-9c4ff326f46e',
 }
 
 function node(webPartType, title, properties) {
@@ -160,7 +160,7 @@ const MAPPINGS = {
   'documenti':           documentLibraryMapper,
   'embed-custom':        embedMapper,
   'motore-ricerca':      searchBoxMapper,
-  // 'carosello-contenuti': highlightedContentMapper, // GUID e377ea37 is Bing Maps — verify correct Highlighted Content GUID
+  'carosello-contenuti': highlightedContentMapper,
   'polls-survey':        formsMapper,
   'multimedia-gallery':  streamMapper,
   'contatti-chiave':     peopleMapper,

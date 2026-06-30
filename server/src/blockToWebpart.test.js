@@ -56,7 +56,7 @@ describe('mapBlock', () => {
   it('maps contatti-chiave to People web part', () => {
     const result = mapBlock({ blockId: 'contatti-chiave', props: {} })
     assert.ok(result, 'result should not be null')
-    assert.equal(result.webPartType, 'TODO-VERIFY-GUID')
+    assert.equal(result.webPartType, '7f718435-ee4d-431c-bdbf-9c4ff326f46e')
     assert.ok(Array.isArray(result.data.properties.persons))
   })
 
@@ -65,6 +65,12 @@ describe('mapBlock', () => {
     assert.ok(result)
     assert.equal(result.webPartType, 'b19b3b9e-8d13-4fec-a93c-401a091c0099')
     assert.equal(result.data.properties.formUrl, 'https://forms.office.com/r/abc')
+  })
+
+  it('maps carosello-contenuti to Highlighted Content web part', () => {
+    const result = mapBlock({ blockId: 'carosello-contenuti' })
+    assert.ok(result)
+    assert.equal(result.webPartType, 'daf0b71c-6de8-4ef7-b511-faae7c388708')
   })
 })
 
