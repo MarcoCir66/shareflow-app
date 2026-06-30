@@ -431,6 +431,35 @@ async function configurePages(job) {
       logger.warn({ err: e.message, pageId }, 'commentsDisabled patch skipped')
     }
 
+    // Activate Multilingual Pages (MLP) site feature when multilingua block is present
+    if (pageFlags.mlpEnabled) {
+      try {
+        const spHostname = new URL(job.siteUrl).hostname
+        const spToken = await getSharePointAccessToken(spHostname)
+        // Feature GUID for SP Multilingual User Interface (site collection scope)
+        const mlpFeatureId = '24611c05-ee19-45da-955f-6602264abaf8'
+        const resp = await fetch(
+          `${job.siteUrl}/_api/site/features/add('${mlpFeatureId}', 0, 15)`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${spToken}`,
+              Accept: 'application/json;odata=nometadata',
+              'Content-Type': 'application/json;odata=nometadata',
+            },
+          }
+        )
+        if (!resp.ok) {
+          const body = await resp.text()
+          logger.warn({ status: resp.status, body: body.substring(0, 200) }, 'MLP feature activation failed')
+        } else {
+          logger.info({ pageId, siteUrl: job.siteUrl }, 'MLP feature activated')
+        }
+      } catch (e) {
+        logger.warn({ err: e.message }, 'MLP activation skipped')
+      }
+    }
+
     // Publish immediately — unpublished (draft) pages are rejected by SP REST nav write
     logger.info({ spName, pageId }, 'publishing page')
     try {
