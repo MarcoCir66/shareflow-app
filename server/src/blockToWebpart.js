@@ -107,8 +107,12 @@ function documentLibraryMapper(block) {
 function highlightedContentMapper(block) {
   return node(WP.HIGHLIGHTED_CONTENT, 'Highlighted Content', {
     layoutId: 'Carousel',
-    dataProviderId: 'highlighted-content',
-    showChrome: true,
+    dataProviderId: 'Search',
+    maxItemsPerPage: 8,
+    isSeeAllLinkEnabled: false,
+    hideWebPartWhenEmpty: false,
+    queryText: '',
+    sites: [],
   })
 }
 
@@ -138,9 +142,9 @@ function searchBoxMapper(_block) {
 
 function peopleMapper(_block) {
   return node(WP.PEOPLE, 'People', {
+    title: '',
     persons: [],
-    layout: 0,
-    hideEmptyFields: false,
+    layout: 1,
   })
 }
 
@@ -148,6 +152,8 @@ function orgChartMapper(_block) {
   return node(WP.ORG_CHART, 'Organigramma', {
     datasource: 'graph',
     viewType: 'people',
+    levelsDisplayedAbove: 3,
+    levelsDisplayedBelow: 1,
   })
 }
 
@@ -175,9 +181,9 @@ function weatherMapper(block) {
 }
 
 function worldClockMapper(block) {
-  return node(WP.WORLD_CLOCK, 'Orologio mondiale', {
-    clocks: block.props?.timezones ?? [],
-  })
+  const timezones = block.props?.timezones ?? []
+  const clockItems = timezones.map(tz => ({ location: tz, displayedLocation: tz, useManualConfiguration: false }))
+  return node(WP.WORLD_CLOCK, 'Orologio mondiale', { clockItems })
 }
 
 // Mapping table: blockId → mapper function

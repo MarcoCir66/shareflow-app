@@ -106,7 +106,7 @@ describe('mapBlock', () => {
     const result = mapBlock({ blockId: 'fusi-orari', props: { timezones: ['Europe/Rome', 'America/New_York'] } })
     assert.ok(result)
     assert.equal(result.webPartType, '81b57906-cbed-4bb1-9823-2e3314f46f28')
-    assert.deepEqual(result.data.properties.clocks, ['Europe/Rome', 'America/New_York'])
+    assert.deepEqual(result.data.properties.clockItems, [{ location: 'Europe/Rome', displayedLocation: 'Europe/Rome', useManualConfiguration: false }, { location: 'America/New_York', displayedLocation: 'America/New_York', useManualConfiguration: false }])
   })
 
   it('maps sezione-fiere to Highlighted Content (same GUID as carosello-contenuti)', () => {
