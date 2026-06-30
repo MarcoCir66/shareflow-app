@@ -174,10 +174,8 @@ function listMapper(block) {
 }
 
 function weatherMapper(block) {
-  return node(WP.WEATHER, 'Meteo', {
-    city: block.props?.city ?? '',
-    unit: 'celsius',
-  })
+  const city = block.props?.city ?? block.props?.contentItems?.[0]?.city ?? ''
+  return node(WP.WEATHER, 'Meteo', { city, unit: 'celsius' })
 }
 
 function worldClockMapper(block) {

@@ -95,11 +95,17 @@ describe('mapBlock', () => {
     assert.equal(result.data.properties.webUrl, 'https://shareflowit.sharepoint.com/sites/test/Lists/Procedure')
   })
 
-  it('maps meteo with city from props', () => {
+  it('maps meteo with city from props.city', () => {
     const result = mapBlock({ blockId: 'meteo', props: { city: 'Milano' } })
     assert.ok(result)
     assert.equal(result.webPartType, '868ac3c3-cad7-4bd6-9a1c-14dc5cc8e823')
     assert.equal(result.data.properties.city, 'Milano')
+  })
+
+  it('maps meteo with city from props.contentItems[0].city', () => {
+    const result = mapBlock({ blockId: 'meteo', props: { contentItems: [{ city: 'Roma' }] } })
+    assert.ok(result)
+    assert.equal(result.data.properties.city, 'Roma')
   })
 
   it('maps fusi-orari with timezones array from props', () => {
