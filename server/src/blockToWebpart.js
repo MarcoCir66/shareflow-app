@@ -14,6 +14,7 @@ const WP = {
   FORMS:              'b19b3b9e-8d13-4fec-a93c-401a091c0099',
   STREAM:             '275c0095-a77e-4f6d-a2a0-6a7626911518',
   SEARCH_BOX:         '8f94f9ea-6fba-4aba-90f6-b21bdba5a0bd',
+  PEOPLE:             'TODO-VERIFY-GUID', // GUID not yet verified — replace before using in production
 }
 
 function node(webPartType, title, properties) {
@@ -130,6 +131,14 @@ function searchBoxMapper(_block) {
   })
 }
 
+function peopleMapper(_block) {
+  return node(WP.PEOPLE, 'People', {
+    persons: [],
+    layout: 0,
+    hideEmptyFields: false,
+  })
+}
+
 // Mapping table: blockId → mapper function
 const MAPPINGS = {
   'news-corporate':      newsMapper,
@@ -154,6 +163,8 @@ const MAPPINGS = {
   // 'carosello-contenuti': highlightedContentMapper, // GUID e377ea37 is Bing Maps — verify correct Highlighted Content GUID
   'polls-survey':        formsMapper,
   'multimedia-gallery':  streamMapper,
+  'contatti-chiave':     peopleMapper,
+  'feedback-utenti':     formsMapper,
 }
 
 /**
