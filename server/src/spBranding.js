@@ -103,7 +103,7 @@ export function generateSpPalette(accentHex, pageHex) {
     neutralPrimary:       '#323130',
     neutralDark:          '#201f1e',
     black:                '#000000',
-    white:                '#ffffff',
+    white:                bg,
   }
 
   const palette = {

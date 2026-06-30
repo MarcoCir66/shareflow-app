@@ -42,6 +42,16 @@ describe('generateSpPalette', () => {
     const { palette } = generateSpPalette('#0078d4', null)
     assert.notEqual(palette.themeDark, palette.themePrimary)
   })
+
+  it('white equals pageColor for light themes (SP uses white as page background)', () => {
+    const { palette } = generateSpPalette('#0078d4', '#e3e0ce')
+    assert.equal(palette.white, '#e3e0ce')
+  })
+
+  it('white equals pageColor for dark themes', () => {
+    const { palette } = generateSpPalette('#0078d4', '#15140f')
+    assert.equal(palette.white, '#15140f')
+  })
 })
 
 describe('uploadSiteLogo', () => {
