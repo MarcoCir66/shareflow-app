@@ -12,8 +12,8 @@ test('string input is returned as-is', () => {
   assert.equal(resolveSiteName('My Site'), 'My Site')
 })
 
-test('object input prefers en', () => {
-  assert.equal(resolveSiteName({ it: 'Sito', en: 'Site' }), 'Site')
+test('object input prefers it (default preferLang)', () => {
+  assert.equal(resolveSiteName({ it: 'Sito', en: 'Site' }), 'Sito')
 })
 
 test('object input falls back to it when en is missing', () => {

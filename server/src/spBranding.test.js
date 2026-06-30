@@ -94,8 +94,9 @@ describe('applySiteTheme', () => {
     }
     await applySiteTheme('https://t.sharepoint.com/sites/x', 'tok', '#0078d4', '#ffffff')
     assert.ok(capturedUrl.endsWith('/_api/ThemeManager/ApplyTheme'), `url: ${capturedUrl}`)
-    assert.equal(capturedBody.palette.themePrimary, '#0078d4')
-    assert.ok('isInverted' in capturedBody)
+    const themeJson = JSON.parse(capturedBody.themeJson)
+    assert.equal(themeJson.palette.themePrimary, '#0078d4')
+    assert.ok('isInverted' in themeJson)
   })
 })
 
