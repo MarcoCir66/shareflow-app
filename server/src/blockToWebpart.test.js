@@ -14,10 +14,10 @@ describe('mapBlock', () => {
     assert.ok(result.data.properties)
   })
 
-  it('maps eventi-corporate to Events web part', () => {
+  it('maps eventi-corporate to Group Calendar web part', () => {
     const result = mapBlock({ blockId: 'eventi-corporate' })
     assert.ok(result)
-    assert.equal(result.webPartType, '20745d7d-8581-4a6c-bf26-68279bc914f0')
+    assert.equal(result.webPartType, '6676088b-e28e-4a90-b9cb-d0d0303cd2eb')
   })
 
   it('maps collegamenti-rapidi to Quick Links web part', () => {
@@ -41,7 +41,8 @@ describe('mapBlock', () => {
       props: { content: [{ type: 'heading', text: 'Hello' }] },
     })
     assert.ok(result)
-    assert.equal(result.webPartType, '1ef5ed11-ce7b-44be-bc5e-4abd55101d16')
+    assert.equal(result['@odata.type'], '#microsoft.graph.textWebPart')
+    assert.ok(result.innerHtml.includes('Hello'))
   })
 
   it('returns an object with id (uuid v4) each call', () => {
