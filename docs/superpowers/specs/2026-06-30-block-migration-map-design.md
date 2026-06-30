@@ -213,8 +213,9 @@ Requires development of custom SPFx solution (`.sppkg`). ShareFlow generates the
 | `anniversari` | Work anniversaries via Graph People API |
 | `sezione-progetti` | Project overview |
 | `meteo` | Weather widget (external API) |
+| `fusi-orari` | World clock widget (no native/PnP equivalent) |
 
-**Phase 3 total: 10 blocks** *(was 12 before reclassifications)*
+**Phase 3 total: 11 blocks** *(was 13 before reclassifications)*
 
 ### Permanent gap
 

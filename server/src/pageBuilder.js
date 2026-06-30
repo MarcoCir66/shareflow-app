@@ -52,7 +52,7 @@ function placeholderTextNode(blockId) {
  * SharePoint Graph API canvasLayout object.
  *
  * @param {object} page - ShareFlow page with sections array
- * @returns {{ canvasLayout: object, unmappedBlocks: string[] }}
+ * @returns {{ canvasLayout: object, unmappedBlocks: string[], pageFlags: { commentsEnabled: boolean, reactionsEnabled: boolean } }}
  */
 export function buildCanvasLayout(page, ctx) {
   const unmappedBlocks = []
