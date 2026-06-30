@@ -350,7 +350,7 @@ async function configurePages(job) {
   for (const page of pages) {
     const spName = pageSpFilename(page, activePageId)
     const titleStr = resolveSiteName(page.title) || siteName
-    const { canvasLayout, unmappedBlocks } = buildCanvasLayout(page, {
+    const { canvasLayout, unmappedBlocks, pageFlags } = buildCanvasLayout(page, {
       siteUrl: job.siteUrl,
       groupId: job.groupId ?? null,
       groupName: siteName,
@@ -419,6 +419,16 @@ async function configurePages(job) {
 
     if (!pageId) {
       throw new Error(`pageId is null after create/patch for ${spName}`)
+    }
+
+    // Apply page-level settings derived from semantic blocks
+    try {
+      await job.graphClient
+        .api(`/sites/${job.siteId}/pages/${pageId}/microsoft.graph.sitePage`)
+        .version('beta')
+        .patch({ commentsDisabled: !pageFlags.commentsEnabled })
+    } catch (e) {
+      logger.warn({ err: e.message, pageId }, 'commentsDisabled patch skipped')
     }
 
     // Publish immediately — unpublished (draft) pages are rejected by SP REST nav write
