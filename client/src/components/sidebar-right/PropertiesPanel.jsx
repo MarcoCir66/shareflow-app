@@ -29,10 +29,7 @@ function InstanceIdSection({ instanceId }) {
   )
 }
 
-const SP_UNSUPPORTED_PROPS = {
-  commentsEnabled: "In SharePoint i commenti si abilitano a livello pagina tramite il blocco 'Commenti sul contenuto'",
-  likesEnabled:    "In SharePoint le reazioni si abilitano a livello pagina tramite il blocco 'Like sul contenuto'",
-}
+const SP_UNSUPPORTED_KEYS = new Set(['commentsEnabled', 'likesEnabled'])
 
 export default function PropertiesPanel() {
   const { state, dispatch, ACTIONS } = useConfigurator()
@@ -118,7 +115,7 @@ export default function PropertiesPanel() {
                 label={t(`props.${key}`, { defaultValue: key })}
                 value={widget.props[key]}
                 onChange={v => updateProp(key, v)}
-                spNote={SP_UNSUPPORTED_PROPS[key] ?? null}
+                spNote={SP_UNSUPPORTED_KEYS.has(key) ? t(`props.${key}SpNote`) : null}
               />
             )
           })}
