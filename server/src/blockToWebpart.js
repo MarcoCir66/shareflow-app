@@ -15,6 +15,11 @@ const WP = {
   STREAM:             '275c0095-a77e-4f6d-a2a0-6a7626911518',
   SEARCH_BOX:         '8f94f9ea-6fba-4aba-90f6-b21bdba5a0bd',
   PEOPLE:             '7f718435-ee4d-431c-bdbf-9c4ff326f46e',
+  ORG_CHART:          'e84a8ca2-f63c-4fb9-bc0b-d8eef5ccb22b',
+  COUNTDOWN:          '62cac389-787f-495d-beca-e11786162ef4',
+  LIST:               'f92bf067-bc19-489e-a556-7fe95f508720',
+  WEATHER:            '868ac3c3-cad7-4bd6-9a1c-14dc5cc8e823',
+  WORLD_CLOCK:        '81b57906-cbed-4bb1-9823-2e3314f46f28',
 }
 
 function node(webPartType, title, properties) {
@@ -139,6 +144,42 @@ function peopleMapper(_block) {
   })
 }
 
+function orgChartMapper(_block) {
+  return node(WP.ORG_CHART, 'Organigramma', {
+    datasource: 'graph',
+    viewType: 'people',
+  })
+}
+
+function countdownMapper(block) {
+  return node(WP.COUNTDOWN, 'Timer conto alla rovescia', {
+    date: block.props?.targetDate ?? '',
+    message: block.props?.label ?? '',
+  })
+}
+
+function listMapper(block) {
+  const url = block.dataSource?.url ?? ''
+  return node(WP.LIST, 'Elenco', {
+    webUrl: url,
+    listId: '',
+    showDefaultList: !url,
+  })
+}
+
+function weatherMapper(block) {
+  return node(WP.WEATHER, 'Meteo', {
+    city: block.props?.city ?? '',
+    unit: 'celsius',
+  })
+}
+
+function worldClockMapper(block) {
+  return node(WP.WORLD_CLOCK, 'Orologio mondiale', {
+    clocks: block.props?.timezones ?? [],
+  })
+}
+
 // Mapping table: blockId → mapper function
 const MAPPINGS = {
   'news-corporate':      newsMapper,
@@ -165,6 +206,13 @@ const MAPPINGS = {
   'multimedia-gallery':  streamMapper,
   'contatti-chiave':     peopleMapper,
   'feedback-utenti':     formsMapper,
+  'organigramma':        orgChartMapper,
+  'countdown-lancio':    countdownMapper,
+  'procedure':           listMapper,
+  'meteo':               weatherMapper,
+  'fusi-orari':          worldClockMapper,
+  'sezione-fiere':       highlightedContentMapper,
+  'sezione-mostre':      highlightedContentMapper,
 }
 
 /**
@@ -181,4 +229,4 @@ export function mapBlock(block, ctx) {
 
 export const MAPPED_BLOCK_IDS = Object.keys(MAPPINGS)
 
-export const SEMANTIC_PAGE_FLAGS = ['commenti-contenuto', 'like-contenuto']
+export const SEMANTIC_PAGE_FLAGS = ['commenti-contenuto', 'like-contenuto', 'multilingua']
