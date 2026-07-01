@@ -1,4 +1,4 @@
-import { Eye, LineChart, Save, LayoutDashboard } from 'lucide-react'
+import { Eye, LineChart, Save, LayoutDashboard, HelpCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { isMsalConfigured } from '../../auth/msalInstance.js'
 import AuthSection from './AuthSection.jsx'
@@ -8,7 +8,7 @@ function openPreview() {
   window.open('/?mode=preview', 'shareflow-preview')
 }
 
-export default function Navbar({ projectName, saving, onSave, onGoToDashboard, onEditProject, onDeployClick, onAnalyticsClick }) {
+export default function Navbar({ projectName, saving, onSave, onGoToDashboard, onEditProject, onDeployClick, onAnalyticsClick, onGuideClick }) {
   const { t } = useTranslation()
 
   return (
@@ -47,6 +47,15 @@ export default function Navbar({ projectName, saving, onSave, onGoToDashboard, o
           </span>
         )}
         <LanguageSwitcher />
+        {onGuideClick && (
+          <button
+            onClick={onGuideClick}
+            className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-600 text-sm px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <HelpCircle size={14} />
+            Guida
+          </button>
+        )}
         <button onClick={onAnalyticsClick}
           className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-800 text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
@@ -54,12 +63,14 @@ export default function Navbar({ projectName, saving, onSave, onGoToDashboard, o
           {t('navbar.analytics')}
         </button>
         <button onClick={openPreview}
+          data-tour="preview-btn"
           className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-800 text-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <Eye size={14} />
           {t('navbar.preview')}
         </button>
         <button onClick={onDeployClick}
+          data-tour="deploy-btn"
           className="flex items-center gap-2 bg-flow-400 hover:bg-flow-600 text-ink-950 font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
         >
           {t('navbar.deploy')}

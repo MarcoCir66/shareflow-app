@@ -21,6 +21,8 @@ import ProjectFormModal from './components/projects/ProjectFormModal.jsx'
 import { updateProject } from './lib/projectsApi.js'
 import SplashScreen from './components/layout/SplashScreen.jsx'
 import SpSetupModal from './components/layout/SpSetupModal.jsx'
+import { useTour } from './hooks/useTour.js'
+import TourOverlay from './components/layout/TourOverlay.jsx'
 
 const COLUMN_PREFIX = 'column-'
 const IS_PREVIEW = new URLSearchParams(window.location.search).get('mode') === 'preview'
@@ -51,6 +53,7 @@ function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDa
   const [editOpen, setEditOpen]         = useState(false)
   const [activeDragData, setActiveDragData] = useState(null)
   const [saving, setSaving]             = useState(false)
+  const { active: tourActive, stepIndex, rect, start: startTour, next: tourNext, prev: tourPrev, skip: tourSkip } = useTour()
   const debounceTimer   = useRef(null)
   const isInitialLoad   = useRef(true)
 
@@ -137,6 +140,7 @@ function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDa
         onEditProject={() => setEditOpen(true)}
         onDeployClick={() => setDeployOpen(true)}
         onAnalyticsClick={() => setAnalyticsOpen(true)}
+        onGuideClick={startTour}
       />
       {analyticsOpen ? (
         <AnalyticsView onClose={() => setAnalyticsOpen(false)} />
@@ -152,6 +156,15 @@ function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDa
       </DragOverlay>
       {deployOpen && <DeployModal onClose={() => setDeployOpen(false)} onSuccess={handleDeploySuccess} />}
       {editOpen && <ProjectFormModal mode="edit" project={projectMeta} onSubmit={handleEditProject} onClose={() => setEditOpen(false)} />}
+      {tourActive && (
+        <TourOverlay
+          stepIndex={stepIndex}
+          rect={rect}
+          onNext={tourNext}
+          onPrev={tourPrev}
+          onSkip={tourSkip}
+        />
+      )}
     </DndContext>
   )
 }
