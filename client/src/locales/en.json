@@ -370,5 +370,33 @@
     "colBlock": "Block",
     "colCompletion": "Completion",
     "complianceEmpty": "No content marked as mandatory read"
+  },
+  "tour": {
+    "skip": "Skip",
+    "prev": "← Back",
+    "next": "Next →",
+    "finish": "Start building",
+    "steps": {
+      "block-library": {
+        "title": "The block library",
+        "description": "Blocks are the building blocks of your intranet. Each block represents a widget — news, events, documents, weather and much more. They are organized in 4 categories: Communication, Learning, Productivity, Knowledge Base."
+      },
+      "canvas": {
+        "title": "The canvas",
+        "description": "Drag a block from the library and drop it here to add it to the page. You can reorder blocks by dragging them, and arrange them in side-by-side columns."
+      },
+      "properties-panel": {
+        "title": "Configure each block",
+        "description": "Select a block on the canvas to access its properties: visibility scope, comments, likes, mandatory reading. Each block has its own specific options."
+      },
+      "preview-btn": {
+        "title": "Real-time preview",
+        "description": "Click here to see the intranet as your colleagues will see it on SharePoint. The preview updates with every change."
+      },
+      "deploy-btn": {
+        "title": "Publish to SharePoint",
+        "description": "When your intranet is ready, click here to publish it directly to your Microsoft 365 tenant. The process is automatic and takes a few minutes."
+      }
+    }
   }
 }

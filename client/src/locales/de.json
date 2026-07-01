@@ -370,5 +370,33 @@
     "colBlock": "Block",
     "colCompletion": "Abschluss",
     "complianceEmpty": "Keine Inhalte als Pflichtlektüre markiert"
+  },
+  "tour": {
+    "skip": "Überspringen",
+    "prev": "← Zurück",
+    "next": "Weiter →",
+    "finish": "Mit dem Aufbau beginnen",
+    "steps": {
+      "block-library": {
+        "title": "Die Block-Bibliothek",
+        "description": "Blöcke sind die Bausteine Ihres Intranets. Jeder Block stellt ein Widget dar — Neuigkeiten, Veranstaltungen, Dokumente, Wetter und vieles mehr. Sie sind in 4 Kategorien organisiert: Kommunikation, Lernen, Produktivität, Wissensdatenbank."
+      },
+      "canvas": {
+        "title": "Die Zeichenfläche",
+        "description": "Ziehen Sie einen Block aus der Bibliothek und legen Sie ihn hier ab, um ihn zur Seite hinzuzufügen. Sie können Blöcke durch Ziehen neu anordnen und sie in nebeneinanderliegenden Spalten organisieren."
+      },
+      "properties-panel": {
+        "title": "Jeden Block konfigurieren",
+        "description": "Wählen Sie einen Block auf der Zeichenfläche aus, um auf seine Eigenschaften zuzugreifen: Sichtbarkeitsbereich, Kommentare, Likes, Pflichtlektüre. Jeder Block hat seine eigenen spezifischen Optionen."
+      },
+      "preview-btn": {
+        "title": "Echtzeit-Vorschau",
+        "description": "Klicken Sie hier, um das Intranet so zu sehen, wie Ihre Kollegen es auf SharePoint sehen werden. Die Vorschau wird bei jeder Änderung aktualisiert."
+      },
+      "deploy-btn": {
+        "title": "Auf SharePoint veröffentlichen",
+        "description": "Wenn Ihr Intranet fertig ist, klicken Sie hier, um es direkt in Ihrem Microsoft 365-Mandanten zu veröffentlichen. Der Prozess ist automatisch und dauert nur wenige Minuten."
+      }
+    }
   }
 }

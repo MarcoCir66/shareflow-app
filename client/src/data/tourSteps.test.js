@@ -7,13 +7,11 @@ test('TOUR_STEPS has exactly 5 entries', () => {
   expect(TOUR_STEPS).toHaveLength(5)
 })
 
-test('every step has required string fields', () => {
+test('every step has required fields', () => {
   for (const step of TOUR_STEPS) {
     expect(typeof step.id).toBe('string')
     expect(step.id.length).toBeGreaterThan(0)
     expect(typeof step.targetSelector).toBe('string')
-    expect(typeof step.title).toBe('string')
-    expect(typeof step.description).toBe('string')
     expect(VALID_POSITIONS).toContain(step.popoverPosition)
   }
 })
