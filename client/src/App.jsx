@@ -1,5 +1,5 @@
 // client/src/App.jsx
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { DndContext, DragOverlay, PointerSensor, KeyboardSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useConfigurator } from './hooks/useConfigurator.js'
@@ -171,7 +171,9 @@ function AppRoot() {
     setActiveProject(prev => ({ ...prev, ...meta }))
   }
 
-  if (!splashDone) return <SplashScreen onDone={() => setSplashDone(true)} />
+  const handleSplashDone = useCallback(() => setSplashDone(true), [])
+
+  if (!splashDone) return <SplashScreen onDone={handleSplashDone} />
   if (!modalDone)  return <SpSetupModal onConfirm={() => setModalDone(true)} onSkip={() => setModalDone(true)} />
 
   if (!activeProject) return <ProjectDashboard onOpen={handleOpenProject} />
