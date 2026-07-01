@@ -13,3 +13,44 @@ body { margin: 0; font-family: 'Hanken Grotesk', system-ui, sans-serif; backgrou
     radial-gradient(ellipse at 52% 92%, color-mix(in srgb, var(--theme-accent) 45%, transparent) 0%, transparent 45%),
     #0d0d1f;
 }
+
+/* ── SplashScreen ─────────────────────────────────── */
+.splash-logo-entering {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.splash-logo-entered {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 400ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.splash-ring {
+  animation: pulse-ring 1000ms ease-out 2;
+  pointer-events: none;
+}
+
+.splash-wordmark {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 400ms ease 200ms, transform 400ms ease 200ms;
+}
+.splash-wordmark-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.splash-exit {
+  animation: splash-exit-anim 600ms ease-in-out forwards;
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes splash-exit-anim {
+  from { clip-path: inset(0 0 0% 0); }
+  to   { clip-path: inset(0 0 100% 0); }
+}
