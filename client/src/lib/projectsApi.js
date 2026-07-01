@@ -2,7 +2,7 @@
 import { msalInstance, isMsalConfigured } from '../auth/msalInstance.js'
 import { loginRequest } from '../auth/msalConfig.js'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001'
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
 
 async function getAuthHeaders() {
   if (!isMsalConfigured) return {}
