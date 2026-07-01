@@ -32,6 +32,11 @@ export function useTour() {
     }
   }, [active, stepIndex, readRect])
 
+  const skip = useCallback(() => {
+    setActive(false)
+    setStepIndex(0)
+  }, [])
+
   const start = useCallback(() => {
     setStepIndex(0)
     setActive(true)
@@ -44,11 +49,6 @@ export function useTour() {
 
   const prev = useCallback(() => {
     setStepIndex(p => Math.max(0, p - 1))
-  }, [])
-
-  const skip = useCallback(() => {
-    setActive(false)
-    setStepIndex(0)
   }, [])
 
   return { active, stepIndex, rect, start, next, prev, skip }
