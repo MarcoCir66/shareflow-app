@@ -24,7 +24,7 @@ export default function CanvasDropZone() {
   const labelSubText = isPageDark ? 'text-white/30' : 'text-ink-800'
 
   return (
-    <div className="min-h-full p-6" style={{ backgroundColor: pageColor }}>
+    <div className="min-h-full p-6" style={{ backgroundColor: pageColor }} data-tour="canvas">
       <div className="max-w-2xl mx-auto" style={{ '--theme-accent': accentColor }}>
         <CanvasTopNav />
         <HeroBanner />

@@ -14,7 +14,7 @@ export default function WorkspaceShell({ left, center, right }) {
       <main className="overflow-y-auto bg-paper">
         {center}
       </main>
-      <aside className="overflow-y-auto bg-ink-800 border-l border-ink-700">
+      <aside className="overflow-y-auto bg-ink-800 border-l border-ink-700" data-tour="properties-panel">
         {right}
       </aside>
     </div>

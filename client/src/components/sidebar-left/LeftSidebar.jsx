@@ -19,7 +19,7 @@ export default function LeftSidebar() {
   ]
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" data-tour="block-library">
       <div className="flex flex-col border-b border-ink-700 flex-shrink-0">
         {TABS.map(tabItem => {
           const Icon = icons[tabItem.icon] ?? icons.Box
