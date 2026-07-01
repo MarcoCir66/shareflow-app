@@ -53,7 +53,7 @@ export default function Navbar({ projectName, saving, onSave, onGoToDashboard, o
             className="flex items-center gap-2 text-ink-400 hover:text-white border border-ink-700 hover:border-ink-600 text-sm px-3 py-1.5 rounded-lg transition-colors"
           >
             <HelpCircle size={14} />
-            Guida
+            {t('tour.guide')}
           </button>
         )}
         <button onClick={onAnalyticsClick}

@@ -372,6 +372,7 @@
     "complianceEmpty": "Nessun contenuto marcato come lettura obbligatoria"
   },
   "tour": {
+    "guide": "Guida",
     "skip": "Salta",
     "prev": "← Indietro",
     "next": "Avanti →",

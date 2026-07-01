@@ -372,6 +372,7 @@
     "complianceEmpty": "No content marked as mandatory read"
   },
   "tour": {
+    "guide": "Guide",
     "skip": "Skip",
     "prev": "← Back",
     "next": "Next →",

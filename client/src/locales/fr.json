@@ -372,6 +372,7 @@
     "complianceEmpty": "Aucun contenu marqué comme lecture obligatoire"
   },
   "tour": {
+    "guide": "Guide",
     "skip": "Ignorer",
     "prev": "← Précédent",
     "next": "Suivant →",
