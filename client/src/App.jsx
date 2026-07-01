@@ -19,6 +19,8 @@ import AnalyticsView from './components/analytics/AnalyticsView.jsx'
 import ProjectDashboard from './components/projects/ProjectDashboard.jsx'
 import ProjectFormModal from './components/projects/ProjectFormModal.jsx'
 import { updateProject } from './lib/projectsApi.js'
+import SplashScreen from './components/layout/SplashScreen.jsx'
+import SpSetupModal from './components/layout/SpSetupModal.jsx'
 
 const COLUMN_PREFIX = 'column-'
 const IS_PREVIEW = new URLSearchParams(window.location.search).get('mode') === 'preview'
@@ -156,6 +158,8 @@ function AppCanvas({ projectId, projectName, projectMeta, onUpdateMeta, onGoToDa
 
 function AppRoot() {
   const { dispatch, ACTIONS } = useConfigurator()
+  const [splashDone, setSplashDone] = useState(false)
+  const [modalDone, setModalDone]   = useState(false)
   const [activeProject, setActiveProject] = useState(null)
 
   function handleOpenProject(project) {
@@ -167,9 +171,10 @@ function AppRoot() {
     setActiveProject(prev => ({ ...prev, ...meta }))
   }
 
-  if (!activeProject) {
-    return <ProjectDashboard onOpen={handleOpenProject} />
-  }
+  if (!splashDone) return <SplashScreen onDone={() => setSplashDone(true)} />
+  if (!modalDone)  return <SpSetupModal onConfirm={() => setModalDone(true)} onSkip={() => setModalDone(true)} />
+
+  if (!activeProject) return <ProjectDashboard onOpen={handleOpenProject} />
 
   return (
     <AppCanvas
