@@ -38,14 +38,9 @@ export function useTour() {
   }, [])
 
   const next = useCallback(() => {
-    setStepIndex(prev => {
-      if (prev >= TOUR_STEPS.length - 1) {
-        setActive(false)
-        return 0
-      }
-      return prev + 1
-    })
-  }, [])
+    if (stepIndex >= TOUR_STEPS.length - 1) { skip(); return }
+    setStepIndex(stepIndex + 1)
+  }, [stepIndex, skip])
 
   const prev = useCallback(() => {
     setStepIndex(p => Math.max(0, p - 1))

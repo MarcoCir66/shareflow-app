@@ -67,7 +67,7 @@ export default function TourOverlay({ stepIndex, rect, onNext, onPrev, onSkip })
               ← Indietro
             </button>
             <button
-              onClick={onNext}
+              onClick={isLast ? onSkip : onNext}
               className="bg-flow-400 hover:bg-flow-600 text-ink-950 font-semibold text-sm px-3 py-1.5 rounded-lg transition-colors"
             >
               {isLast ? 'Inizia a costruire' : 'Avanti →'}
